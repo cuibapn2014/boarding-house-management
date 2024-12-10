@@ -59,12 +59,14 @@
                 <div class="card">
                     <form role="form" method="POST" action={{ route('profile.update') }} enctype="multipart/form-data">
                         @csrf
+                        @if(!auth()->user()->is_admin)
                         <div class="card-header pb-0">
                             <div class="d-flex align-items-center">
                                 <p class="mb-0">Edit Profile</p>
                                 <button type="submit" class="btn btn-primary btn-sm ms-auto">Save</button>
                             </div>
                         </div>
+                        @endif
                         <div class="card-body">
                             <p class="text-uppercase text-sm">User Information</p>
                             <div class="row">
@@ -198,6 +200,6 @@
                 </div>
             </div>
         </div>
-        @include('layouts.footers.auth.footer')
+        {{-- @include('layouts.footers.auth.footer') --}}
     </div>
 @endsection
