@@ -23,7 +23,8 @@ class UserProfileController extends Controller
             'city' => ['max:100'],
             'country' => ['max:100'],
             'postal' => ['max:100'],
-            'about' => ['max:255']
+            'about' => ['max:255'],
+            'phone' => ['nullable','digits:10']
         ]);
 
         auth()->user()->update([
@@ -35,7 +36,8 @@ class UserProfileController extends Controller
             'city' => $request->get('city'),
             'country' => $request->get('country'),
             'postal' => $request->get('postal'),
-            'about' => $request->get('about')
+            'about' => $request->get('about'),
+            'phone' => $request->get('phone')
         ]);
         return back()->with('succes', 'Profile succesfully updated');
     }

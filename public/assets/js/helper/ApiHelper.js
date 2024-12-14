@@ -26,6 +26,7 @@ const ApiHelper = {
         let errJSON = err?.responseJSON?.errors;
         
         if(status === 422) {
+            GlobalHelper.toastError('Xảy ra lỗi vui lòng kiểm tra lại!');
             for(const key in errJSON) {
                 $(`#${key}`).after(`<span class="input-error-message text-danger text-sm">${errJSON[key][0]}<span>`);
             }

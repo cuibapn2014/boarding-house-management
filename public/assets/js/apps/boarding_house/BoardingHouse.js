@@ -26,7 +26,7 @@ const BoardingHouse = {
         const handleSuccess = function(response) {
             modalCreate.find('.modal-body').html(response);
             GlobalHelper.initTinyEditor(`#${modalCreate.attr('id')} #content`);
-            BoardingHouse.initSelectDistrict();
+            BoardingHouse.initSelectDistrict(`#${modalCreate.attr('id')}`);
 
             modalCreate.modal('show');
         }
@@ -96,7 +96,7 @@ const BoardingHouse = {
         const handleSuccess = function(response) {
             modalEdit.find('.modal-body').html(response);
             GlobalHelper.initTinyEditor(`#${modalEdit.attr('id')} #content`);
-            BoardingHouse.initSelectDistrict();
+            BoardingHouse.initSelectDistrict(`#${modalEdit.attr('id')}`);
 
             modalEdit.modal('show');
         }
@@ -236,9 +236,10 @@ const BoardingHouse = {
         .catch(err => {});
     },
 
-    initSelectDistrict: function() {
-        const district = $('.modal.show #district');
-        const ward = $('.modal.show #ward');
+    initSelectDistrict: function(selectorModal) {
+        selectorModal = selectorModal ? selectorModal : '.modal.show';
+        const district = $(selectorModal).find('#district');
+        const ward = $(selectorModal).find('#ward');
         const districtSelected = district.val();
         const wardSelected = ward.val();
 

@@ -2,6 +2,7 @@
     use App\Constants\SystemDefination;
 
     $status = SystemDefination::BOARDING_HOUSE_STATUS;
+    $categories = SystemDefination::BOARDING_HOUSE_CATEGORY;
 @endphp
 <div class="card p-3">
     <div class="card-body px-0 pt-0 pb-2">
@@ -13,6 +14,17 @@
                     <div class="form-group">
                         <label class="form-control-label">Tiêu đề</label>
                         <input id="title" name="title" class="form-control" type="text" placeholder="Nhập tiêu để" value="{{ $boardingHouse->title }}">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="form-control-label">Danh mục</label>
+                        <select id="category" name="category" class="form-control">
+                            <option value="">Chọn danh mục</option>
+                            @foreach($categories as $k => $category)
+                            <option value="{{ $k }}" {{ $boardingHouse->category === $k ? 'selected' : '' }}>{{ $category }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-12">

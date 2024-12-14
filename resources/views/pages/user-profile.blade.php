@@ -123,6 +123,12 @@
                                         <input class="form-control" type="text" name="postal" value="{{ old('postal', auth()->user()->postal) }}">
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="form-control-label">Phone/Zalo</label>
+                                        <input class="form-control" type="text" name="phone" value="{{ old('phone', auth()->user()->phone) }}">
+                                    </div>
+                                </div>
                             </div>
                             <hr class="horizontal dark">
                             <p class="text-uppercase text-sm">About me</p>

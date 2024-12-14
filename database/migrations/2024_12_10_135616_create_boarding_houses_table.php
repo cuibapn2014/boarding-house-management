@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('boarding_houses', function (Blueprint $table) {
             $table->id();
             $table->string('title', 255);
-            $table->string('thumbnail')->nullable();
+            $table->string('category', 50)->nullable();
             $table->string('description', 255)->nullable();
             $table->text('content')->nullable();
             $table->string('district', 50)->nullable();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Constants\SystemDefination;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreBoardingHouseRequest extends FormRequest
@@ -21,6 +22,7 @@ class StoreBoardingHouseRequest extends FormRequest
      */
     public function rules(): array
     {
+        $category = implode(',',array_keys(SystemDefination::BOARDING_HOUSE_CATEGORY));
         return [
             //
             'title' => 'required|max:255',
@@ -30,7 +32,8 @@ class StoreBoardingHouseRequest extends FormRequest
             'files.*' => 'nullable|mimes:png,jpg,mp4,jpeg,webp',
             'phone' => 'nullable|digits:10',
             'district' => 'required',
-            'ward' => 'required'
+            'ward' => 'required',
+            'category' => 'required|in:' . $category
         ];
     }
 
@@ -40,7 +43,8 @@ class StoreBoardingHouseRequest extends FormRequest
             'required' => 'Bắt buộc nhập',
             'max' => ':attribute tối đa :max ký tự',
             'mimes' => ':attribute không hợp lệ',
-            'digits' => ':attribute không hợp lệ'
+            'digits' => ':attribute không hợp lệ',
+            'in' => ':attribute không hợp lệ'
         ];
     }
 
@@ -55,7 +59,8 @@ class StoreBoardingHouseRequest extends FormRequest
             'files' => 'Tệp tin',
             'phone' => 'Liên hệ/Zalo',
             'district' => 'Quận/Huyện',
-            'ward' => 'Phường/Xã'
+            'ward' => 'Phường/Xã',
+            'category' => 'Danh mục'
         ];
     }
 }

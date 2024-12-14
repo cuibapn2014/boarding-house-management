@@ -32,6 +32,8 @@
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                             Tiêu đề</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Danh mục</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Giá</th>
                                         <th
                                             class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -67,6 +69,12 @@
                                                     {{-- <p class="text-xs text-secondary mb-0">john@creative-tim.com</p> --}}
                                                 </div>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <p class="text-xs font-weight-bold mb-0">
+                                                {{ $boardingHouse->category }}
+                                            </p>
+                                            {{-- <p class="text-xs text-secondary mb-0">Organization</p> --}}
                                         </td>
                                         <td>
                                             <p class="text-xs font-weight-bold mb-0">
