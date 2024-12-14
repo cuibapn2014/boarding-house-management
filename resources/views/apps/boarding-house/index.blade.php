@@ -1,5 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
-
+@push('css')
+<link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />   
+@endpush
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Nhà trọ'])
     @php
@@ -45,15 +47,23 @@
                                 </thead>
                                 <tbody>
                                     @forelse($boardingHouses as $boardingHouse)
+                                    @php
+                                        $thumbnail = $boardingHouse?->boarding_house_files?->where('type', 'image')?->first();
+                                    @endphp
                                     <tr>
                                         <td>
-                                            <div class="d-flex px-2 py-1">
+                                            <div class="d-flex px-2 py-1" style="max-width: 600px;">
                                                 <div>
-                                                    <img src="/img/team-2.jpg" class="avatar avatar-sm me-3"
+                                                    @if($thumbnail && $thumbnail->type === 'image')
+                                                    <img src="{{ $thumbnail->url }}" class="avatar avatar-sm me-3"
+                                                        alt="boarding-house-file" loading="lazy">
+                                                    @else
+                                                    <img src="{{ \Storage::url('images/image.jpg') }}" class="avatar avatar-sm me-3"
                                                         alt="user1">
+                                                    @endif
                                                 </div>
                                                 <div class="d-flex flex-column justify-content-center" style="flex-grow: 1">
-                                                    <h6 class="mb-0 text-sm overflow-hidden">{{ $boardingHouse->title }}</h6>
+                                                    <h6 class="mb-0 text-sm overflow-hidden text-ellipsis" style="max-width:500px;text-overflow:ellipsis;">{{ $boardingHouse->title }}</h6>
                                                     {{-- <p class="text-xs text-secondary mb-0">john@creative-tim.com</p> --}}
                                                 </div>
                                             </div>
@@ -81,10 +91,16 @@
                                             <span class="text-secondary text-xs font-weight-bold">{{ date('d/m/Y H:i', strtotime($boardingHouse->created_at)) }}</span>
                                         </td>
                                         <td class="align-middle">
-                                            <a href="javascript:;" data-url="{{ route('boarding-house.edit', [$boardingHouse->id]) }}" class="text-secondary font-weight-bold text-xs edit-boarding-house"
-                                                data-toggle="tooltip" data-original-title="Edit user">
-                                                Edit
-                                            </a>
+                                            <nobr class="d-flex flex-wrap" style="gap:10px;">
+                                                <a href="javascript:;" data-url="{{ route('boarding-house.edit', [$boardingHouse->id]) }}" class="text-secondary font-weight-bold text-xs edit-boarding-house"
+                                                    data-toggle="tooltip" data-original-title="Edit">
+                                                    Edit
+                                                </a>
+                                                <a href="javascript:;" data-url="{{ route('boarding-house.destroy', [$boardingHouse->id]) }}" class="text-secondary font-weight-bold text-xs remove-boarding-house"
+                                                    data-toggle="tooltip" data-original-title="Delete">
+                                                    Delete
+                                                </a>
+                                            </nobr>
                                         </td>
                                     </tr>
                                     @empty
@@ -120,6 +136,11 @@
     ])
 @endsection
 @push('js')
+{{-- Tagify --}}
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+
 <script src="{{ asset('assets/js/apps/boarding_house/script.js') }}"></script>
 <script src="{{ asset('assets/js/apps/boarding_house/BoardingHouse.js') }}"></script>
+<script src="{{ asset('assets/js/helper/Dropzone.js') }}"></script>
 @endpush

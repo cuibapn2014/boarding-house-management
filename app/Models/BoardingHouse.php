@@ -21,4 +21,9 @@ class BoardingHouse extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'updated_by', 'id');
     }
+
+    public function boarding_house_files()
+    {
+        return $this->hasMany(\App\Models\BoardingHouseFile::class, 'boarding_house_id', 'id');
+    }
 }

@@ -29,13 +29,24 @@
     <link href="assets/css/style.css" rel="stylesheet" />
     <!-- CSS Files -->
     <link id="pagestyle" href="assets/css/argon-dashboard.css" rel="stylesheet" />
+    @stack('css')
 
     {{-- Toastify --}}
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
+    {{-- Dropzone --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/dropzone.css') }}" type="text/css"/>
+ 
+    {{-- Global css --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" type="text/css"/>
+
     {{-- Jquery --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    {{-- TinyMCE --}}
+    <script src="https://cdn.tiny.cloud/1/7ixm8fbuehf6vt9wnxwtss6w9joq557zoe273irzpmdi4byu/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tinymce/tinymce-jquery@2/dist/tinymce-jquery.min.js"></script>
 </head>
 
 <body class="{{ $class ?? '' }}">

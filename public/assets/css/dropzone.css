@@ -1,0 +1,35 @@
+.dropzone__item-preivew, .file-uploaded {
+    width: 96px;
+    height: 96px;
+    position: relative;
+}
+
+.dropzone__item-preivew .dropzone__item-preivew-img, .file-uploaded img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dropzone__item-preivew .btn-remove-preview-item, .file-uploaded .remove-file {
+    position: absolute;
+    top: 1px;
+    right: 2px;
+}
+
+.dropzone__item-tag {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.btn-remove-preview-item, .file-uploaded .remove-file {
+    cursor: pointer;
+}
+
+.modal.show #btn-submit:disabled .spinner-border {
+    display: inline-block !important;
+}

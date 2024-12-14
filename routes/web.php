@@ -49,4 +49,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/{page}', [PageController::class, 'index'])->name('page');
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
+
+	Route::delete('/boarding-house-file/{id}/delete', [\App\Http\Controllers\BoardingHouseFileController::class, 'destroy'])->name('boardingHouseFile.destroy');
 });

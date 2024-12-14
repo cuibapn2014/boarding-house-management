@@ -26,7 +26,11 @@ class StoreBoardingHouseRequest extends FormRequest
             'title' => 'required|max:255',
             'description' => 'required',
             'status' => 'required',
-            'price' => 'required'
+            'price' => 'required',
+            'files.*' => 'nullable|mimes:png,jpg,mp4,jpeg,webp',
+            'phone' => 'nullable|digits:10',
+            'district' => 'required',
+            'ward' => 'required'
         ];
     }
 
@@ -34,7 +38,9 @@ class StoreBoardingHouseRequest extends FormRequest
     {
         return [
             'required' => 'Bắt buộc nhập',
-            'max' => ':attribute tối đa :max ký tự'
+            'max' => ':attribute tối đa :max ký tự',
+            'mimes' => ':attribute không hợp lệ',
+            'digits' => ':attribute không hợp lệ'
         ];
     }
 
@@ -45,7 +51,11 @@ class StoreBoardingHouseRequest extends FormRequest
             'description' => 'Mô tả',
             'status' => 'Trạng thái',
             'is_publish' => 'Pushlish',
-            'price' => 'Giá'
+            'price' => 'Giá',
+            'files' => 'Tệp tin',
+            'phone' => 'Liên hệ/Zalo',
+            'district' => 'Quận/Huyện',
+            'ward' => 'Phường/Xã'
         ];
     }
 }

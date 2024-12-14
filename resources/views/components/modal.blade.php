@@ -7,12 +7,17 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body scroll-modal">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Đóng</button>
         @if(!($readyOnly ?? false))
-        <button id="btn-submit" type="button" class="btn bg-gradient-primary">{{ $okText ?? 'Lưu' }}</button>
+        <button id="btn-submit" type="button" class="btn bg-gradient-primary">
+          <div class="spinner-border" role="status" style="width: 15.5px;height: 15.5px;display:none">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          {{ $okText ?? 'Lưu' }}
+        </button>
         @endif
       </div>
     </div>

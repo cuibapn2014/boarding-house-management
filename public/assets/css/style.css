@@ -1,0 +1,9 @@
+* {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+}
+
+.scroll-modal {
+    max-height: 80vh;
+    overflow: auto;
+}

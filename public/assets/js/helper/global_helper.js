@@ -32,4 +32,22 @@ const GlobalHelper = {
             // onClick: function(){} // Callback after click
           }).showToast();
     },
+
+    initTinyEditor: function(selector) {
+      $(selector).tinymce({
+        height: 500,
+        menubar: false,
+        forced_root_block: false, // Ngăn không cho TinyMCE tự động thêm <p>
+        force_br_newlines: true,   // Sử dụng <br> khi nhấn Enter
+        force_p_newlines: false, 
+        plugins: [
+          'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+          'anchor', 'searchreplace', 'visualblocks', 'fullscreen',
+          'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+        ],
+        toolbar: 'undo redo | blocks | bold italic backcolor | ' +
+          'alignleft aligncenter alignright alignjustify | ' +
+          'bullist numlist outdent indent | removeformat | help'
+      });
+    }
 }
