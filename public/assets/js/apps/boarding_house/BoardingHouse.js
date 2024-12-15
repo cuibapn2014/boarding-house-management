@@ -188,11 +188,13 @@ const BoardingHouse = {
     destroy: function(ele) {
         const url = ele.data('url');
         const _token = $('meta[name="csrf_token"]').attr('content');
+        const modalConfirm = $('#confirmDeleteBoardingHouseModal');
 
         const handleSuccess = function(response) {
             if(response.status == 'success') {
                 GlobalHelper.toastSuccess(response.message);
                 BoardingHouse.loadData();
+                modalConfirm.modal('hide');
                 return;
             }
 
@@ -205,8 +207,10 @@ const BoardingHouse = {
             {}, 
             {"X-CSRF-TOKEN" : _token}, 
             {}, 
-            null, 
-            handleSuccess
+            () => modalConfirm.find('#btn-confirm-delete').prop('disabled', true), 
+            handleSuccess,
+            null,
+            () => modalConfirm.find('#btn-confirm-delete').prop('disabled', false)
         )
         .then(() => {})
         .catch(err => {});

@@ -41,6 +41,15 @@ $(document).ready(function() {
     $(document).on('click', '.remove-boarding-house', function(e) {
         e.preventDefault();
 
+        const modalConfirm = $('#confirmDeleteBoardingHouseModal');
+        modalConfirm.find('#btn-confirm-delete').attr('data-url', $(this).data('url'));
+        modalConfirm.find('.modal-body').text('Bạn có chắn chắn muốn xoá dữ liệu này?');
+        modalConfirm.modal('show');
+    });
+
+    $(document).on('click', '#confirmDeleteBoardingHouseModal #btn-confirm-delete', function(e) {
+        e.preventDefault();
+
         BoardingHouse.destroy($(this));
     });
 

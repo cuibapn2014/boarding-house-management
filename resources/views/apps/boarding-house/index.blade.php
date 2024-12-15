@@ -142,6 +142,13 @@
         'title' => 'Chỉnh sửa',
         'size' => 'xl'
     ])
+    @include('components.modal', [
+        'id' => 'confirmDeleteBoardingHouse',
+        'title' => 'Xác nhận xoá',
+        'size' => 'md',
+        'okText' => 'Chắc chắn',
+        'btnId' => 'btn-confirm-delete'
+    ])
 @endsection
 @push('js')
 {{-- Tagify --}}
