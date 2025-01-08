@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Đăng nhập')
 
 @section('content')
     <div class="container position-sticky z-index-sticky top-0">

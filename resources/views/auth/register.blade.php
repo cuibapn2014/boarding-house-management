@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Đăng ký')
 
 @section('content')
     {{-- @include('layouts.navbars.guest.navbar') --}}
