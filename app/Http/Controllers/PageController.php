@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PageController extends Controller
 {
@@ -15,7 +17,8 @@ class PageController extends Controller
     public function index(string $page)
     {
         if (view()->exists("pages.{$page}")) {
-            return view("pages.{$page}");
+            $users = $page == 'user-management' ? User::paginate(20) : new LengthAwarePaginator(collect([]), 20, 20);
+            return view("pages.{$page}", compact('users'));
         }
 
         return abort(404);
