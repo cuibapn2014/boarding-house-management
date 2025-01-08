@@ -1,9 +1,11 @@
 const BoardingHouse = {
     
-    loadData: function(ele = null) {
+    loadData: function(ele = null, _url = null) {
         let url = window.location.href;
 
         if(ele) url = ele.attr('href');
+
+        if(_url) url = _url; 
 
         window.history.pushState({}, null, url);
 

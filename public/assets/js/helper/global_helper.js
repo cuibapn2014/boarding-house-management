@@ -49,5 +49,15 @@ const GlobalHelper = {
           'alignleft aligncenter alignright alignjustify | ' +
           'bullist numlist outdent indent | removeformat | help'
       });
+    },
+
+    initValueSearchForm: function() {
+      const searchParam = new URLSearchParams(window.location.search);
+
+      searchParam.forEach((value, key) => {
+        if(key) {
+          $(`[name="${key}"]`).val(value);
+        }
+      })
     }
 }

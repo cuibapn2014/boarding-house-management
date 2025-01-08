@@ -19,6 +19,24 @@ class BoardingHouseController extends Controller
         $boardingHouses = BoardingHouse::with([
                 'boarding_house_files:id,boarding_house_id,type,url'
             ])
+            ->when($request->filled('byTitle'), function($query) use($request) {
+                $query->where('title', 'like', '%'.$request->byTitle.'%');
+            })
+            ->when($request->filled('byCategory'), function($query) use($request) {
+                $query->where('category', $request->byCategory);
+            })
+            ->when($request->filled('byFromPrice'), function($query) use($request) {
+                $query->where('price', '>=', numberRemoveComma($request->byFromPrice));
+            })
+            ->when($request->filled('byToPrice'), function($query) use($request) {
+                $query->where('price', '<=', numberRemoveComma($request->byToPrice));
+            })
+            ->when($request->filled('byStatus'), function($query) use($request) {
+                $query->where('status', $request->byStatus);
+            })
+            ->when($request->filled('byPublish'), function($query) use($request) {
+                $query->where('is_publish', $request->byPublish);
+            })
             ->orderByDesc('id')
             ->select(
                 'id',

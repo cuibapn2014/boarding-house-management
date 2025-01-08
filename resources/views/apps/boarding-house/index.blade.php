@@ -8,6 +8,7 @@
     use App\Constants\SystemDefination;
 
     $status = SystemDefination::BOARDING_HOUSE_STATUS;
+    $categories = SystemDefination::BOARDING_HOUSE_CATEGORY;
     @endphp
     <div class="container-fluid py-4">
         <div class="row">
@@ -16,7 +17,57 @@
                     <i class="fa-solid fa-plus"></i>
                     <span>Thêm</span>
                 </button>
+                <button id="btn-advance-filter" class="btn btn-white position-relative" type="button" data-bs-toggle="collapse" data-bs-target="#advance-filter" aria-expanded="false" aria-controls="advance-filter">
+                    <i class="fa-solid fa-filter"></i>
+                    <span>Tìm kiếm nâng cao</span>
+                </button>
             </div>
+            <form id="form-search__boarding-house">
+                <div class="col-md-4 form-group row">
+                    <div class="input-group input-group-md">
+                      <input id="byTitle" type="search" class="form-control" name="byTitle" aria-label="Search" placeholder="Tìm kiếm nhà trọ">
+                    </div>
+                </div>                 
+                <div class="card card-body collapse bg-light position-relative mb-2 rounded p-2" id="advance-filter">
+                    <div class="row align-items-center">
+                        <div class="form-group col-md-2 my-1">
+                            <select class="form-control" id="byCategory" name="byCategory">
+                              <option value="">Danh mục</option>
+                              @foreach($categories as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                              @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2 form-group my-1">
+                            <div class="input-group input-group-md">
+                              <span class="input-group-text" id="inputGroup-sizing-default">Giá từ</span>
+                              <input id="byFromPrice" type="search" class="form-control number-separator" name="byFromPrice" aria-label="Search" placeholder="0"/>
+                            </div>
+                        </div>
+                        <div class="col-md-2 form-group my-1">
+                            <div class="input-group input-group-md">
+                              <span class="input-group-text" id="inputGroup-sizing-default">Giá đến</span>
+                              <input id="byToPrice" type="search" class="form-control number-separator" name="byToPrice" aria-label="Search" placeholder="6,000,000"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-2 my-1">
+                            <select class="form-control" id="byStatus" name="byStatus">
+                              <option value="">Trạng thái</option>
+                              @foreach($status as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                              @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2 my-1">
+                            <select class="form-control" id="byPublish" name="byPublish">
+                              <option value="">Publish</option>
+                              <option value="0">Không</option>
+                              <option value="1">Có</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
         <div class="row">
             <div class="col-12">
