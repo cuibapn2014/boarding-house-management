@@ -100,6 +100,10 @@
                                         </td>
                                         <td class="align-middle">
                                             <nobr class="d-flex flex-wrap" style="gap:10px;">
+                                                <a href="javascript:;" data-url="{{ route('boarding-house.create', ['id' => $boardingHouse->id]) }}" class="text-secondary font-weight-bold text-xs clone-boarding-house"
+                                                    data-toggle="tooltip" data-original-title="Copy">
+                                                    Copy
+                                                </a>
                                                 <a href="javascript:;" data-url="{{ route('boarding-house.edit', [$boardingHouse->id]) }}" class="text-secondary font-weight-bold text-xs edit-boarding-house"
                                                     data-toggle="tooltip" data-original-title="Edit">
                                                     Edit

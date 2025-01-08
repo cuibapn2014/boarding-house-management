@@ -12,6 +12,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#btn-create-boarding-house', BoardingHouse.showModalCreate);
+    $(document).on('click', '.clone-boarding-house', BoardingHouse.showModalCreate);
     $(document).on('click', '.edit-boarding-house', BoardingHouse.showModalEdit);
 
     $(document).on('click', '#createBoardingHouseModal #btn-submit', BoardingHouse.store);

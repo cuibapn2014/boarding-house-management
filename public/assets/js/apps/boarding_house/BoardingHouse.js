@@ -107,6 +107,26 @@ const BoardingHouse = {
             .catch(err => console.log(err));
     },
 
+    showModalClone: function(e) {
+        e.preventDefault();
+
+        const url = $(this).data('url');
+        const modalCreate = $('#createBoardingHouseModal');
+
+        const handleSuccess = function(response) {
+            modalCreate.find('.modal-body').html(response);
+            GlobalHelper.initTinyEditor(`#${modalCreate.attr('id')} #content`);
+            BoardingHouse.initSelectDistrict(`#${modalCreate.attr('id')}`);
+
+            modalCreate.modal('show');
+        }
+
+        ApiHelper
+            .callApi(url, 'GET', {}, {}, {}, null, handleSuccess)
+            .then(() => {})
+            .catch(err => console.log(err));
+    },
+
     update: function(e) {
         e.preventDefault();
 

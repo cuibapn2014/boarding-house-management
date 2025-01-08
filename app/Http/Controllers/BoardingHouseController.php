@@ -35,8 +35,14 @@ class BoardingHouseController extends Controller
         return view('apps.boarding-house.index', compact('boardingHouses'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $boardingHouse = BoardingHouse::find($request->input('id'));
+
+        if($boardingHouse) {
+            return view('apps.boarding-house.clone', compact('boardingHouse'));
+        }
+
         return view('apps.boarding-house.create');
     }
 
