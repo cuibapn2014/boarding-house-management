@@ -1,0 +1,17 @@
+.item-img {
+    width: 15.5rem;
+    min-width: 15.5rem;
+    height: 200px;
+    object-fit: cover;
+}
+
+.filter__rental-home {
+    min-width: 20rem;
+    max-height: fit-content;
+}
+
+@media screen and (max-width: 576px) {
+    .item-img {
+        width: 100% !important;
+    }
+}
