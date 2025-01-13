@@ -14,7 +14,7 @@
                 <li><a href="{{ route('contact.index') }}" class="text-white">Liên Hệ</a></li>
             </ul>
             <a id="btn-open-sidebar" class="text-light btn" data-bs-toggle="offcanvas" href="#menu-sidebar" role="button"
-                aria-controls="menu-sidebar">
+                aria-controls="menu-sidebar" aria-label="Open the menu sidebar">
                 <i class="fa-solid fa-bars-staggered"></i>
             </a>
         </nav>
@@ -55,11 +55,3 @@
         </div>
     </div>
 </header>
-<section class="hero overflow-hidden position-relative">
-    <div class="container position-relative" style="z-index:10">
-        <h1 class="text-white">Tìm chỗ ở hoàn hảo cho bạn</h1>
-        <p class="text-white">Khám phá hàng ngàn phòng trọ và nhà cho thuê gần bạn.</p>
-        <button>Xem Danh Sách</button>
-    </div>
-    <div class="hero-overlay bg-black position-absolute" style="top:0;left:0;width:100%;height:100%;--bs-bg-opacity:0.35;z-index:1"></div>
-</section>

@@ -1,6 +1,20 @@
 @extends('master')
 @section('title', 'Liên hệ')
+@push('css')
+    <link rel="preload" href="{{ asset('assets/images/hero-background.jpg') }}" as="image"/>
+    <style>
+        section.hero .hero-overlay {
+            --bs-bg-opacity: 0.35;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+    </style>
+@endpush
 @section('content')
+@include('components.hero')
 <div class="container my-5" style="min-height:50vh;">
     <div class="row justify-content-center">
         <div class="col-md-8">

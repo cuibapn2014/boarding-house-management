@@ -1,11 +1,16 @@
 @extends('master')
 @section('title', 'Danh sách cho thuê')
 @push('css')
+    <link rel="preload" href="{{ asset('assets/images/hero-background.jpg') }}" as="image"/>
     <link rel="stylesheet" href="{{ asset('assets/css/apps/rental-home/style.css') }}"/>
 @endpush
 @section('content')
+@include('components.hero')
+@php
+    $categories = \App\Constants\SystemDefination::BOARDING_HOUSE_CATEGORY;
+@endphp
 <div class="container d-flex justify-content-center my-4 flex-md-row flex-column">
-    <a id="btn-open-filter-sidebar" class="btn btn-outline-success mb-2 align-self-end mx-3 d-md-none" data-bs-toggle="offcanvas" href="#filter-sidebar" role="button"
+    <a id="btn-open-filter-sidebar" class="btn btn-sm btn-success mb-2 align-self-end mx-3 d-md-none" data-bs-toggle="offcanvas" href="#filter-sidebar" role="button"
         aria-controls="filter-sidebar">
         <i class="fa-solid fa-filter"></i>
         <span>Bộ lọc</span>
@@ -21,24 +26,25 @@
         <div class="container">
             <div class="grid" id="room-list">
                 @forelse($boardingHouses as $boardingHouse)
-                    <div class="card rounded mb-3 d-flex flex-md-nowrap flex-md-row overflow-hidden">
-                        <img class="item-img skeleton" src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" alt="Phòng Trọ" loading="lazy">
+                    <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" class="card rounded mb-3 d-flex flex-md-nowrap flex-md-row overflow-hidden position-relative text-dark">
+                        <img class="item-img skeleton" src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" alt="{{ $boardingHouse->category }}" loading="lazy"/>
                         <div class="item-info flex-grow-1 p-2">
                             <h3 class="__title text-lg fw-bold fs-5">{{ $boardingHouse->title }}</h3>
+                            <h4 class="text-success text-md fw-bold fs-4 mt-2">
+                                {{ numberFormatVi($boardingHouse->price) }}
+                                <sup><u>đ</u></sup>
+                            </h4>
                             <h5 class="text-sm fs-6">
-                                <i class="fa-solid fa-clock" style="color:#b0b0b0"></i>
-                                <span>{{ dateForHumman($boardingHouse->created_at) }}</span>
-                            </h5>
-                            <h5 class="text-sm mb-0 fs-6">
                                 <i class="fa-solid fa-location-dot text-danger"></i>
                                 <span>{{ $boardingHouse->district }}</span>
                             </h5>
-                            <h3 class="text-success text-md fw-bold fs-4 mt-2">
-                                {{ numberFormatVi($boardingHouse->price) }}
-                                <sup><u>đ</u></sup>
-                            </h3>
+                            <h5 class="text-sm fs-6 mb-0">
+                                <i class="fa-solid fa-clock" style="color:#b0b0b0"></i>
+                                <span>{{ dateForHumman($boardingHouse->created_at) }}</span>
+                            </h5>
                         </div>
-                    </div>
+                        <div class="bg-success position-absolute top-0 left-0 fs-6 text-white px-1">{{ $categories[$boardingHouse->category] }}</div>
+                    </a>
                 @empty
                     <p class="text-center">Không có dữ liệu</p>
                 @endforelse
@@ -76,11 +82,53 @@
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Trang Chủ Thuê Phòng Hiện Đại - {{ config('app.name') }}ễ">
     <meta property="og:description" content="Khám phá hàng ngàn phòng trọ và nhà cho thuê dễ dàng. Tìm chỗ ở hoàn hảo gần bạn.">
-    <meta property="og:image" content="https://via.placeholder.com/1200x630">
-    <meta property="og:url" content="{{ asset('') }}">
+    <meta property="og:image" content="{{ asset('assets/images/hero-background.jpg') }}">
+    <meta property="og:url" content="{{ route('rentalHome.index') }}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Trang Chủ Thuê Phòng Hiện Đại - {{ config('app.name') }}">
     <meta name="twitter:description" content="Khám phá hàng ngàn phòng trọ và nhà cho thuê dễ dàng. Tìm chỗ ở hoàn hảo gần bạn.">
-    <meta name="twitter:image" content="https://via.placeholder.com/1200x630">
-    <link rel="canonical" href="{{ asset('') }}">
+    <meta name="twitter:image" content="{{ asset('assets/images/hero-background.jpg') }}">
+    <link rel="canonical" href="{{ route('rentalHome.index') }}">
+@endpush
+@push('js')
+    <script src="{{ asset('assets/js/helper/ApiHelper.js') }}"></script>
+    <script src="{{ asset('assets/js/apps/rental/script.js') }}"></script>
+    <script src="{{ asset('assets/js/apps/rental/Rental.js') }}"></script>
+@endpush
+@push('jsonLD-lg')
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": [
+            @foreach($boardingHouses as $boardingHouse)
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}",
+                "item": {
+                    "@type": "RentalProperty",
+                    "name": "{{ $boardingHouse->title }}",
+                    "description": "{{ $boardingHouse->description }}",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": "{{ $boardingHouse->address }}",
+                        "addressLocality": "{{ $boardingHouse->district }}",
+                        "addressRegion": "Hồ Chí Minh",
+                        "postalCode": "700000",
+                        "addressCountry": "VN"
+                    },
+                    "offers": {
+                        "@type": "Offer",
+                        "price": "{{ $boardingHouse->price }}",
+                        "priceCurrency": "VND",
+                        "availability": "https://schema.org/InStock"
+                    },
+                    "image": "{{ $boardingHouse->thumbnail }}"
+                }
+            }@if (!$loop->last),@endif
+            @endforeach
+        ]
+    }
+</script>
 @endpush

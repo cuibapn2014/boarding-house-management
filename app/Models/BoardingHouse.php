@@ -6,6 +6,7 @@ use App\Trait\CommonTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BoardingHouse extends Model
 {
@@ -15,7 +16,8 @@ class BoardingHouse extends Model
 
     protected $appends = [
         'thumbnail',
-        'location_address'
+        'location_address',
+        'slug'
     ];
 
     public function user_create() 
@@ -45,5 +47,10 @@ class BoardingHouse extends Model
     public function getLocationAddressAttribute() : ?string 
     {
         return "{$this?->ward}, {$this?->district}";
+    }
+
+    public function getSlugAttribute() : string
+    {
+        return Str::slug($this->title);
     }
 }

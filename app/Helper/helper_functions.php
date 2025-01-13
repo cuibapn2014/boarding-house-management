@@ -13,7 +13,13 @@ function dateForHumman(string $date) {
 }
 
 function resizeImageCloudinary(string $url, float $width, float $height) : string {
-    $imgUrl = str_replace('/upload/',"/upload/c_thumb,w_{$width},h_{$height}/", $url);
+    $imgUrl = str_replace('/upload/',"/upload/f_webp/c_thumb,w_{$width},h_{$height}/", $url);
 
     return $imgUrl;
+}
+
+function getZaloLink($number) : ?string {
+    if(! $number) return '';
+
+    return "https://zalo.me/{$number}";
 }

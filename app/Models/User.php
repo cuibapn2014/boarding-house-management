@@ -31,6 +31,10 @@ class User extends Authenticatable
         'phone'
     ];
 
+    protected $appends = [
+        'full_name'
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -64,5 +68,10 @@ class User extends Authenticatable
     public function getIsAdminAttribute() : bool
     {
         return $this->id === 1;
+    }
+
+    public function getFullNameAttribute() : string
+    {
+        return "{$this->lastname} {$this->firstname}";
     }
 }

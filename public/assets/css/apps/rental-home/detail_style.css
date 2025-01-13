@@ -1,0 +1,32 @@
+.hero-image {
+    width: 100%;
+    height: 450px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+.contact-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: white;
+}
+.related-room {
+    transition: transform 0.3s ease;
+}
+.related-room:hover {
+    transform: scale(1.02);
+}
+
+.splide__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.splide__slide {
+    opacity: 0.6;
+}
+
+.splide__slide.is-active {
+    opacity: 1;
+}

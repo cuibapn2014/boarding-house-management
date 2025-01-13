@@ -189,7 +189,7 @@ header button {
 
 /* Hero Section */
 .hero {
-    background: url('../../assets/images/hero-background.jpg') no-repeat center/cover;
+    background: url('../../assets/images/hero-background.webp') no-repeat center/cover;
     padding: 5rem 0;
     text-align: center;
     margin-top: 75px; /* For fixed header */
