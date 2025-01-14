@@ -1,7 +1,7 @@
 @extends('master')
 @section('title', 'Liên hệ')
 @push('css')
-    <link rel="preload" href="{{ asset('assets/images/hero-background.jpg') }}" as="image"/>
+    <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image"/>
     <style>
         section.hero .hero-overlay {
             --bs-bg-opacity: 0.35;

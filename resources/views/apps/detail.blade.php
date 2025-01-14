@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-lg-8">
             <div>
-                <img src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 800, 450) }}" alt="Phòng trọ đẹp" class="hero-image mb-4 w-100 skeleton">
+                <img src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 800, 450) }}" alt="Phòng trọ đẹp" class="hero-image mb-4 w-100 skeleton" decoding="async">
                 <section
                     id="thumbnail-carousel"
                     class="splide"
@@ -24,7 +24,7 @@
                         <ul class="splide__list">
                             @foreach($boardingHouse->boarding_house_files as $file)
                             <li class="splide__slide">
-                                <img src="{{ resizeImageCloudinary($file->url, 300, 200) }}" alt="Thumbnail phòng trọ" data-src="{{ resizeImageCloudinary($file->url, 800, 450) }}" class="skeleton">
+                                <img src="{{ resizeImageCloudinary($file->url, 300, 200) }}" alt="Thumbnail phòng trọ" data-src="{{ resizeImageCloudinary($file->url, 800, 450) }}" class="skeleton" decoding="async">
                             </li>
                             @endforeach
                         </ul>
@@ -34,8 +34,9 @@
             <h1 class="fw-bold fs-2">{{ $boardingHouse->title }}</h1>
             <p class="text-muted">Đăng bởi <strong>{{ $boardingHouse->user_create->firstname }}</strong> | Cập nhật {{ dateForHumman($boardingHouse->updated_at) }}</p>
             <h2 class="fw-bold fs-3 text-success d-flex align-items-center" style="gap:5px;">
-                {{ numberFormatVi($boardingHouse->price) }}/tháng
-                <span class="{{ $boardingHouse->status == 'available' ? 'bg-success text-white' : 'bg-warning text-dark' }} py-1 px-2 rounded-pill" style="max-width: fit-content;font-size:.5em;">{{ $statues[$boardingHouse->status] }}</span>
+                {{ numberFormatVi($boardingHouse->price) }}
+                <span class="text-dark fs-6">/tháng</span>
+                <span class="{{ $boardingHouse->status == 'available' ? 'bg-success text-white' : 'bg-warning text-dark' }} py-1 px-2 rounded-pill fs-6" style="max-width: fit-content;font-size:.5em;">{{ $statues[$boardingHouse->status] }}</span>
             </h2>
             <div class="mt-3">
                 <h4 class="fw-bold">Mô Tả</h4>
@@ -71,10 +72,13 @@
             @foreach($boardingHouseRelation as $relation)
             <a href="{{ route('rentalHome.show', ['id' => $relation->id, 'title' => $relation->slug]) }}" class="col-md-4 text-dark position-relative">
                 <div class="related-room">
-                    <img src="{{ resizeImageCloudinary($relation->thumbnail, 400, 270) }}" alt="Phòng trọ 1" class="img-fluid rounded">
+                    <img src="{{ resizeImageCloudinary($relation->thumbnail, 400, 270) }}" alt="Phòng trọ 1" class="img-fluid rounded" decoding="async">
                     <h5 class="mt-2">{{ $relation->title }}</h5>
                     <span class="fs-6 {{ $boardingHouse->status == 'available' ? 'bg-success text-white' : 'bg-warning text-dark' }} p-1 position-absolute top-0 left-0" style="max-width: fit-content;">{{ $statues[$boardingHouse->status] }}</span>
-                    <p class="fw-bold text-success">{{ $relation->price / 1000000 }} triệu/tháng</p>
+                    <p class="fw-bold text-success">
+                        {{ $relation->price / 1000000 }} triệu
+                        <span class="text-dark fs-6">/tháng</span>
+                    </p>
                 </div>
             </a>
             @endforeach

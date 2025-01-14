@@ -33,8 +33,6 @@ class RentalHomeController extends Controller
                                     ->when($request->filled('district'), function($query) use($district) {
                                         $query->whereIn('district', $district);
                                     })
-                                    ->groupBy('id')
-                                    ->orderByDesc('id')
                                     ->select(
                                         'id',
                                         'title',
@@ -46,6 +44,8 @@ class RentalHomeController extends Controller
                                         'status',
                                         'created_at'
                                     )
+                                    ->groupBy('id')
+                                    ->orderByDesc('id')
                                     ->paginate(20)
                                     ->withQueryString();
 
@@ -55,18 +55,19 @@ class RentalHomeController extends Controller
     public function show($id, $title)
     {
         $boardingHouse = BoardingHouse::find($id, [
-            'id',
-            'title',
-            'content',
-            'category',
-            'address',
-            'district',
-            'ward',
-            'price',
-            'status',
-            'updated_at',
-            'created_by'
-        ]);
+                                            'id',
+                                            'title',
+                                            'description',
+                                            'content',
+                                            'category',
+                                            'address',
+                                            'district',
+                                            'ward',
+                                            'price',
+                                            'status',
+                                            'updated_at',
+                                            'created_by'
+                                        ]);
 
         if(!$boardingHouse || $title != $boardingHouse->slug) abort(404);
 

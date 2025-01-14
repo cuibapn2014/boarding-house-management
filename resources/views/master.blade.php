@@ -30,6 +30,18 @@
 
     @stack('jsonLD-sm')
 
+    @if(env('G_TAG_ID'))
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('G_TAG_ID') }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', '{{ env("G_TAG_ID") }}');
+    </script>
+    @endif
+
     <title>@yield('title') - {{ config('app.name') }}</title>
 </head>
 <body>

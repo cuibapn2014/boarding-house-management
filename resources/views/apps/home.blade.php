@@ -1,7 +1,7 @@
 @extends('master')
 @section('title', 'Home')
 @push('css')
-    <link rel="preload" href="{{ asset('assets/images/hero-background.jpg') }}" as="image"/>
+    <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image"/>
     <link rel="stylesheet" href="{{ asset('assets/css/apps/home/style.css') }}"/>
 @endpush
 @php
@@ -14,15 +14,15 @@
         <h2 class="fw-bold">Danh Mục Nổi Bật</h2>
         <div class="grid" id="room-list">
             <a href="{{ route('rentalHome.index', ['category' => ['Phòng']]) }}" class="card pointer text-dark">
-                <img class="skeleton" src="{{ asset('assets/images/rental-category.webp') }}" alt="Phòng Trọ" loading="lazy">
+                <img class="skeleton" src="{{ asset('assets/images/rental-category.webp') }}" alt="Phòng Trọ" loading="lazy" decoding="async">
                 <h3>Phòng Trọ Giá Rẻ</h3>
             </a>
             <a href="{{ route('rentalHome.index', ['category' => ['KTX', 'SLEEPBOX']]) }}" class="card pointer text-dark">
-                <img class="skeleton" src="{{ asset('assets/images/rental-sleepbox-category.webp') }}" alt="KTX/Sleepbox" loading="lazy">
+                <img class="skeleton" src="{{ asset('assets/images/rental-sleepbox-category.webp') }}" alt="KTX/Sleepbox" loading="lazy" decoding="async">
                 <h3>KTX/Sleepbox Sang Trọng</h3>
             </a>
             <a href="{{ route('rentalHome.index', ['category' => ['Nhà nguyên căn']]) }}" class="card pointer text-dark">
-                <img class="skeleton" src="{{ asset('assets/images/hero-background.webp') }}" alt="Căn Hộ" loading="lazy">
+                <img class="skeleton" src="{{ asset('assets/images/hero-background.webp') }}" alt="Căn Hộ" loading="lazy" decoding="async">
                 <h3>Căn Hộ Hiện Đại</h3>
             </a>
         </div>
@@ -34,7 +34,7 @@
         <div class="grid my-4" id="room-list">
             @foreach($latestPosts as $boardingHouse)
             <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" class="card rounded my-2 d-flex flex-md-nowrap flex-md-row overflow-hidden pointer text-dark">
-                <img class="item-img skeleton" src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" alt="{{ $boardingHouse->category }}" loading="lazy"/>
+                <img class="item-img skeleton" src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" alt="{{ $boardingHouse->category }}" loading="lazy" decoding="async"/>
                 <div class="item-info flex-grow-1 p-2">
                     <h3 class="__title text-lg fw-bold fs-5">{{ $boardingHouse->title }}</h3>
                     <h4 class="text-success text-md fw-bold fs-4 mt-2">
@@ -65,11 +65,11 @@
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Trang Chủ Thuê Phòng Hiện Đại - {{ config('app.name') }}">
     <meta property="og:description" content="Khám phá hàng ngàn phòng trọ và nhà cho thuê dễ dàng. Tìm chỗ ở hoàn hảo gần bạn.">
-    <meta property="og:image" content="{{ asset('assets/images/hero-background.jpg') }}">
+    <meta property="og:image" content="{{ asset('assets/images/hero-background.webp') }}">
     <meta property="og:url" content="{{ route('home.index') }}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Trang Chủ Thuê Phòng Hiện Đại - {{ config('app.name') }}">
     <meta name="twitter:description" content="Khám phá hàng ngàn phòng trọ và nhà cho thuê dễ dàng. Tìm chỗ ở hoàn hảo gần bạn.">
-    <meta name="twitter:image" content="{{ asset('assets/images/hero-background.jpg') }}">
+    <meta name="twitter:image" content="{{ asset('assets/images/hero-background.webp') }}">
     <link rel="canonical" href="{{ route('home.index') }}">
 @endpush
