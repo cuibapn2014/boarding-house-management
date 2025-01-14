@@ -15,15 +15,15 @@
         <div class="grid" id="room-list">
             <a href="{{ route('rentalHome.index', ['category' => ['Phòng']]) }}" class="card pointer text-dark">
                 <img class="skeleton" src="{{ asset('assets/images/rental-category.webp') }}" alt="Phòng Trọ" loading="lazy" decoding="async">
-                <h3>Phòng Trọ Giá Rẻ</h3>
+                <h3 class="fw-bold">Phòng Trọ Giá Rẻ</h3>
             </a>
             <a href="{{ route('rentalHome.index', ['category' => ['KTX', 'SLEEPBOX']]) }}" class="card pointer text-dark">
                 <img class="skeleton" src="{{ asset('assets/images/rental-sleepbox-category.webp') }}" alt="KTX/Sleepbox" loading="lazy" decoding="async">
-                <h3>KTX/Sleepbox Sang Trọng</h3>
+                <h3 class="fw-bold">KTX/Sleepbox Sang Trọng</h3>
             </a>
             <a href="{{ route('rentalHome.index', ['category' => ['Nhà nguyên căn']]) }}" class="card pointer text-dark">
                 <img class="skeleton" src="{{ asset('assets/images/hero-background.webp') }}" alt="Căn Hộ" loading="lazy" decoding="async">
-                <h3>Căn Hộ Hiện Đại</h3>
+                <h3 class="fw-bold">Căn Hộ Hiện Đại</h3>
             </a>
         </div>
     </div>
@@ -31,7 +31,7 @@
 <section class="list-home">
     <div class="container">
         <h2 class="text-center fw-bold">Gần đây nhất</h2>
-        <div class="grid my-4" id="room-list">
+        <div class="grid my-3" id="room-list">
             @foreach($latestPosts as $boardingHouse)
             <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" class="card rounded my-2 d-flex flex-md-nowrap flex-md-row overflow-hidden pointer text-dark">
                 <img class="item-img skeleton" src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" alt="{{ $boardingHouse->category }}" loading="lazy" decoding="async"/>

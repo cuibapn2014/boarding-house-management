@@ -30,3 +30,19 @@
 .splide__slide.is-active {
     opacity: 1;
 }
+
+.splide__track--nav>.splide__list>.splide__slide.is-active {
+    border-color: var(--bs-success) !important;
+}
+
+@media screen and (max-width: 768px) {
+    .hero-image {
+        height: 350px !important;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .hero-image {
+        height: 200px !important;
+    }
+}

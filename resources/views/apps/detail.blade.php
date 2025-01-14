@@ -18,12 +18,12 @@
                 <section
                     id="thumbnail-carousel"
                     class="splide"
-                    aria-label="The carousel with thumbnails. Selecting a thumbnail will change the Beautiful Gallery carousel."
+                    aria-label="Ảnh phòng trọ được chọn hiển thị"
                 >
                     <div class="splide__track">
                         <ul class="splide__list">
                             @foreach($boardingHouse->boarding_house_files as $file)
-                            <li class="splide__slide">
+                            <li class="splide__slide rounded">
                                 <img src="{{ resizeImageCloudinary($file->url, 300, 200) }}" alt="Thumbnail phòng trọ" data-src="{{ resizeImageCloudinary($file->url, 800, 450) }}" class="skeleton" decoding="async">
                             </li>
                             @endforeach
@@ -58,7 +58,7 @@
                         {{ $boardingHouse->user_create->full_name }}
                     </strong>
                 </p>
-                <p>Zalo: <a href="{{ getZaloLink($boardingHouse->phone ?? $boardingHouse->user_create->phone) }}" target="_blank">{{ $boardingHouse->phone ?? $boardingHouse->user_create->phone }}</a></p>
+                <p>Zalo: <a href="{{ getZaloLink($boardingHouse->phone ?? $boardingHouse->user_create->phone) }}" aria-label="Người liên hệ" target="_blank">{{ $boardingHouse->phone ?? $boardingHouse->user_create->phone }}</a></p>
                 <p><i class="fa-solid fa-envelope text-warning mr-2"></i> <a>********@*****.com</a></p>
                 {{-- <button class="btn btn-primary w-100 mt-3">Gửi Tin Nhắn</button> --}}
             </div>
