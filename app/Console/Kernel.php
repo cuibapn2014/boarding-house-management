@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('db:backup')->weeklyOn(5);
+        $schedule->command('sitemap:generate')->dailyAt('00:00');
     }
 
     /**

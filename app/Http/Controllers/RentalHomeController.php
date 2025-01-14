@@ -82,7 +82,7 @@ class RentalHomeController extends Controller
                                                 'status',
                                             )
                                             ->inRandomOrder()
-                                            ->take(6)
+                                            ->take(8)
                                             ->get();
 
         return view('apps.detail', compact('boardingHouse', 'boardingHouseRelation'));

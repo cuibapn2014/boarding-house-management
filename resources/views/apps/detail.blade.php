@@ -10,6 +10,13 @@
     $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
 @endphp
 <div class="container" style="margin-top: 100px;">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item"><a href="{{ route('rentalHome.index') }}">Danh sách cho thuê</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ $boardingHouse->category }}</li>
+        </ol>
+      </nav>
     <!-- Room Details -->
     <div class="row">
         <div class="col-lg-8">
@@ -31,7 +38,7 @@
                     </div>
                 </section>
             </div>
-            <h1 class="fw-bold fs-2">{{ $boardingHouse->title }}</h1>
+            <h1 class="fw-bold fs-2 mt-1">{{ $boardingHouse->title }}</h1>
             <p class="text-muted">Đăng bởi <strong>{{ $boardingHouse->user_create->firstname }}</strong> | Cập nhật {{ dateForHumman($boardingHouse->updated_at) }}</p>
             <h2 class="fw-bold fs-3 text-success d-flex align-items-center" style="gap:5px;">
                 {{ numberFormatVi($boardingHouse->price) }}
@@ -59,7 +66,7 @@
                     </strong>
                 </p>
                 <p>Zalo: <a href="{{ getZaloLink($boardingHouse->phone ?? $boardingHouse->user_create->phone) }}" aria-label="Người liên hệ" target="_blank">{{ $boardingHouse->phone ?? $boardingHouse->user_create->phone }}</a></p>
-                <p><i class="fa-solid fa-envelope text-warning mr-2"></i> <a>********@*****.com</a></p>
+                <p><i class="fa-solid fa-envelope text-warning mr-2"></i> <span>********@*****.com</span></p>
                 {{-- <button class="btn btn-primary w-100 mt-3">Gửi Tin Nhắn</button> --}}
             </div>
         </div>
@@ -70,10 +77,10 @@
         <h3 class="fw-bold mb-2">Phòng Liên Quan</h3>
         <div class="row g-3">
             @foreach($boardingHouseRelation as $relation)
-            <a href="{{ route('rentalHome.show', ['id' => $relation->id, 'title' => $relation->slug]) }}" class="col-md-4 text-dark position-relative">
+            <a href="{{ route('rentalHome.show', ['id' => $relation->id, 'title' => $relation->slug]) }}" class="col-md-3 text-dark position-relative">
                 <div class="related-room">
                     <img src="{{ resizeImageCloudinary($relation->thumbnail, 400, 270) }}" alt="Phòng trọ 1" class="img-fluid rounded" decoding="async">
-                    <h5 class="mt-2">{{ $relation->title }}</h5>
+                    <h5 class="mt-2 fw-bold fs-5">{{ $relation->title }}</h5>
                     <span class="fs-6 {{ $boardingHouse->status == 'available' ? 'bg-success text-white' : 'bg-warning text-dark' }} p-1 position-absolute top-0 left-0" style="max-width: fit-content;">{{ $statues[$boardingHouse->status] }}</span>
                     <p class="fw-bold text-success">
                         {{ $relation->price / 1000000 }} triệu
@@ -103,8 +110,36 @@
     <meta name="twitter:title" content="{{ $boardingHouse->title }}">
     <meta name="twitter:description" content="{{ $boardingHouse->description }}">
     <meta name="twitter:image" content="{{ resizeImageCloudinary($boardingHouse->thumbnail, 1200, 600) }}">
+    <link rel="canonical" href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}">
 @endpush
 @push('jsonLD-sm')
+
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Trang chủ",
+                "item": "{{ route('home.index') }}"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Danh sách phòng cho thuê",
+                "item": "{{ route('rentalHome.index') }}"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "{{ $boardingHouse->category }}",
+                "item": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}"
+            }
+        ]
+    }
+</script>    
 <script type="application/ld+json">
     {
         "@context": "https://schema.org",
