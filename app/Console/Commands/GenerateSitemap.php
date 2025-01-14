@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Constants\SystemDefination;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Spatie\Sitemap\Sitemap;
@@ -31,7 +32,6 @@ class GenerateSitemap extends Command
     {
         //
         try {
-
             // Tạo sitemap mới
             $sitemap = Sitemap::create();
 
@@ -71,6 +71,52 @@ class GenerateSitemap extends Command
             $sitemap->add(Url::create(route('rentalHome.index', ['price' => ['5000000-7000000']]))
                 ->setPriority(0.9)
                 ->setChangeFrequency('daily'));
+
+            foreach(SystemDefination::LIST_DISTRICT as $district) {
+                $sitemap->add(
+                    Url::create(route('rentalHome.index', ['district' => [$district]]))
+                        ->setPriority(0.7)
+                        ->setChangeFrequency('weekly')
+                );
+            }
+
+            foreach(SystemDefination::LIST_DISTRICT as $district) {
+                $sitemap->add(
+                    Url::create(route('rentalHome.index', ['district' => [$district], 'price' => ['1000000-3000000']]))
+                        ->setPriority(0.7)
+                        ->setChangeFrequency('weekly')
+                );
+
+                $sitemap->add(
+                    Url::create(route('rentalHome.index', ['district' => [$district], 'price' => ['3000000-5000000']]))
+                        ->setPriority(0.7)
+                        ->setChangeFrequency('weekly')
+                );
+
+                $sitemap->add(
+                    Url::create(route('rentalHome.index', ['district' => [$district], 'price' => ['5000000-7000000']]))
+                        ->setPriority(0.7)
+                        ->setChangeFrequency('weekly')
+                );
+
+                $sitemap->add(
+                    Url::create(route('rentalHome.index', ['category' => ['Phòng'], 'district' => [$district], 'price' => ['1000000-3000000']]))
+                        ->setPriority(0.7)
+                        ->setChangeFrequency('weekly')
+                );
+
+                $sitemap->add(
+                    Url::create(route('rentalHome.index', ['category' => ['Phòng'], 'district' => [$district], 'price' => ['3000000-5000000']]))
+                        ->setPriority(0.7)
+                        ->setChangeFrequency('weekly')
+                );
+
+                $sitemap->add(
+                    Url::create(route('rentalHome.index', ['category' => ['Phòng'], 'district' => [$district], 'price' => ['5000000-7000000']]))
+                        ->setPriority(0.7)
+                        ->setChangeFrequency('weekly')
+                );
+            }
 
             // Thêm từng phòng chi tiết từ cơ sở dữ liệu
             $rentals = \App\Models\BoardingHouse::all();
