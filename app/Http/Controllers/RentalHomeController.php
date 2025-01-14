@@ -44,7 +44,7 @@ class RentalHomeController extends Controller
                                         'status',
                                         'created_at'
                                     )
-                                    ->groupBy('id')
+                                    // ->groupBy('id')
                                     ->orderByDesc('id')
                                     ->paginate(20)
                                     ->withQueryString();
@@ -72,6 +72,7 @@ class RentalHomeController extends Controller
         if(!$boardingHouse || $title != $boardingHouse->slug) abort(404);
 
         $boardingHouseRelation = BoardingHouse::where('district', $boardingHouse->district)
+                                            ->where('id', '!=', $boardingHouse->id)
                                             ->select(
                                                 'id',
                                                 'title',
