@@ -47,9 +47,12 @@
                     <span class="mx-2">Liên hệ</span>
                 </a>
             </div>
-            <div class="row" style="gap: 10px;font-size:.79rem">
-                <a href="{{ route('privacy.index') }}" class="item-menu col-md-12 text-white py-2">
+            <div class="d-flex flex-wrap flex-row" style="gap: 10px;font-size:.79rem">
+                <a href="{{ route('privacy.index') }}" class="item-menu text-white py-2">
                     <span class="mx-2">Chính sách bảo mật</span>
+                </a>
+                <a href="/sitemap.xml" class="item-menu text-white py-2">
+                    <span class="mx-2">Sơ đồ trang web</span>
                 </a>
             </div>
         </div>
