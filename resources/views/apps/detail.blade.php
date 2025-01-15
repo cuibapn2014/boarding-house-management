@@ -21,7 +21,11 @@
     <div class="row">
         <div class="col-lg-8">
             <div>
-                <img src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 800, 450) }}" alt="Phòng trọ đẹp" class="hero-image mb-4 w-100 skeleton" decoding="async">
+                <img src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 800, 450) }}" alt="{{ $boardingHouse->title }}" class="hero-image mb-4 w-100 skeleton" loading="lazy" decoding="async">
+                <video autoplay loop muted class="hero-video" controls hidden>
+                    <source src="" type="video/mp4">
+                    <span>Trình duyệt của bạn không hỗ trợ video.</span>
+                </video>
                 <section
                     id="thumbnail-carousel"
                     class="splide"
@@ -30,8 +34,13 @@
                     <div class="splide__track">
                         <ul class="splide__list">
                             @foreach($boardingHouse->boarding_house_files as $file)
-                            <li class="splide__slide rounded">
-                                <img src="{{ resizeImageCloudinary($file->url, 300, 200) }}" alt="Thumbnail phòng trọ" data-src="{{ resizeImageCloudinary($file->url, 800, 450) }}" class="skeleton" decoding="async">
+                            <li class="splide__slide rounded position-relative" aria-hidden="false">
+                                <img src="{{ resizeImageCloudinary($file->url, 300, 200) }}" alt="Thumbnail {{ $boardingHouse->title }}" data-media-type="{{ $file->type }}" data-src="{{ $file->type === 'image' ? resizeImageCloudinary($file->url, 800, 450) : $file->url }}" class="skeleton" loading="lazy" decoding="async">
+                                @if($file->type === 'video')
+                                <div class="position-absolute top-0 left-0 h-100 w-100 bg-dark text-white d-flex justify-content-center align-items-center" style="--bs-bg-opacity:0.6;">
+                                    <i class="fa-solid fa-video text-white" arial-label="Video phòng trọ"></i>
+                                </div>
+                                @endif
                             </li>
                             @endforeach
                         </ul>
@@ -79,7 +88,7 @@
             @foreach($boardingHouseRelation as $relation)
             <a href="{{ route('rentalHome.show', ['id' => $relation->id, 'title' => $relation->slug]) }}" class="col-md-3 text-dark position-relative">
                 <div class="related-room">
-                    <img src="{{ resizeImageCloudinary($relation->thumbnail, 400, 270) }}" alt="Phòng trọ 1" class="img-fluid rounded" decoding="async">
+                    <img src="{{ resizeImageCloudinary($relation->thumbnail, 400, 270) }}" alt="{{ $relation->title }}" class="img-fluid rounded" loading="lazy" decoding="async">
                     <h5 class="mt-2 fw-bold fs-5">{{ $relation->title }}</h5>
                     <span class="fs-6 {{ $boardingHouse->status == 'available' ? 'bg-success text-white' : 'bg-warning text-dark' }} p-1 position-absolute top-0 left-0" style="max-width: fit-content;">{{ $statues[$boardingHouse->status] }}</span>
                     <p class="fw-bold text-success">

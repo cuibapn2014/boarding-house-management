@@ -9,9 +9,27 @@ $(document).ready(function (){
             isNavigation: true
     } ).mount();
 
-    splide.on('active click', function(e) {
-        const imgActive = $(e.slide).find('img');
-        $('img.hero-image').attr('src', imgActive.data('src'));
+    splide.on('active, click', async function(e) {
+        const active = await $(e.slide).find('img');
+        const mediaType = await active.data('media-type');
+
+        if(mediaType === 'video') {
+            if($('video.hero-video source').first().attr('src') != active.data('src')) {
+                $('video.hero-video source').first().attr('src', active.data('src'));
+                document.querySelector('video.hero-video').load();
+            };
+            
+            $('video.hero-video').removeAttr('hidden');
+            $('img.hero-image').attr('hidden', true);
+            return;
+        }
+
+        if($('img.hero-image').attr('src') != active.data('src')) {
+            $('img.hero-image').attr('src', active.data('src'));
+        }
+
+        $('video.hero-video').attr('hidden', true);
+        $('img.hero-image').removeAttr('hidden');
     });
 
     $('img.hero-image.skeleton').removeClass('skeleton');

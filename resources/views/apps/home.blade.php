@@ -1,5 +1,5 @@
 @extends('master')
-@section('title', 'Home')
+@section('title', 'Nhà trọ tốt sài gòn: Cho thuê phòng trọ, nhà trọ giá tốt ở khu vực Hồ Chí Minh')
 @push('css')
     <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image"/>
     <link rel="stylesheet" href="{{ asset('assets/css/apps/home/style.css') }}"/>
@@ -60,16 +60,53 @@
 @push('seo')
     <meta name="title" content="Tìm kiếm và thuê phòng trọ, nhà nguyên căn, căn hộ hiện đại dễ dàng với Nhatrototsaigon"/>
     <meta name="description" content="Tìm kiếm và thuê phòng trọ, nhà nguyên căn, căn hộ hiện đại dễ dàng với Nhatrototsaigon. Khám phá hàng ngàn chỗ ở hoàn hảo cho bạn.">
-    <meta name="keywords" content="thuê phòng trọ, thuê nhà nguyên căn, thuê căn hộ, tìm kiếm chỗ ở, phòng trọ giá rẻ, nhà cho thuê, nhatrototsaigon">
+    <meta name="keywords" content="thuê phòng trọ, thuê nhà nguyên căn, thuê căn hộ, tìm kiếm chỗ ở, phòng trọ giá rẻ, nhà cho thuê, nhatrototsaigon, nhà trọ tốt sài gòn">
     <meta name="author" content="Nhatrototsaigon Team">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Trang Chủ Thuê Phòng Hiện Đại - {{ config('app.name') }}">
+    <meta property="og:title" content="Nhà trọ tốt sài gòn: Cho thuê phòng trọ, nhà trọ giá tốt ở khu vực Hồ Chí Minh - {{ config('app.name') }}">
     <meta property="og:description" content="Khám phá hàng ngàn phòng trọ và nhà cho thuê dễ dàng. Tìm chỗ ở hoàn hảo gần bạn.">
     <meta property="og:image" content="{{ asset('assets/images/hero-background.webp') }}">
     <meta property="og:url" content="{{ route('home.index') }}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Trang Chủ Thuê Phòng Hiện Đại - {{ config('app.name') }}">
+    <meta name="twitter:title" content="Nhà trọ tốt sài gòn: Cho thuê phòng trọ, nhà trọ giá tốt ở khu vực Hồ Chí Minh - {{ config('app.name') }}">
     <meta name="twitter:description" content="Khám phá hàng ngàn phòng trọ và nhà cho thuê dễ dàng. Tìm chỗ ở hoàn hảo gần bạn.">
     <meta name="twitter:image" content="{{ asset('assets/images/hero-background.webp') }}">
     <link rel="canonical" href="{{ route('home.index') }}">
+@endpush
+@push('jsonLD-lg')
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": [
+            @foreach($latestPosts as $boardingHouse)
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}",
+                "item": {
+                    "@type": "RentalProperty",
+                    "name": "{{ $boardingHouse->title }}",
+                    "description": "{{ $boardingHouse->description }}",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": "{{ $boardingHouse->address }}",
+                        "addressLocality": "{{ $boardingHouse->district }}",
+                        "addressRegion": "Hồ Chí Minh",
+                        "postalCode": "700000",
+                        "addressCountry": "VN"
+                    },
+                    "offers": {
+                        "@type": "Offer",
+                        "price": "{{ $boardingHouse->price }}",
+                        "priceCurrency": "VND",
+                        "availability": "https://schema.org/InStock"
+                    },
+                    "image": "{{ $boardingHouse->thumbnail }}"
+                }
+            }@if (!$loop->last),@endif
+            @endforeach
+        ]
+    }
+</script>
 @endpush

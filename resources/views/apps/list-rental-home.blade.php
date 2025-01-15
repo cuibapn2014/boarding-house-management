@@ -1,5 +1,5 @@
 @extends('master')
-@section('title', 'Danh sách cho thuê')
+@section('title', 'Danh sách cho thuê - Nhà trọ tốt sài gòn')
 @push('css')
     <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image"/>
     <link rel="stylesheet" href="{{ asset('assets/css/apps/rental-home/style.css') }}"/>
@@ -27,7 +27,7 @@
             <div class="grid" id="room-list">
                 @forelse($boardingHouses as $boardingHouse)
                     <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" class="card rounded mb-3 d-flex flex-md-nowrap flex-md-row overflow-hidden position-relative text-dark">
-                        <img class="item-img skeleton" src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" alt="{{ $boardingHouse->category }}" loading="lazy" decoding="lazy"/>
+                        <img class="item-img skeleton" src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" alt="{{ $boardingHouse->category }}" loading="lazy" decoding="async"/>
                         <div class="item-info flex-grow-1 p-2">
                             <h3 class="__title text-lg fw-bold fs-5">{{ $boardingHouse->title }}</h3>
                             <h4 class="text-success text-md fw-bold fs-4 mt-2">
@@ -77,15 +77,15 @@
 @push('seo')
     <meta name="title" content="Tìm kiếm và thuê phòng trọ, nhà nguyên căn, căn hộ hiện đại dễ dàng với Nhatrototsaigon"/>
     <meta name="description" content="Tìm kiếm và thuê phòng trọ, nhà nguyên căn, căn hộ hiện đại dễ dàng với Nhatrototsaigon. Khám phá hàng ngàn chỗ ở hoàn hảo cho bạn.">
-    <meta name="keywords" content="thuê phòng trọ, thuê nhà nguyên căn, thuê căn hộ, tìm kiếm chỗ ở, phòng trọ giá rẻ, nhà cho thuê, nhatrototsaigon">
+    <meta name="keywords" content="thuê phòng trọ, thuê nhà nguyên căn, thuê căn hộ, tìm kiếm chỗ ở, phòng trọ giá rẻ, nhà cho thuê, nhatrototsaigon, nhà trọ giá tốt sài gòn">
     <meta name="author" content="Nhatrototsaigon Team">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Trang Chủ Thuê Phòng Hiện Đại - {{ config('app.name') }}ễ">
+    <meta property="og:title" content="Nhà trọ tốt sài gòn: Cho thuê phòng trọ, nhà trọ giá tốt ở khu vực Hồ Chí Minh - {{ config('app.name') }}">
     <meta property="og:description" content="Khám phá hàng ngàn phòng trọ và nhà cho thuê dễ dàng. Tìm chỗ ở hoàn hảo gần bạn.">
     <meta property="og:image" content="{{ asset('assets/images/hero-background.webp') }}">
     <meta property="og:url" content="{{ route('rentalHome.index') }}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Trang Chủ Thuê Phòng Hiện Đại - {{ config('app.name') }}">
+    <meta name="twitter:title" content="Nhà trọ tốt sài gòn: Cho thuê phòng trọ, nhà trọ giá tốt ở khu vực Hồ Chí Minh - {{ config('app.name') }}">
     <meta name="twitter:description" content="Khám phá hàng ngàn phòng trọ và nhà cho thuê dễ dàng. Tìm chỗ ở hoàn hảo gần bạn.">
     <meta name="twitter:image" content="{{ asset('assets/images/hero-background.webp') }}">
     <link rel="canonical" href="{{ route('rentalHome.index') }}">
