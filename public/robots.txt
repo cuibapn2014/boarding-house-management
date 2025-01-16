@@ -1,2 +1,8 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /cgi-bin/
+Disallow: /storage/
+Disallow: /storage/logs/
+Disallow: /storage/framework
+
+Sitemap: https://nhatrototsaigon.com/sitemap.xml
