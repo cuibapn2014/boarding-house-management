@@ -14,15 +14,15 @@
         <h2 class="fw-bold">Danh Mục Nổi Bật</h2>
         <div class="grid" id="room-list">
             <a href="{{ route('rentalHome.index', ['category' => ['Phòng']]) }}" class="card pointer text-dark">
-                <img class="skeleton" src="{{ asset('assets/images/rental-category.webp') }}" alt="Phòng Trọ" loading="lazy" decoding="async">
+                <img class="skeleton" src="{{ asset('assets/images/room.webp') }}" alt="Phòng Trọ" loading="lazy" decoding="async">
                 <h3 class="fw-bold">Phòng Trọ Giá Rẻ</h3>
             </a>
             <a href="{{ route('rentalHome.index', ['category' => ['KTX', 'SLEEPBOX']]) }}" class="card pointer text-dark">
-                <img class="skeleton" src="{{ asset('assets/images/rental-sleepbox-category.webp') }}" alt="KTX/Sleepbox" loading="lazy" decoding="async">
+                <img class="skeleton" src="{{ asset('assets/images/sleepbox.webp') }}" alt="KTX/Sleepbox" loading="lazy" decoding="async">
                 <h3 class="fw-bold">KTX/Sleepbox Sang Trọng</h3>
             </a>
             <a href="{{ route('rentalHome.index', ['category' => ['Nhà nguyên căn']]) }}" class="card pointer text-dark">
-                <img class="skeleton" src="{{ asset('assets/images/hero-background.webp') }}" alt="Căn Hộ" loading="lazy" decoding="async">
+                <img class="skeleton" src="{{ asset('assets/images/house.webp') }}" alt="Căn Hộ" loading="lazy" decoding="async">
                 <h3 class="fw-bold">Căn Hộ Hiện Đại</h3>
             </a>
         </div>
@@ -89,6 +89,7 @@
                     "name": "{{ $boardingHouse->title }}",
                     "description": "{{ $boardingHouse->description }}",
                     "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}",
+                    "image": "{{ $boardingHouse->thumbnail }}",
                     "address": {
                         "@type": "PostalAddress",
                         "streetAddress": "{{ $boardingHouse->address }}",
@@ -102,8 +103,7 @@
                         "price": "{{ $boardingHouse->price }}",
                         "priceCurrency": "VND",
                         "availability": "https://schema.org/InStock"
-                    },
-                    "image": "{{ $boardingHouse->thumbnail }}"
+                    }
                 }
             }@if (!$loop->last),@endif
             @endforeach

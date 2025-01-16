@@ -5,4 +5,5 @@
         <a href="{{ route('rentalHome.index') }}" title="Danh sách cho thuê">Xem Danh Sách</a>
     </div>
     <div class="hero-overlay bg-black position-absolute"></div>
+    <img class="position-absolute w-100 h-100 top-0 z-0" src="{{ asset('assets/images/hero-background.webp') }}" alt="Background nhà trọ tốt sài gòn" loading="lazy" decoding="async">
 </section>

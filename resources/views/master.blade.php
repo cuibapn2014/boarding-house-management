@@ -19,7 +19,7 @@
     {{-- Font Awnsome --}}
     <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/fontawesome.min.css') }}" rel="stylesheet" lazyload/>
     <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/solid.min.css') }}" rel="stylesheet" lazyload/>
-    {{-- <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/brands.css') }}" rel="stylesheet" /> --}}
+    <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/brands.css') }}" rel="stylesheet" />
     {{-- <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/sharp-thin.css') }}" rel="stylesheet" />
     <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/duotone-thin.css') }}" rel="stylesheet" />
     <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/sharp-duotone-thin.css') }}" rel="stylesheet" /> --}}

@@ -111,6 +111,7 @@
                     "name": "{{ $boardingHouse->title }}",
                     "description": "{{ $boardingHouse->description }}",
                     "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}",
+                    "image": "{{ $boardingHouse->thumbnail }}",
                     "address": {
                         "@type": "PostalAddress",
                         "streetAddress": "{{ $boardingHouse->address }}",
@@ -124,8 +125,7 @@
                         "price": "{{ $boardingHouse->price }}",
                         "priceCurrency": "VND",
                         "availability": "https://schema.org/InStock"
-                    },
-                    "image": "{{ $boardingHouse->thumbnail }}"
+                    }
                 }
             }@if (!$loop->last),@endif
             @endforeach

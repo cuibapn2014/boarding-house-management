@@ -189,7 +189,6 @@ header button {
 
 /* Hero Section */
 .hero {
-    background: url('../../assets/images/hero-background.webp') no-repeat center/cover;
     padding: 5rem 0;
     text-align: center;
     margin-top: 75px; /* For fixed header */
@@ -201,6 +200,7 @@ header button {
     font-size: 1.2rem !important;
     margin: 1rem 0;
 }
+
 .hero a {
     padding: 1rem 2rem;
     border: none;
@@ -209,6 +209,11 @@ header button {
     border-radius: 5px;
     cursor: pointer;
     font-size: 1rem !important;
+}
+
+.hero img {
+    left: 0;
+    object-fit: cover;
 }
 
 #loading {
