@@ -201,7 +201,7 @@ header button {
     font-size: 1.2rem !important;
     margin: 1rem 0;
 }
-.hero button {
+.hero a {
     padding: 1rem 2rem;
     border: none;
     background: #ff6b6b;

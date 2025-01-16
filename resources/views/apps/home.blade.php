@@ -79,15 +79,16 @@
         "@context": "https://schema.org",
         "@type": "ItemList",
         "itemListElement": [
-            @foreach($latestPosts as $boardingHouse)
+            @foreach($latestPosts as $index => $boardingHouse)
             {
                 "@type": "ListItem",
-                "position": 1,
+                "position": {{ $index + 1 }},
                 "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}",
                 "item": {
                     "@type": "RentalProperty",
                     "name": "{{ $boardingHouse->title }}",
                     "description": "{{ $boardingHouse->description }}",
+                    "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}",
                     "address": {
                         "@type": "PostalAddress",
                         "streetAddress": "{{ $boardingHouse->address }}",

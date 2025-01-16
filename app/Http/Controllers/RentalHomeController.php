@@ -37,6 +37,7 @@ class RentalHomeController extends Controller
                                         'id',
                                         'title',
                                         'category',
+                                        'description',
                                         'address',
                                         'district',
                                         'ward',

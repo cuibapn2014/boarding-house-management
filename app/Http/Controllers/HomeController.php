@@ -38,7 +38,9 @@ class HomeController extends Controller
                                     ->select(
                                         'id',
                                         'title',
+                                        'description',
                                         'category',
+                                        'address',
                                         'district',
                                         'ward',
                                         'price',
