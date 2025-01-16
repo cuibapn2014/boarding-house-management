@@ -105,7 +105,6 @@
             {
                 "@type": "ListItem",
                 "position": {{ $boardingHouses->firstItem() + $index }},
-                "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}",
                 "item": {
                     "@type": "RentalProperty",
                     "name": "{{ $boardingHouse->title }}",
