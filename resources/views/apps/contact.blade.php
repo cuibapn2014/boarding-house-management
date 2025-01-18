@@ -1,5 +1,5 @@
 @extends('master')
-@section('title', 'Liên hệ')
+@section('title', 'Liên Hệ')
 @push('css')
     <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image"/>
     <style>

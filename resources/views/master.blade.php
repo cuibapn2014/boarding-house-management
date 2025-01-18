@@ -8,7 +8,7 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="vi_VN">
     @stack('seo')
-    <meta name="apple-mobile-web-app-title" content="Nhatrototsaigon" />
+    <meta name="apple-mobile-web-app-title" content="NhaTroTotSaiGon" />
     <meta name="theme-color" content="#4CAF50"/>
     <link rel="icon" type="image/png" href="{{ asset('/assets/images/favicon/favicon-96x96.png') }}" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/images/favicon/favicon.svg') }}" />
@@ -19,14 +19,13 @@
     {{-- Font Awnsome --}}
     <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/fontawesome.min.css') }}" rel="stylesheet" lazyload/>
     <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/solid.min.css') }}" rel="stylesheet" lazyload/>
-    <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/brands.css') }}" rel="stylesheet" />
-    {{-- <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/sharp-thin.css') }}" rel="stylesheet" />
-    <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/duotone-thin.css') }}" rel="stylesheet" />
-    <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/sharp-duotone-thin.css') }}" rel="stylesheet" /> --}}
+    <link href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/brands.min.css') }}" rel="stylesheet" lazyload/>
 
     {{-- CSS File --}}
     <link href="{{ asset('/assets/css/bootstrap.min.css') }}" rel="stylesheet" lazyload/>
-    <link href="{{ asset('/assets/css/style.css') }}" rel="stylesheet" />
+    <link href="{{ asset('/assets/css/style.css') }}" rel="stylesheet" lazyload/>
+
+    <link rel="preload" href="{{ asset('assets/images/icon/logo.png') }}" as="image"/>
     @stack('css')
 
     @stack('jsonLD-sm')
@@ -51,8 +50,8 @@
 
     @include('layouts.footer')
 
-    <div id="scroll-to-top" class="btn btn-outline-success" style="display: none">
-        <i class="fa-solid fa-chevron-up"></i>
+    <div id="scroll-to-top" class="btn btn-outline-success" style="display: none" aria-label="Quay về đầu trang">
+        <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
     </div>
 
     @include('components.loading')

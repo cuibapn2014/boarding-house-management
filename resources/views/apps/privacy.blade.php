@@ -1,5 +1,5 @@
 @extends('master')
-@section('title', 'Chính sách bảo mật')
+@section('title', 'Chính Sách Bảo Mật')
 @push('css')
 <style>
     .container-custom {

@@ -1,7 +1,7 @@
 @extends('master')
 @section('title', $boardingHouse->title)
 @push('css')
-    <link href="{{ asset('assets/css/splide.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/splide.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('assets/css/apps/rental-home/detail_style.css') }}" rel="stylesheet" />
 @endpush
 @section('content')
@@ -21,11 +21,7 @@
     <div class="row">
         <div class="col-lg-8">
             <div>
-                <img src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 800, 450) }}" alt="{{ $boardingHouse->title }}" class="hero-image mb-4 w-100 skeleton" loading="lazy" decoding="async">
-                <video autoplay loop muted class="hero-video" controls hidden>
-                    <source src="" type="video/mp4">
-                    <span>Trình duyệt của bạn không hỗ trợ video.</span>
-                </video>
+                <div class="hero-container mb-2 skeleton"></div>
                 <section
                     id="thumbnail-carousel"
                     class="splide"
@@ -174,5 +170,4 @@
         "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}"
     }
     </script>
-    
 @endpush

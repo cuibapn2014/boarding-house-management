@@ -1,9 +1,16 @@
-.hero-image, .hero-video {
-    width: 100%;
-    height: 450px;
+.hero-container img, .hero-container video {
     object-fit: contain;
     border-radius: 8px;
+    height: 100%;
+    width: 100%;
+    background: #f7f7f7;
 }
+
+.hero-container {
+    width: 100%;
+    height: 450px;
+}
+
 .contact-card {
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -36,13 +43,13 @@
 }
 
 @media screen and (max-width: 768px) {
-    .hero-image, .hero-video {
+    .hero-container {
         height: 350px !important;
     }
 }
 
 @media screen and (max-width: 576px) {
-    .hero-image, .hero-video {
+    .hero-container {
         height: 200px !important;
     }
 }

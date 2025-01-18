@@ -1,5 +1,5 @@
 @extends('master')
-@section('title', 'Danh sách cho thuê - Nhà trọ tốt sài gòn')
+@section('title', 'Danh Sách Cho Yhuê - Nhà Trọ Tốt Sài Gòn')
 @push('css')
     <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image"/>
     <link rel="stylesheet" href="{{ asset('assets/css/apps/rental-home/style.css') }}"/>
@@ -80,12 +80,12 @@
     <meta name="keywords" content="thuê phòng trọ, thuê nhà nguyên căn, thuê căn hộ, tìm kiếm chỗ ở, phòng trọ giá rẻ, nhà cho thuê, nhatrototsaigon, nhà trọ giá tốt sài gòn">
     <meta name="author" content="Nhatrototsaigon Team">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Nhà trọ tốt sài gòn: Cho thuê phòng trọ, nhà trọ giá tốt ở khu vực Hồ Chí Minh - {{ config('app.name') }}">
+    <meta property="og:title" content="Nhà Trọ Tốt Sài Sòn: Cho thuê phòng trọ, nhà trọ giá tốt ở khu vực Hồ Chí Minh - {{ config('app.name') }}">
     <meta property="og:description" content="Khám phá hàng ngàn phòng trọ và nhà cho thuê dễ dàng. Tìm chỗ ở hoàn hảo gần bạn.">
     <meta property="og:image" content="{{ asset('assets/images/hero-background.webp') }}">
     <meta property="og:url" content="{{ route('rentalHome.index') }}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Nhà trọ tốt sài gòn: Cho thuê phòng trọ, nhà trọ giá tốt ở khu vực Hồ Chí Minh - {{ config('app.name') }}">
+    <meta name="twitter:title" content="Nhà Trọ Tốt Sài Gòn: Cho thuê phòng trọ, nhà trọ giá tốt ở khu vực Hồ Chí Minh - {{ config('app.name') }}">
     <meta name="twitter:description" content="Khám phá hàng ngàn phòng trọ và nhà cho thuê dễ dàng. Tìm chỗ ở hoàn hảo gần bạn.">
     <meta name="twitter:image" content="{{ asset('assets/images/hero-background.webp') }}">
     <link rel="canonical" href="{{ route('rentalHome.index') }}">
