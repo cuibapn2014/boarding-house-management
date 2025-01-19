@@ -37,6 +37,8 @@ Route::get('/', function () {return redirect('/dashboard');})->middleware('auth'
 	Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
 	Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
 Route::group(['middleware' => 'auth'], function () {
+	Route::get('/boarding-house/{id}/create-appointment', [\App\Http\Controllers\BoardingHouseController::class , 'createAppointment'])->name('boarding-house.createAppointment');
+	Route::post('/boarding-house/{id}/create-appointment', [\App\Http\Controllers\BoardingHouseController::class, 'storeAppointment'])->name('boarding-house.storeAppointment');
 	Route::resource('/boarding-house', \App\Http\Controllers\BoardingHouseController::class);
 	
 	// Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');

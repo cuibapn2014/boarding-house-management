@@ -13,4 +13,10 @@ class SystemDefination {
         'Phòng' => 'Phòng',
         'Nhà nguyên căn' => 'Nhà nguyên căn'
     ];
+
+    const APPOINTMENT_STATUS = [
+        'WAITING_CONFIRM' => 'Chờ xác nhận',
+        'CONFIRMED' => 'Đã xác nhận',
+        'CANCELED' => 'Đã huỷ',
+    ];
 }

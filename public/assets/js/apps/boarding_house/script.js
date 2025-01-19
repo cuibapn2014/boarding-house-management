@@ -73,6 +73,9 @@ $(document).ready(function() {
     $(document).on('change', '#createBoardingHouseModal #district, #editBoardingHouseModal #district', BoardingHouse.handleSelectDistrict);
 
     $(document).on('click', '#btn-advance-filter', () => handleClickAdvanceFilter());
+
+    $(document).on('click', '.create-appointment', BoardingHouse.showModalCreateAppointment);
+    $(document).on('click', '#createAppointmentModal #btn-submit', BoardingHouse.storeAppointment);
 });
 
 function search(ele) {

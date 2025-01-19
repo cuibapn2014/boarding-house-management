@@ -305,5 +305,83 @@ const BoardingHouse = {
                 <option value="${item.name}">${item.name}</option>
             `);
         });
-    }
+    },
+
+    showModalCreateAppointment: function(e) {
+        e.preventDefault();
+
+        const url = $(this).data('url');
+        const modalCreate = $('#createAppointmentModal');
+
+        const handleSuccess = function(response) {
+            modalCreate.find('.modal-body').html(response);
+            flatpickr('#createAppointmentModal #move_in_date', {
+                enableTime: false,
+                dateFormat: "d/m/Y",
+                locale: 'vn',
+                disableMobile: true,
+                time_24h: true,
+                allowInput: true
+            });
+
+            flatpickr('#createAppointmentModal #appointment_at', {
+                enableTime: true,
+                dateFormat: "d/m/Y H:i",
+                locale: 'vn',
+                disableMobile: true,
+                time_24h: true,
+                allowInput: true
+            });
+
+            modalCreate.modal('show');
+        }
+
+        ApiHelper
+            .callApi(url, 'GET', {}, {}, {}, null, handleSuccess)
+            .then(() => {})
+            .catch(err => console.log(err));
+    },
+
+    storeAppointment: async function(e) {
+        e.preventDefault();
+
+        const modal = $('#createAppointmentModal');
+        const form = $('#formCreateAppointment');
+        const formData = new FormData(form[0]);
+        const url = form.attr('action');
+        const method = form.attr('method');
+        const _token = $('meta[name="csrf_token"]').attr('content');
+
+        $('.input-error-message').remove();
+
+        const handleSuccess = function(response) {
+            if(response.status === 'error') {
+                GlobalHelper.toastError(response.message);
+                return;
+            }
+
+            GlobalHelper.toastSuccess(response.message);
+            modal.modal('hide');
+            // BoardingHouse.loadData();
+        }
+        
+        await ApiHelper
+        .callApi(url, 
+            method, 
+            formData, 
+            {
+                "X-CSRF-TOKEN" : _token
+            }, 
+            {
+                processData: false,
+                contentType: false,
+            }, 
+            () => modal.find('#btn-submit').prop('disabled', true), 
+            handleSuccess,
+            null,
+            () => modal.find('#btn-submit').prop('disabled', false)
+        )
+        .then(() => {})
+        .catch(err => {});
+    },
 }
