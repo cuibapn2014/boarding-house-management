@@ -68,7 +68,7 @@
     <meta property="og:image" content="{{ asset('assets/images/hero-background.webp') }}">
     <meta property="og:url" content="{{ route('home.index') }}">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content=": Cho thuê phòng trọ, nhà trọ giá tốt ở khu vực Hồ Chí Minh - {{ config('app.name') }}">
+    <meta name="twitter:title" content="Nhà Trọ Tốt Sài Gòn: Cho thuê phòng trọ, nhà trọ giá tốt ở khu vực Hồ Chí Minh - {{ config('app.name') }}">
     <meta name="twitter:description" content="Khám phá hàng ngàn phòng trọ và nhà cho thuê dễ dàng. Tìm chỗ ở hoàn hảo gần bạn.">
     <meta name="twitter:image" content="{{ asset('assets/images/hero-background.webp') }}">
     <link rel="canonical" href="{{ route('home.index') }}">
@@ -84,7 +84,7 @@
                 "@type": "ListItem",
                 "position": {{ $index + 1 }},
                 "item": {
-                    "@type": "RentalProperty",
+                    "@type": "Property",
                     "name": "{{ $boardingHouse->title }}",
                     "description": "{{ $boardingHouse->description }}",
                     "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}",

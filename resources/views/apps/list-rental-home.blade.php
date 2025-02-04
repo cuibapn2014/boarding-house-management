@@ -1,5 +1,5 @@
 @extends('master')
-@section('title', 'Danh Sách Cho Yhuê - Nhà Trọ Tốt Sài Gòn')
+@section('title', 'Danh Sách Cho Thuê - Nhà Trọ Tốt Sài Gòn')
 @push('css')
     <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image"/>
     <link rel="stylesheet" href="{{ asset('assets/css/apps/rental-home/style.css') }}"/>
@@ -106,7 +106,7 @@
                 "@type": "ListItem",
                 "position": {{ $boardingHouses->firstItem() + $index }},
                 "item": {
-                    "@type": "RentalProperty",
+                    "@type": "Property",
                     "name": "{{ $boardingHouse->title }}",
                     "description": "{{ $boardingHouse->description }}",
                     "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}",

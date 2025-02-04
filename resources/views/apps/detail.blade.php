@@ -148,7 +148,7 @@
 <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "RentalProperty",
+        "@type": "Property",
         "name": "{{ $boardingHouse->title }}",
         "description": "{{ $boardingHouse->description }}",
         "image": "{{ resizeImageCloudinary($boardingHouse->thumbnail, 1200, 600) }}",
@@ -169,5 +169,5 @@
         },
         "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}"
     }
-    </script>
+</script>
 @endpush
