@@ -28,6 +28,31 @@
     <link rel="preload" href="{{ asset('assets/images/icon/logo.png') }}" as="image"/>
     @stack('css')
 
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Nhà Trọ Tốt Sài Gòn",
+            "alternateName": "Nhà Trọ Tốt Sài Gòn",
+            "url": "{{ url('/') }}",
+            "description": "Tìm kiếm và thuê phòng trọ, nhà nguyên căn, căn hộ hiện đại dễ dàng với Nhatrototsaigon. Khám phá hàng ngàn chỗ ở hoàn hảo cho bạn.",
+            "publisher": {
+              "@type": "Organization",
+              "name": "Nhà Trọ Tốt Sài Gòn",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "{{ asset('assets/images/icon/logo.png') }}",
+                "width": 200,
+                "height": 60
+              }
+            },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "{{ url(route('rentalHome.index')) }}?category={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          }           
+    </script>
     @stack('jsonLD-sm')
 
     @if(env('G_TAG_ID'))
