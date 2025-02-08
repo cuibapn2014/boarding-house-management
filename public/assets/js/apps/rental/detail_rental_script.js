@@ -40,6 +40,26 @@ $(document).ready(function (){
     });
 
     $('img.hero-image.skeleton').removeClass('skeleton');
+
+    flatpickr('#createAppointmentModal #move_in_date', {
+        enableTime: false,
+        dateFormat: "d/m/Y",
+        locale: 'vn',
+        disableMobile: true,
+        time_24h: true,
+        allowInput: true
+    });
+
+    flatpickr('#createAppointmentModal #appointment_at', {
+        enableTime: true,
+        dateFormat: "d/m/Y H:i",
+        locale: 'vn',
+        disableMobile: true,
+        time_24h: true,
+        allowInput: true
+    });
+
+    $(document).on('click', '#createAppointmentModal #btn-submit', storeAppointment);
 });
 
 
@@ -68,4 +88,47 @@ function generateImgOrVideo(item) {
     }
 
     return element;
+}
+
+const storeAppointment = async function(e) {
+    e.preventDefault();
+
+    const modal = $('#createAppointmentModal');
+    const form = modal.find('#formCreateAppointment');
+    const formData = new FormData(form[0]);
+    const url = form.attr('action');
+    const method = form.attr('method');
+    const _token = $('meta[name="csrf_token"]').attr('content');
+
+    $('.input-error-message').remove();
+
+    const handleSuccess = function(response) {
+        if(response.status === 'error') {
+            GlobalHelper.toastError(response.message);
+            return;
+        }
+
+        GlobalHelper.toastSuccess(response.message);
+        form[0].reset();
+        modal.modal('hide');
+    }
+    
+    await ApiHelper
+    .callApi(url, 
+        method, 
+        formData, 
+        {
+            "X-CSRF-TOKEN" : _token
+        }, 
+        {
+            processData: false,
+            contentType: false,
+        }, 
+        () => modal.find('#btn-submit').prop('disabled', true), 
+        handleSuccess,
+        null,
+        () => modal.find('#btn-submit').prop('disabled', false)
+    )
+    .then(() => {})
+    .catch(err => {});
 }

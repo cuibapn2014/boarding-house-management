@@ -1,6 +1,8 @@
 @extends('master')
 @section('title', $boardingHouse->title)
 @push('css')
+<link href="{{ asset('vendor/toastify/css/toastify.min.css') }}" rel="stylesheet"/>
+<link href="{{ asset('vendor/flatpickr/css/flatpickr.min.css') }}" rel="stylesheet"/>
 <link href="{{ asset('assets/css/splide.min.css') }}" rel="stylesheet" />
 <link href="{{ asset('assets/css/apps/rental-home/detail_style.css') }}" rel="stylesheet" />
 @endpush
@@ -87,7 +89,7 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
                         $boardingHouse->user_create->phone }}</a></p>
                 <p><i class="fa-solid fa-envelope text-warning mr-2"></i> <span>********@*****.com</span></p>
                 <div class="contact__divide mx-auto my-2">Hoặc</div>
-                <button class="btn btn-success w-100">Đặt lịch xem phòng</button>
+                <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#createAppointmentModal">Đặt lịch xem phòng</button>
             </div>
         </div>
     </div>
@@ -118,8 +120,23 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
     </div>
     @endif
 </div>
+@include('components.modals.create-appointment', [
+'id' => 'createAppointment',
+'title' => 'Tạo lịch hẹn xem phòng',
+'size' => 'lg',
+'okText' => 'Đặt lịch ngay',
+'b_title' => $boardingHouse->slug,
+'b_id' => $boardingHouse->id
+])
 @endsection
 @push('js')
+{{-- Flatpickr --}}
+<script src="{{ asset('/vendor/flatpickr/js/flatpickr.min.js') }}"></script>
+<script src="{{ asset('/vendor/flatpickr/js/vn.js') }}"></script>
+
+<script src="{{ asset('/vendor/toastify/js/toastify.min.js') }}"></script>
+<script src="{{ asset('assets/js/helper/global_helper.js') }}"></script>
+<script src="{{ asset('assets/js/helper/ApiHelper.js') }}"></script>
 <script src="{{ asset('/assets/js/core/splide.min.js') }}"></script>
 <script src="{{ asset('assets/js/apps/rental/detail_rental_script.js') }}"></script>
 @endpush

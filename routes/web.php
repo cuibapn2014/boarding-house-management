@@ -47,3 +47,5 @@ Route::group(['prefix' => 'danh-sach-cho-thue'], function () {
 	Route::get('/', [\App\Http\Controllers\RentalHomeController::class, 'index'])->name('rentalHome.index');
 	Route::get('/{id}/{title}', [\App\Http\Controllers\RentalHomeController::class, 'show'])->name('rentalHome.show');
 });
+
+Route::post('/{id}/{title}/create-appointment', [\App\Http\Controllers\AppointmentController::class, 'store'])->name('appointment.store');

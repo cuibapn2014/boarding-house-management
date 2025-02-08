@@ -8,11 +8,12 @@
         </button>
       </div>
       <div class="modal-body scroll-modal">
+        @yield('modal-body')
       </div>
       <div class="modal-footer">
         <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Đóng</button>
         @if(!($readyOnly ?? false))
-        <button id="{{ $btnId ?? 'btn-submit' }}" type="button" class="btn bg-gradient-primary">
+        <button id="{{ $btnId ?? 'btn-submit' }}" type="button" class="btn btn-success">
           <div class="spinner-border" role="status" style="width: 15.5px;height: 15.5px;display:none">
             <span class="visually-hidden">Loading...</span>
           </div>
