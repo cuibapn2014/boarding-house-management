@@ -24,26 +24,28 @@
     </aside>
     <section class="list-home flex-grow-1">
         <div class="container">
-            <div class="grid" id="room-list">
+            <div class="d-flex flex-wrap justify-content-md-center" id="room-list">
                 @forelse($boardingHouses as $boardingHouse)
-                    <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" class="card rounded mb-3 d-flex flex-md-nowrap flex-md-row overflow-hidden position-relative text-dark">
-                        <img class="item-img skeleton" src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" alt="{{ $boardingHouse->category }}" loading="lazy" decoding="async"/>
-                        <div class="item-info flex-grow-1 p-2">
-                            <h3 class="__title text-lg fw-bold fs-5">{{ $boardingHouse->title }}</h3>
-                            <h4 class="text-success text-md fw-bold fs-4 mt-2">
-                                {{ numberFormatVi($boardingHouse->price) }}
-                                <sup><u>đ</u></sup>
-                            </h4>
-                            <h5 class="text-sm fs-6">
-                                <i class="fa-solid fa-location-dot text-danger"></i>
-                                <span>{{ $boardingHouse->district }}</span>
-                            </h5>
-                            <h5 class="text-sm fs-6 mb-0">
-                                <i class="fa-solid fa-clock" style="color:#b0b0b0"></i>
-                                <span>{{ dateForHumman($boardingHouse->created_at) }}</span>
-                            </h5>
+                    <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" class="flex-grow-1 col-md-12 col-6 px-1">
+                        <div class="card rounded mb-3 d-flex flex-md-nowrap flex-md-row overflow-hidden position-relative text-dark">
+                            <img class="item-img skeleton" src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" alt="{{ $boardingHouse->category }}" loading="lazy" decoding="async"/>
+                            <div class="item-info flex-grow-1 p-2">
+                                <h3 class="__title text-lg fw-bold fs-5">{{ $boardingHouse->title }}</h3>
+                                <h4 class="text-success text-md fw-bold fs-4 mt-2">
+                                    {{ getShortPrice($boardingHouse->price) }}/tháng
+                                    
+                                </h4>
+                                <h5 class="text-sm fs-6">
+                                    <i class="fa-solid fa-location-dot text-danger"></i>
+                                    <span>{{ $boardingHouse->district }}</span>
+                                </h5>
+                                <h5 class="text-sm fs-6 mb-0">
+                                    <i class="fa-solid fa-clock" style="color:#b0b0b0"></i>
+                                    <span>{{ dateForHumman($boardingHouse->created_at) }}</span>
+                                </h5>
+                            </div>
+                            <div class="bg-success position-absolute top-0 left-0 fs-6 text-white px-1">{{ $categories[$boardingHouse->category] }}</div>
                         </div>
-                        <div class="bg-success position-absolute top-0 left-0 fs-6 text-white px-1">{{ $categories[$boardingHouse->category] }}</div>
                     </a>
                 @empty
                     <p class="text-center">Không có dữ liệu</p>

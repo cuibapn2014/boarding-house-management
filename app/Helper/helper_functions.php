@@ -31,3 +31,14 @@ function getZaloLink($number) : ?string {
 
     return "https://zalo.me/{$number}";
 }
+
+function getShortPrice(string $input) : ?string
+{
+    $length = strlen(trim($input));
+
+    if($length>= 10) return str_replace('.', ',', $input / 10**9) . ' tỷ';
+    elseif($length>= 7) return str_replace('.', ',', $input / 10**6) . ' triệu';
+    elseif($length>= 4) return str_replace('.', ',', $input / 10**3) . ' ngàn';
+
+    return null;
+}

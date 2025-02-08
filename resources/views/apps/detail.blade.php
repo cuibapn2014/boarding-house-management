@@ -74,7 +74,7 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
 
         <!-- Contact Section -->
         <div class="col-lg-4">
-            <div class="contact-card">
+            <div class="contact-card position-sticky" style="top: 100px;">
                 <h4 class="fw-bold">Thông Tin Liên Hệ</h4>
                 <p>
                     <strong>
@@ -86,18 +86,20 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
                         aria-label="Người liên hệ" target="_blank">{{ $boardingHouse->phone ??
                         $boardingHouse->user_create->phone }}</a></p>
                 <p><i class="fa-solid fa-envelope text-warning mr-2"></i> <span>********@*****.com</span></p>
-                {{-- <button class="btn btn-primary w-100 mt-3">Gửi Tin Nhắn</button> --}}
+                <div class="contact__divide mx-auto my-2">Hoặc</div>
+                <button class="btn btn-success w-100">Đặt lịch xem phòng</button>
             </div>
         </div>
     </div>
 
     <!-- Related Rooms -->
+    @if($boardingHouseRelation->count() > 0)
     <div class="mt-5">
-        <h3 class="fw-bold mb-2">Phòng Liên Quan</h3>
+        <h3 class="fw-bold mb-2">Có Thể Bạn Cũng Quan Tâm</h3>
         <div class="row g-3">
             @foreach($boardingHouseRelation as $relation)
             <a href="{{ route('rentalHome.show', ['id' => $relation->id, 'title' => $relation->slug]) }}"
-                class="col-md-3 text-dark position-relative">
+                class="col-md-3 col-6 text-dark position-relative">
                 <div class="related-room">
                     <img src="{{ resizeImageCloudinary($relation->thumbnail, 400, 270) }}" alt="{{ $relation->title }}"
                         class="img-fluid rounded" loading="lazy" decoding="async">
@@ -106,7 +108,7 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
                         class="fs-6 {{ $boardingHouse->status == 'available' ? 'bg-success text-white' : 'bg-warning text-dark' }} p-1 position-absolute top-0 left-0"
                         style="max-width: fit-content;">{{ $statues[$boardingHouse->status] }}</span>
                     <p class="fw-bold text-success">
-                        {{ $relation->price / 1000000 }} triệu
+                        {{ getShortPrice($relation->price) }}
                         <span class="text-dark fs-6">/tháng</span>
                     </p>
                 </div>
@@ -114,6 +116,7 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
             @endforeach
         </div>
     </div>
+    @endif
 </div>
 @endsection
 @push('js')

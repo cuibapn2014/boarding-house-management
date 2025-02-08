@@ -12,16 +12,16 @@
 <section class="categories">
     <div class="container">
         <h2 class="fw-bold">Danh Mục Nổi Bật</h2>
-        <div class="grid" id="room-list">
-            <a href="{{ route('rentalHome.index', ['category' => ['Phòng']]) }}" class="card pointer text-dark">
+        <div class="d-flex flex-nowrap justify-content-md-center" id="room-list" style="overflow-x: auto;gap: 0px 5px;">
+            <a href="{{ route('rentalHome.index', ['category' => ['Phòng']]) }}" class="card pointer text-dark" style="min-width: 20rem">
                 <img class="skeleton" src="{{ asset('assets/images/room.webp') }}" alt="Phòng Trọ" loading="lazy" decoding="async">
                 <h3 class="fw-bold">Phòng Trọ Giá Rẻ</h3>
             </a>
-            <a href="{{ route('rentalHome.index', ['category' => ['KTX', 'SLEEPBOX']]) }}" class="card pointer text-dark">
+            <a href="{{ route('rentalHome.index', ['category' => ['KTX', 'SLEEPBOX']]) }}" class="card pointer text-dark" style="min-width: 20rem">
                 <img class="skeleton" src="{{ asset('assets/images/sleepbox.webp') }}" alt="KTX/Sleepbox" loading="lazy" decoding="async">
                 <h3 class="fw-bold">KTX/Sleepbox Sang Trọng</h3>
             </a>
-            <a href="{{ route('rentalHome.index', ['category' => ['Nhà nguyên căn']]) }}" class="card pointer text-dark">
+            <a href="{{ route('rentalHome.index', ['category' => ['Nhà nguyên căn']]) }}" class="card pointer text-dark" style="min-width: 20rem">
                 <img class="skeleton" src="{{ asset('assets/images/house.webp') }}" alt="Căn Hộ" loading="lazy" decoding="async">
                 <h3 class="fw-bold">Căn Hộ Hiện Đại</h3>
             </a>
@@ -31,26 +31,28 @@
 <section class="list-home">
     <div class="container">
         <h2 class="text-center fw-bold">Gần đây nhất</h2>
-        <div class="grid my-3" id="room-list">
+        <div class="d-flex flex-wrap my-3" id="room-list">
             @foreach($latestPosts as $boardingHouse)
-            <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" class="card rounded my-2 d-flex flex-md-nowrap flex-md-row overflow-hidden pointer text-dark">
-                <img class="item-img skeleton" src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" alt="{{ $boardingHouse->category }}" loading="lazy" decoding="async"/>
-                <div class="item-info flex-grow-1 p-2">
-                    <h3 class="__title text-lg fw-bold fs-5">{{ $boardingHouse->title }}</h3>
-                    <h4 class="text-success text-md fw-bold fs-4 mt-2">
-                        {{ numberFormatVi($boardingHouse->price) }}
-                        <sup><u>đ</u></sup>
-                    </h4>
-                    <h5 class="text-sm fs-6">
-                        <i class="fa-solid fa-location-dot text-danger"></i>
-                        <span>{{ $boardingHouse->district }}</span>
-                    </h5>
-                    <h5 class="text-sm fs-6 mb-0">
-                        <i class="fa-solid fa-clock" style="color:#b0b0b0"></i>
-                        <span>{{ dateForHumman($boardingHouse->created_at) }}</span>
-                    </h5>
+            <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" class="flex-grow-1 col-md-12 col-6 px-1">
+                <div class="card rounded my-2 d-flex flex-md-nowrap flex-md-row overflow-hidden pointer text-dark">
+                    <img class="item-img skeleton" src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" alt="{{ $boardingHouse->category }}" loading="lazy" decoding="async"/>
+                    <div class="item-info flex-grow-1 p-2">
+                        <h3 class="__title text-lg fw-bold fs-5">{{ $boardingHouse->title }}</h3>
+                        <h4 class="text-success text-md fw-bold fs-4 mt-2">
+                            {{ getShortPrice($boardingHouse->price) }}/tháng
+                            
+                        </h4>
+                        <h5 class="text-sm fs-6">
+                            <i class="fa-solid fa-location-dot text-danger"></i>
+                            <span>{{ $boardingHouse->district }}</span>
+                        </h5>
+                        <h5 class="text-sm fs-6 mb-0">
+                            <i class="fa-solid fa-clock" style="color:#b0b0b0"></i>
+                            <span>{{ dateForHumman($boardingHouse->created_at) }}</span>
+                        </h5>
+                    </div>
+                    <div class="bg-success position-absolute top-0 left-0 fs-6 text-white px-1">{{ $categories[$boardingHouse->category] }}</div>
                 </div>
-                <div class="bg-success position-absolute top-0 left-0 fs-6 text-white px-1">{{ $categories[$boardingHouse->category] }}</div>
             </a>
             @endforeach
         </div>

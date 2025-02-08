@@ -75,6 +75,7 @@ class RentalHomeController extends Controller
 
         $boardingHouseRelation = BoardingHouse::where('district', $boardingHouse->district)
                                             ->where('id', '!=', $boardingHouse->id)
+                                            ->where('status', 'available')
                                             ->select(
                                                 'id',
                                                 'title',
