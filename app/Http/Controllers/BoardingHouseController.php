@@ -76,7 +76,8 @@ class BoardingHouseController extends Controller
 
     public function store(StoreBoardingHouseRequest $request)
     {
-        $tags = array_map(fn($item) => $item->value, json_decode($request->tags));
+        $tags = $request->filled('tags') ? array_map(fn($item) => $item->value, json_decode($request->tags)) : [];
+
         try {
             DB::transaction(function () use($request, $tags) {
                 $boardingHouse = new BoardingHouse();
