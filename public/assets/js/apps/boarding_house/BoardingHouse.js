@@ -292,6 +292,16 @@ const BoardingHouse = {
                 `);
             });
         }
+
+        district.selectpicker({
+            liveSearch: true,
+            size: 10,
+        });
+
+        ward.selectpicker({
+            liveSearch: true,
+            size: 10,
+        });
     },
 
     handleSelectDistrict: function(e) {
@@ -299,11 +309,18 @@ const BoardingHouse = {
         const districts = locationHCM.districts.find(item => item.name === selected);
         const ward = $('.modal #ward');
 
+
+        ward.selectpicker('destroy')
         ward.empty();
         districts?.wards?.forEach(item => {
             ward.append(`
                 <option value="${item.name}">${item.name}</option>
             `);
+        });
+
+        ward.selectpicker({
+            liveSearch: true,
+            size: 10,
         });
     },
 
