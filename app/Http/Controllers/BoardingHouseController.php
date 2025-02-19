@@ -8,6 +8,7 @@ use App\Models\Appointment;
 use App\Models\BoardingHouse;
 use App\Models\BoardingHouseFile;
 use App\Services\TelegramService;
+use App\Utils\ChatGptUtils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -18,10 +19,12 @@ class BoardingHouseController extends Controller
 {
     //
     private TelegramService $telegramService;
+    private ChatGptUtils $chatGptUtils;
 
     public function __construct(TelegramService $telegramService)
     {
         $this->telegramService = $telegramService;
+        $this->chatGptUtils = new ChatGptUtils();
     }
 
     public function index(Request $request)
@@ -77,15 +80,22 @@ class BoardingHouseController extends Controller
     public function store(StoreBoardingHouseRequest $request)
     {
         $tags = $request->filled('tags') ? array_map(fn($item) => $item->value, json_decode($request->tags)) : [];
+        $message = trim($request->input('content')) . "\n Hãy viết lại cái mô tả trên sao cho seo được điểm tốt. Lưu ý không viết kiểu markdown. Dùng các thẻ của HTML để biểu diễn các xuống dòng hay icon chẳng hạn. Có thể dùng emoji cho sinh động cũng được";
+        $messageTag = trim($request->input('content')) . "\n Hãy tạo ra những keywords hiệu quả cho bài viết này giúp tôi, những từ khoá liên quan cũng được. Response chỉ trả lời kết quả không cần giải thích";
+        $response = $this->chatGptUtils->sendMessageUsingChat($message);
+        $responseTags = $this->chatGptUtils->sendMessageUsingChat($messageTag);
 
         try {
-            DB::transaction(function () use($request, $tags) {
+            DB::transaction(function () use($request, $tags, $response, $responseTags) {
                 $boardingHouse = new BoardingHouse();
+                $tags = $responseTags ? $responseTags?->choices[0]?->message?->content : implode(', ', $tags);
+                $tags = str_replace("\n", ", ", $tags);
+                $tags = str_replace("-", "", $tags);
 
                 $boardingHouse->title       = trim($request->input('title'));
                 $boardingHouse->category    = $request->input('category');
-                $boardingHouse->description = trim($request->input('description'));
-                $boardingHouse->content     = $request->input('content');
+                $boardingHouse->description = $request->input('description');
+                $boardingHouse->content     = $response ? $response?->choices[0]?->message?->content : trim($request->input('content'));
                 $boardingHouse->district    = $request->input('district');
                 $boardingHouse->ward        = $request->input('ward');
                 $boardingHouse->address     = trim($request->input('address'));
@@ -93,7 +103,8 @@ class BoardingHouseController extends Controller
                 $boardingHouse->price       = numberRemoveComma($request->input('price'));
                 $boardingHouse->status      = $request->input('status');
                 $boardingHouse->is_publish  = $request->has('is_publish') && $request->input('is_publish') === 'on';
-                $boardingHouse->tags        = implode(', ', $tags);
+                $boardingHouse->tags        = $tags;
+                $boardingHouse->completion_id = $response->id;
 
                 $boardingHouse->save();
 

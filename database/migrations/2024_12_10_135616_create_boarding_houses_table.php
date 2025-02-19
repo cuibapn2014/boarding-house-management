@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->boolean('is_publish')->default(false);
             $table->string('tags', 500)->nullable();
+            $table->string('completion_id', 255)->nullable();
 
             $table->integer('created_by');
             $table->integer('updated_by')->nullable();
