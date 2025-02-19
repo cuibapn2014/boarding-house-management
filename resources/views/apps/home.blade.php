@@ -29,7 +29,7 @@
     </div>
 </section>
 <section class="list-home">
-    <div class="container">
+    <div class="container px-md-2 px-0">
         <h2 class="text-center fw-bold">Gần đây nhất</h2>
         <div class="d-flex flex-wrap my-3" id="room-list">
             @foreach($latestPosts as $boardingHouse)

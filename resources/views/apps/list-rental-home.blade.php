@@ -9,7 +9,7 @@
 @php
     $categories = \App\Constants\SystemDefination::BOARDING_HOUSE_CATEGORY;
 @endphp
-<div class="container d-flex justify-content-center my-4 flex-md-row flex-column">
+<div class="container d-flex justify-content-center my-4 flex-md-row flex-column px-md-1 px-0">
     <a id="btn-open-filter-sidebar" class="btn btn-sm btn-success mb-2 align-self-end mx-3 d-md-none" data-bs-toggle="offcanvas" href="#filter-sidebar" role="button"
         aria-controls="filter-sidebar">
         <i class="fa-solid fa-filter"></i>
@@ -23,7 +23,7 @@
         @include('components.filter')
     </aside>
     <section class="list-home flex-grow-1">
-        <div class="container">
+        <div class="container px-md-2 px-0">
             <div class="d-flex flex-wrap justify-content-md-center" id="room-list">
                 @forelse($boardingHouses as $boardingHouse)
                     <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" class="flex-grow-1 col-md-12 col-6 px-1">

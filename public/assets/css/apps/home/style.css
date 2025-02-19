@@ -48,6 +48,13 @@
     object-fit: cover;
 }
 
+.__title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
 section.hero .hero-overlay {
     --bs-bg-opacity: 0.35;
     top: 0;

@@ -27,6 +27,13 @@ section.hero .hero-overlay {
     border-color: var(--bs-success) !important;
 }
 
+.__title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
 @media screen and (max-width: 576px) {
     .item-img {
         width: 100% !important;

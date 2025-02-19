@@ -108,7 +108,7 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
                     <h5 class="mt-2 fw-bold fs-5">{{ $relation->title }}</h5>
                     <span
                         class="fs-6 {{ $boardingHouse->status == 'available' ? 'bg-success text-white' : 'bg-warning text-dark' }} p-1 position-absolute top-0 left-0"
-                        style="max-width: fit-content;">{{ $statues[$boardingHouse->status] }}</span>
+                        style="max-width: fit-content;">{{ $statues[$relation->status] }}</span>
                     <p class="fw-bold text-success">
                         {{ getShortPrice($relation->price) }}
                         <span class="text-dark fs-6">/tháng</span>
