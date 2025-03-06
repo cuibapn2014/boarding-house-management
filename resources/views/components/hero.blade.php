@@ -12,6 +12,7 @@
         sizes="(max-width: 575px) 100vw, 
             (min-width: 576px) 100vw" 
         alt="Background nhà trọ tốt Sài Gòn" 
-        loading="lazy" 
+        loading="eager" 
+        fetchpriority="high"
         decoding="async" />
 </section>

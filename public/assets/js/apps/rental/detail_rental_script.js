@@ -69,7 +69,7 @@ function generateImgOrVideo(item) {
     
     if(type == 'image') {
         $(element).attr('class', 'hero-image mb-4 w-100 skeleton');
-        $(element).attr('loading', 'lazy');
+        $(element).attr('loading', 'eager');
         $(element).attr('decoding', 'async');
         $(element).attr('src', item.data('src'));
         $(element).attr('alt', 'Hình ảnh phòng trọ tốt được chọn');
