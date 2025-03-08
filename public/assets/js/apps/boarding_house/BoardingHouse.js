@@ -401,4 +401,35 @@ const BoardingHouse = {
         .then(() => {})
         .catch(err => {});
     },
+
+    handlePasteFile: function(e) {
+        let items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        const dropZoneInputFile = $('.modal.show .dropzone-input-file');
+        const dataTransfer = new DataTransfer();
+
+        for(let item of items) {
+            if(item.kind === 'file') {
+                let file = item.getAsFile();
+                if(!file) continue;
+
+                dataTransfer.items.add(file);
+            } else if(item.kind === 'string' && item.type === 'text/html') {
+                item.getAsString(html => {
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(html, 'text/html');
+                    let imgTag = doc.querySelector('img');
+                    if(imgTag) {
+                        GlobalHelper.urlImgToFile(imgTag.src, 'ThisIsImgFile').then((file) => {
+                            dataTransfer.items.add(file);
+                        })
+                    }
+                })
+            }
+        }
+
+        if(dropZoneInputFile.length > 0 && dataTransfer.items.length > 0) {
+            dropZoneInputFile[0].files = dataTransfer.files;
+            dropZoneInputFile.trigger('change');
+        }
+    }
 }

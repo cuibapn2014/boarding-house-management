@@ -76,6 +76,8 @@ $(document).ready(function() {
 
     $(document).on('click', '.create-appointment', BoardingHouse.showModalCreateAppointment);
     $(document).on('click', '#createAppointmentModal #btn-submit', BoardingHouse.storeAppointment);
+
+    $(document).on('paste', '#createBoardingHouseModal, #editBoardingHouseModal', BoardingHouse.handlePasteFile);
 });
 
 function search(ele) {

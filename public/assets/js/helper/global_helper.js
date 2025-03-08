@@ -59,5 +59,13 @@ const GlobalHelper = {
           $(`[name="${key}"]`).val(value);
         }
       })
+    },
+
+    urlImgToFile: async function(urlImg, outputFileName) {
+      const response = await fetch(urlImg);
+      const blob = response.blob();
+      const file = new File([blob], outputFileName, {type: blob.type});
+
+      return file;
     }
 }
