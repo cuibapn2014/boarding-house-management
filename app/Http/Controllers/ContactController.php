@@ -11,4 +11,9 @@ class ContactController extends Controller
     {
         return view('apps.contact');
     }
+
+    public function store(Request $request)
+    {
+        return $this->responseSuccess('Thêm mới thành công!');
+    }
 }

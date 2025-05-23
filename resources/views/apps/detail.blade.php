@@ -84,7 +84,7 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
                         {{ $boardingHouse->user_create->full_name }}
                     </strong>
                 </p>
-                <p>Zalo: <a href="{{ getZaloLink($boardingHouse->phone ?? $boardingHouse->user_create->phone) }}"
+                <p>Zalo/SMS: <a href="{{ getZaloLink($boardingHouse->phone ?? $boardingHouse->user_create->phone) }}"
                         aria-label="Người liên hệ" target="_blank">{{ $boardingHouse->phone ??
                         $boardingHouse->user_create->phone }}</a></p>
                 <p><i class="fa-solid fa-envelope text-warning mr-2"></i> <span>********@*****.com</span></p>
