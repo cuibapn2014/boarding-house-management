@@ -2,7 +2,7 @@
 @section('title', 'Danh Sách Cho Thuê - Nhà Trọ Tốt Sài Gòn')
 @push('css')
     <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image"/>
-    <link rel="stylesheet" href="{{ asset('assets/css/apps/rental-home/style.css') }}"/>
+    <link rel="preload" href="{{ asset('assets/css/apps/rental-home/style.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 @endpush
 @section('content')
 @include('components.hero')
@@ -93,44 +93,10 @@
     <link rel="canonical" href="{{ route('rentalHome.index') }}">
 @endpush
 @push('js')
-    <script src="{{ asset('assets/js/helper/ApiHelper.js') }}"></script>
-    <script src="{{ asset('assets/js/apps/rental/script.js') }}"></script>
-    <script src="{{ asset('assets/js/apps/rental/Rental.js') }}"></script>
+    <script src="{{ asset('assets/js/helper/ApiHelper.js') }}" async></script>
+    <script src="{{ asset('assets/js/apps/rental/script.js') }}" async></script>
+    <script src="{{ asset('assets/js/apps/rental/Rental.js') }}" async></script>
 @endpush
 @push('jsonLD-lg')
-<script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "ItemList",
-        "itemListElement": [
-            @foreach($boardingHouses as $index => $boardingHouse)
-            {
-                "@type": "ListItem",
-                "position": {{ $boardingHouses->firstItem() + $index }},
-                "item": {
-                    "@type": "Property",
-                    "name": "{{ $boardingHouse->title }}",
-                    "description": "{{ $boardingHouse->description }}",
-                    "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}",
-                    "image": "{{ $boardingHouse->thumbnail }}",
-                    "address": {
-                        "@type": "PostalAddress",
-                        "streetAddress": "{{ $boardingHouse->address }}",
-                        "addressLocality": "{{ $boardingHouse->district }}",
-                        "addressRegion": "Hồ Chí Minh",
-                        "postalCode": "700000",
-                        "addressCountry": "VN"
-                    },
-                    "offers": {
-                        "@type": "Offer",
-                        "price": "{{ $boardingHouse->price }}",
-                        "priceCurrency": "VND",
-                        "availability": "https://schema.org/InStock"
-                    }
-                }
-            }@if (!$loop->last),@endif
-            @endforeach
-        ]
-    }
-</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","itemListElement":[@foreach($boardingHouses as $index => $boardingHouse){"@type":"ListItem","position":{{ $boardingHouses->firstItem() + $index }},"item":{"@type":"Property","name":"{{ $boardingHouse->title }}","description":"{{ $boardingHouse->description }}","url":"{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}","image":"{{ $boardingHouse->thumbnail }}","address":{"@type":"PostalAddress","streetAddress":"{{ $boardingHouse->address }}","addressLocality":"{{ $boardingHouse->district }}","addressRegion":"Hồ Chí Minh","postalCode":"700000","addressCountry":"VN"},"offers":{"@type":"Offer","price":"{{ $boardingHouse->price }}","priceCurrency":"VND","availability":"https://schema.org/InStock"}}}@if (!$loop->last),@endif @endforeach]}</script>
 @endpush

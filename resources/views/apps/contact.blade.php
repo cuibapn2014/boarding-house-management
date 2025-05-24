@@ -3,7 +3,7 @@
 @push('css')
     <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image"/>
     <style>
-        section.hero .hero-overlay {
+        div.hero .hero-overlay {
             --bs-bg-opacity: 0.35;
             top: 0;
             left: 0;

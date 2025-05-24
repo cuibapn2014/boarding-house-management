@@ -131,14 +131,14 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
 @endsection
 @push('js')
 {{-- Flatpickr --}}
-<script src="{{ asset('/vendor/flatpickr/js/flatpickr.min.js') }}"></script>
-<script src="{{ asset('/vendor/flatpickr/js/vn.js') }}"></script>
+<script src="{{ asset('/vendor/flatpickr/js/flatpickr.min.js') }}" async></script>
+<script src="{{ asset('/vendor/flatpickr/js/vn.js') }}" async></script>
 
-<script src="{{ asset('/vendor/toastify/js/toastify.min.js') }}"></script>
-<script src="{{ asset('assets/js/helper/global_helper.js') }}"></script>
-<script src="{{ asset('assets/js/helper/ApiHelper.js') }}"></script>
-<script src="{{ asset('/assets/js/core/splide.min.js') }}"></script>
-<script src="{{ asset('assets/js/apps/rental/detail_rental_script.js') }}"></script>
+<script src="{{ asset('/vendor/toastify/js/toastify.min.js') }}" async></script>
+<script src="{{ asset('assets/js/helper/global_helper.js') }}" async></script>
+<script src="{{ asset('assets/js/helper/ApiHelper.js') }}" async></script>
+<script src="{{ asset('/assets/js/core/splide.min.js') }}" async></script>
+<script src="{{ asset('assets/js/apps/rental/detail_rental_script.js') }}" async></script>
 @endpush
 @push('seo')
 <meta name="description" content="{{ $boardingHouse->description }}">
