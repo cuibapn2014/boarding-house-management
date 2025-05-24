@@ -22,9 +22,9 @@
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
     
     {{-- Font Awnsome --}}
-    <link rel="preload" as="style" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/fontawesome.min.css') }}"/>
-    <link rel="preload" as="style" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/solid.min.css') }}"/>
-    <link rel="preload" as="style" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/brands.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/fontawesome.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/solid.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/brands.min.css') }}"/>
 
     {{-- CSS File --}}
     <link href="{{ asset('/assets/css/bootstrap.min.css') }}" rel="stylesheet"/>
