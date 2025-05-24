@@ -1,10 +1,10 @@
 @extends('master')
 @section('title', $boardingHouse->title)
 @push('css')
-<link href="{{ asset('vendor/toastify/css/toastify.min.css') }}" rel="stylesheet"/>
-<link href="{{ asset('vendor/flatpickr/css/flatpickr.min.css') }}" rel="stylesheet"/>
-<link href="{{ asset('assets/css/splide.min.css') }}" rel="stylesheet" />
-<link href="{{ asset('assets/css/apps/rental-home/detail_style.css') }}" rel="stylesheet" />
+<link rel="preload" as="style" href="{{ asset('vendor/toastify/css/toastify.min.css') }}" onload="this.onload=null;this.rel='stylesheet'"/>
+<link rel="preload" as="style" href="{{ asset('vendor/flatpickr/css/flatpickr.min.css') }}" onload="this.onload=null;this.rel='stylesheet'"/>
+<link rel="preload" as="style" href="{{ asset('assets/css/splide.min.css') }}" onload="this.onload=null;this.rel='stylesheet'"/>
+<link rel="preload" as="style" href="{{ asset('assets/css/apps/rental-home/detail_style.css') }}" onload="this.onload=null;this.rel='stylesheet'"/>
 @endpush
 @section('content')
 
