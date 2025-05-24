@@ -25,10 +25,6 @@
       fetchpriority="high"
     />
     
-    <!-- Jquery, Bootstrap -->
-    <script src="{{ asset('assets/js/core/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
-    
     {{-- Font Awnsome --}}
     <link rel="preload" as="style" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/fontawesome.min.css') }}" onload="this.onload=null;this.rel='stylesheet'"/>
     <link rel="preload" as="style" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/solid.min.css') }}" onload="this.onload=null;this.rel='stylesheet'"/>
@@ -90,8 +86,12 @@
 
     @stack('jsonLD-lg')
 
+    <!-- Jquery, Bootstrap -->
+    <script src="{{ asset('assets/js/core/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
+
     <script src="{{ asset('assets/js/script.js') }}" async></script>
-    
+
     @stack('js')
 </body>
 </html>
