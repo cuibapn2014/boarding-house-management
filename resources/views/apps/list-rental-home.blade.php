@@ -2,7 +2,7 @@
 @section('title', 'Danh Sách Cho Thuê - Nhà Trọ Tốt Sài Gòn')
 @push('css')
     <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image"/>
-    <link rel="preload" href="{{ asset('assets/css/apps/rental-home/style.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+    <link rel="stylesheet" href="{{ asset('assets/css/apps/rental-home/style.css') }}"/>
 @endpush
 @section('content')
 @include('components.hero')

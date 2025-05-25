@@ -26,13 +26,13 @@
     />
     
     {{-- Font Awnsome --}}
-    <link rel="preload" as="style" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/fontawesome.min.css') }}" onload="this.onload=null;this.rel='stylesheet'"/>
-    <link rel="preload" as="style" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/solid.min.css') }}" onload="this.onload=null;this.rel='stylesheet'"/>
-    <link rel="preload" as="style" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/brands.min.css') }}" onload="this.onload=null;this.rel='stylesheet'"/>
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/fontawesome.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/solid.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/brands.min.css') }}"/>
 
     {{-- CSS File --}}
-    <link rel="preload" as="style" href="{{ asset('/assets/css/bootstrap.min.css') }}" onload="this.onload=null;this.rel='stylesheet'"/>
-    <link rel="preload" as="style" href="{{ asset('/assets/css/style.css') }}" onload="this.onload=null;this.rel='stylesheet'"/>
+    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('/assets/css/style.css') }}"/>
 
     <style>
       * {
