@@ -60,6 +60,26 @@ $(document).ready(function (){
     });
 
     $(document).on('click', '#createAppointmentModal #btn-submit', storeAppointment);
+
+    
+    $(document).on('click', 'img.hero-image, video.hero-video', function() {
+        const item = $(this).clone();
+        const overlayPreview = $('#overlay-preview .preview');
+
+        item.removeClass('hero-image hero-video');
+        item.addClass('preview-item');
+
+        overlayPreview.html(item);
+    })
+
+    $(document).on('click', '#overlay-preview', function(e) {
+        if(e.target !== this) return;
+        $(this).find('.preview').empty();
+    });
+
+    $(document).on('click', '.btn__close', function(e) {
+        $('#overlay-preview .preview').empty();
+    });
 });
 
 

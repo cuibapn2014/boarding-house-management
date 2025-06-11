@@ -9,6 +9,16 @@
 <link rel="stylesheet" href="{{ asset('vendor/flatpickr/css/flatpickr.min.css') }}"/>
 <link rel="stylesheet" href="{{ asset('assets/css/splide.min.css') }}"/>
 <link rel="stylesheet" href="{{ asset('assets/css/apps/rental-home/detail_style.css') }}"/>
+<style>
+    #overlay-preview:not(:has(img)) {
+        display: none;
+    }
+
+    .preview-item {
+        height: 100%;
+        object-fit: contain;
+    }
+</style>
 @endpush
 @section('content')
 
@@ -35,7 +45,7 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
                             <li class="splide__slide rounded position-relative" aria-hidden="false">
                                 <img src="{{ resizeImageCloudinary($file->url, 300, 200) }}"
                                     alt="Thumbnail {{ $boardingHouse->title }}" data-media-type="{{ $file->type }}"
-                                    data-src="{{ $file->type === 'image' ? resizeImageCloudinary($file->url, 800, 450) : $file->url }}"
+                                    data-src="{{ $file->url }}"
                                     class="skeleton" loading="eager" decoding="async">
                                 @if($file->type === 'video')
                                 <div class="position-absolute top-0 left-0 h-100 w-100 bg-dark text-white d-flex justify-content-center align-items-center"
@@ -124,6 +134,14 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
     </div>
     @endif
 </div>
+
+<!-- Modal Preview Image  -->
+<div id="overlay-preview" class="position-fixed top-0 left-0 w-100 h-100 text-center" style="z-index:9998;background-color: rgba(0,0,0,0.5);overflow: hidden;">
+    <div class="preview position-absolute top-0 left-0 w-100 h-100 text-center"></div>
+    <button class="btn btn-light position-absolute btn__close" style="right:5px; top:5px; z-index:9999;">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>
 @include('components.modals.create-appointment', [
 'id' => 'createAppointment',
 'title' => 'Tạo lịch hẹn xem phòng',
@@ -142,7 +160,7 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
 <script src="{{ asset('assets/js/helper/global_helper.js') }}" async></script>
 <script src="{{ asset('assets/js/helper/ApiHelper.js') }}" async></script>
 <script src="{{ asset('/assets/js/core/splide.min.js') }}" async></script>
-<script src="{{ asset('assets/js/apps/rental/detail_rental_script.js') }}" async></script>
+<script src="{{ asset('assets/js/apps/rental/detail_rental_script.js') }}?v=1.1" async></script>
 @endpush
 @push('seo')
 <meta name="description" content="{{ $boardingHouse->description }}">
