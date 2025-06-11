@@ -16,14 +16,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/favicon/apple-touch-icon.png') }}" />
     <link rel="manifest" href="{{ asset('assets/images/favicon/site.webmanifest') }}" />
     <link rel="preload" href="{{ asset('assets/images/icon/logo.webp') }}" as="image"/>
-    <link 
-      rel="preload" 
-      as="image" 
-      href="{{ asset('assets/images/hero-bg.webp') }}" 
-      imagesrcset="{{ asset('assets/images/hero-bg.webp') }} 575w, {{ asset('assets/images/hero-background.webp') }} 768w"
-      imagesizes="100vw"
-      fetchpriority="high"
-    />
     
     {{-- Font Awnsome --}}
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/fontawesome.min.css') }}"/>

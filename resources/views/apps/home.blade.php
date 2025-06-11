@@ -1,7 +1,8 @@
 @extends('master')
 @section('title', 'Nhà Trọ Tốt Sài Gòn: Cho thuê phòng trọ, nhà trọ giá tốt ở khu vực Hồ Chí Minh')
 @push('css')
-    <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image"/>
+    <link rel="preload" as="image" href="{{ asset('assets/images/hero-bg.webp') }}" fetchpriority="high" />
+    <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image" fetchpriority="high"/>
     <link rel="stylesheet" href="{{ asset('assets/css/apps/home/style.css') }}"/>
 @endpush
 @php

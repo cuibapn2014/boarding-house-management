@@ -1,6 +1,10 @@
 @extends('master')
 @section('title', $boardingHouse->title)
 @push('css')
+@foreach($boardingHouse->boarding_house_files as $file)
+<link rel="preload" as="image" href="{{ resizeImageCloudinary($file->url, 300, 200) }}" fetchpriority="high" />
+<link rel="preload" as="image" href="{{ $file->type === 'image' ? resizeImageCloudinary($file->url, 800, 450) : $file->url }}" fetchpriority="high" />
+@endforeach
 <link rel="stylesheet" href="{{ asset('vendor/toastify/css/toastify.min.css') }}"/>
 <link rel="stylesheet" href="{{ asset('vendor/flatpickr/css/flatpickr.min.css') }}"/>
 <link rel="stylesheet" href="{{ asset('assets/css/splide.min.css') }}"/>
@@ -32,7 +36,7 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
                                 <img src="{{ resizeImageCloudinary($file->url, 300, 200) }}"
                                     alt="Thumbnail {{ $boardingHouse->title }}" data-media-type="{{ $file->type }}"
                                     data-src="{{ $file->type === 'image' ? resizeImageCloudinary($file->url, 800, 450) : $file->url }}"
-                                    class="skeleton" loading="lazy" decoding="async">
+                                    class="skeleton" loading="eager" decoding="async">
                                 @if($file->type === 'video')
                                 <div class="position-absolute top-0 left-0 h-100 w-100 bg-dark text-white d-flex justify-content-center align-items-center"
                                     style="--bs-bg-opacity:0.6;">

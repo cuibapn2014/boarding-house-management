@@ -1,7 +1,8 @@
 @extends('master')
 @section('title', 'Danh Sách Cho Thuê - Nhà Trọ Tốt Sài Gòn')
 @push('css')
-    <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image"/>
+    <link rel="preload" as="image" href="{{ asset('assets/images/hero-bg.webp') }}" fetchpriority="high" />
+    <link rel="preload" href="{{ asset('assets/images/hero-background.webp') }}" as="image" fetchpriority="high"/>
     <link rel="stylesheet" href="{{ asset('assets/css/apps/rental-home/style.css') }}"/>
 @endpush
 @section('content')
