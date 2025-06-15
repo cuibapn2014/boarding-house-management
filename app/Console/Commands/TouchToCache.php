@@ -28,11 +28,11 @@ class TouchToCache extends Command
     public function handle()
     {
         //
-        $files = BoardingHouseFile::all(['url']);
+        $files = BoardingHouseFile::orderByDesc('id')->get(['url']);
 
         foreach ($files as $file) {
             $this->info("Touching file: {$file->url}");
-            Http::get($file->url);
+            Http::get(getUrlImage($file->url));
             Http::get(resizeImageCloudinary($file->url, 400, 350));
             Http::get(resizeImageCloudinary($file->url, 1200, 600));
             Http::get(resizeImageCloudinary($file->url, 400, 270));

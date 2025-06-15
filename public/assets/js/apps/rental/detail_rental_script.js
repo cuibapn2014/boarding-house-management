@@ -1,6 +1,6 @@
 $(document).ready(function (){
     var firstItem = $('#thumbnail-carousel img');
-    $('.hero-container').append(generateImgOrVideo(firstItem));
+    // $('.hero-container').append(generateImgOrVideo(firstItem));
 
     var splide = new Splide( '#thumbnail-carousel', {
         arrows: false,

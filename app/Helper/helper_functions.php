@@ -26,6 +26,20 @@ function resizeImageCloudinary(string $url, float $width, float $height) : strin
     return $imgUrl;
 }
 
+function getUrlImage(string $url) : string {
+    $ext = explode('.', $url);
+    $ext = count(explode('.', $url)) > 0 ? array_pop($ext) : $ext;
+
+    if(in_array($ext, ['mp4', 'avi', 'mkv', 'mov', 'wmv', 'webm'])) {
+        $imgUrl = str_replace('/upload/',"/upload/f_webp/", $url);
+        $imgUrl = str_replace(".{$ext}", '.webp', $imgUrl);
+    } else {
+        $imgUrl = str_replace('/upload/',"/upload/f_webp/c_thumb/", $url);
+    }
+
+    return $imgUrl;
+}
+
 function getZaloLink($number) : ?string {
     if(! $number) return '';
 

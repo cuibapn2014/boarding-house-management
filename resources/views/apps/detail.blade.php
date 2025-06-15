@@ -37,7 +37,11 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
     <div class="row">
         <div class="col-lg-8">
             <div>
-                <div class="hero-container mb-2 skeleton"></div>
+                <div class="hero-container mb-2 skeleton">
+                    @if($boardingHouse?->boarding_house_files?->first())
+                    <img src="{{ getUrlImage($boardingHouse?->boarding_house_files?->first()->url) }}" class="hero-image mb-4 w-100 skeleton" loading="eager" decoding="async" alt="Hình ảnh phòng trọ"/>
+                    @endif
+                </div>
                 <section id="thumbnail-carousel" class="splide" aria-label="Ảnh phòng trọ được chọn hiển thị">
                     <div class="splide__track">
                         <ul class="splide__list">
@@ -118,7 +122,7 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
                 class="col-md-3 col-6 text-dark position-relative">
                 <div class="related-room">
                     <img src="{{ resizeImageCloudinary($relation->thumbnail, 400, 270) }}" alt="{{ $relation->title }}"
-                        class="img-fluid rounded" loading="lazy" decoding="async">
+                        class="img-fluid rounded" loading="eager" decoding="async">
                     <h5 class="mt-2 fw-bold fs-5">{{ $relation->title }}</h5>
                     <span
                         class="fs-6 {{ $boardingHouse->status == 'available' ? 'bg-success text-white' : 'bg-warning text-dark' }} p-1 position-absolute top-0 left-0"
@@ -160,7 +164,7 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
 <script src="{{ asset('assets/js/helper/global_helper.js') }}" async></script>
 <script src="{{ asset('assets/js/helper/ApiHelper.js') }}" async></script>
 <script src="{{ asset('/assets/js/core/splide.min.js') }}" async></script>
-<script src="{{ asset('assets/js/apps/rental/detail_rental_script.js') }}?v=1.1" async></script>
+<script src="{{ asset('assets/js/apps/rental/detail_rental_script.js') }}?v=1.2" async></script>
 @endpush
 @push('seo')
 <meta name="description" content="{{ $boardingHouse->description }}">
