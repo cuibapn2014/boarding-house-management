@@ -191,7 +191,7 @@ $currentFilters = array_filter([
 
             <div class="d-flex flex-wrap justify-content-md-center" id="room-list" role="list">
                 @forelse($boardingHouses as $index => $boardingHouse)
-                <article class="flex-grow-1 col-md-12 col-6 px-1" 
+                <article class="col-md-12 col-6 px-1" 
                          role="listitem" 
                          itemscope 
                          itemtype="https://schema.org/RealEstate">
