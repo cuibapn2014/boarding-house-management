@@ -75,7 +75,7 @@
     @media (max-width: 768px) {
         .item-img {
             min-width: 120px;
-            max-width: 150px;
+            max-width: 250px;
         }
     }
 </style>
@@ -265,30 +265,30 @@ $currentFilters = array_filter([
 
             {{-- Pagination --}}
             @if($boardingHouses->hasPages())
-            <nav aria-label="Phân trang danh sách phòng trọ" class="mt-4">
-                <div class="row" id="pagination">
-                    {{ $boardingHouses->appends(request()->query())->links('pagination::bootstrap-5') }}
+                <nav aria-label="Phân trang danh sách phòng trọ" class="mt-4">
+                    <div class="row mx-0" id="pagination">
+                        {{ $boardingHouses->appends(request()->query())->links('pagination::bootstrap-4') }}
+                    </div>
+                </nav>
+                
+                {{-- Pagination info for SEO --}}
+                @if($boardingHouses->currentPage() > 1)
+                <div class="text-center mt-3 text-muted small">
+                    Trang {{ $boardingHouses->currentPage() }} của {{ $boardingHouses->lastPage() }} 
+                    ({{ $boardingHouses->total() }} kết quả)
                 </div>
-            </nav>
-            
-            {{-- Pagination info for SEO --}}
-            @if($boardingHouses->currentPage() > 1)
-            <div class="text-center mt-3 text-muted small">
-                Trang {{ $boardingHouses->currentPage() }} của {{ $boardingHouses->lastPage() }} 
-                ({{ $boardingHouses->total() }} kết quả)
-            </div>
-            @endif
+                @endif
             @endif
 
             {{-- Load more for mobile --}}
-            @if($boardingHouses->hasMorePages())
+            <!-- @if($boardingHouses->hasMorePages())
             <div class="text-center mt-4 d-md-none">
                 <button class="btn btn-outline-success" id="load-more-btn" data-page="{{ $boardingHouses->currentPage() + 1 }}">
                     <i class="fa-solid fa-plus me-2"></i>
                     Tải thêm phòng trọ
                 </button>
             </div>
-            @endif
+            @endif -->
         </div>
     </main>
 
