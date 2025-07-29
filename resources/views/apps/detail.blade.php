@@ -357,7 +357,7 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
-    "@type": ["Product", "RealEstate"],
+    "@type": "Product",
     "name": "{{ $boardingHouse->title }}",
     "description": "{{ $boardingHouse->description }}",
     "image": [

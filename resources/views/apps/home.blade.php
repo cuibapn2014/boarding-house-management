@@ -318,7 +318,7 @@ $categories = \App\Constants\SystemDefination::BOARDING_HOUSE_CATEGORY;
             "@type": "ListItem",
             "position": {{ $index + 1 }},
             "item": {
-                "@type": ["Product", "RealEstate"],
+                "@type": "Product",
                 "name": "{{ $boardingHouse->title }}",
                 "description": "{{ $boardingHouse->description }}",
                 "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}",

@@ -455,7 +455,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "@type": "ListItem",
             "position": {{ ($boardingHouses->currentPage() - 1) * $boardingHouses->perPage() + $loop->iteration }},
             "item": {
-                "@type": ["Product", "RealEstate"],
+                "@type": "Product",
                 "name": "{{ $boardingHouse->title }}",
                 "description": "{{ $boardingHouse->description }}",
                 "url": "{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}",

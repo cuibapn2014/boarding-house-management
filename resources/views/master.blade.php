@@ -210,6 +210,11 @@
                 "urlTemplate": "{{ route('rentalHome.index') }}?search={search_term_string}"
             },
             "query-input": "required name=search_term_string"
+        },
+        "mainEntity": {
+            "@type": "ItemList",
+            "name": "Danh sách phòng trọ cho thuê",
+            "description": "Danh sách các phòng trọ, nhà nguyên căn và căn hộ cho thuê tại TP.HCM"
         }
     }
     </script>
