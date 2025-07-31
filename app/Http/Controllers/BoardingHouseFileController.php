@@ -17,6 +17,10 @@ class BoardingHouseFileController extends Controller
             return $this->responseError('File không tồn tại hoặc đã bị xoá!');
         }
 
+        if($boardingHouseFile->boarding_house->create_by != auth()->id() && auth()->id() != 1) {
+            return $this->responseError('Không có quyền chỉnh sửa');
+        }
+
         try{
             DB::transaction(function () use($boardingHouseFile) {
                 cloudinary()->destroy($boardingHouseFile->public_id);
