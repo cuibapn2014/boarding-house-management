@@ -9,7 +9,7 @@ class BoardingHouseFile extends Model
 {
     use HasFactory;
 
-    public function boardingHouse()
+    public function boarding_house()
     {
         return $this->belongsTo(BoardingHouse::class, 'boarding_house_id');
     }
