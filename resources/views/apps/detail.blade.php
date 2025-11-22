@@ -68,7 +68,7 @@ $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
 $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHouse->district}";
 @endphp
 
-<div class="container" style="margin-top: 100px;">
+<div class="container" style="margin-top: 20px;">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
             <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
@@ -89,130 +89,216 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
     <!-- Room Details -->
     <div class="row">
         <div class="col-lg-8">
-            <div>
-                <div class="hero-container mb-2">
-                    @if($boardingHouse?->boarding_house_files?->first())
-                    <picture>
-                        <source 
-                            srcset="{{ resizeImageCloudinary($boardingHouse->boarding_house_files->first()->url, 800, 450, 'webp') }}" 
-                            type="image/webp"
-                            media="(min-width: 768px)">
-                        <source 
-                            srcset="{{ resizeImageCloudinary($boardingHouse->boarding_house_files->first()->url, 400, 225, 'webp') }}" 
-                            type="image/webp"
-                            media="(max-width: 767px)">
-                        <img src="{{ resizeImageCloudinary($boardingHouse->boarding_house_files->first()->url, 800, 450) }}" 
-                             srcset="{{ resizeImageCloudinary($boardingHouse->boarding_house_files->first()->url, 400, 225) }} 400w,
-                                     {{ resizeImageCloudinary($boardingHouse->boarding_house_files->first()->url, 800, 450) }} 800w"
-                             sizes="(max-width: 767px) 400px, 800px"
-                             class="hero-image mb-4" 
-                             loading="eager" 
-                             decoding="async" 
-                             alt="Hình ảnh {{ $boardingHouse->title }}"
-                             width="800" 
-                             height="450" />
-                    </picture>
-                    @endif
+            <!-- Hero Image Gallery -->
+            <div class="hero-container mb-3">
+                @if($boardingHouse?->boarding_house_files?->first())
+                <picture>
+                    <source 
+                        srcset="{{ resizeImageCloudinary($boardingHouse->boarding_house_files->first()->url, 800, 450, 'webp') }}" 
+                        type="image/webp"
+                        media="(min-width: 768px)">
+                    <source 
+                        srcset="{{ resizeImageCloudinary($boardingHouse->boarding_house_files->first()->url, 400, 225, 'webp') }}" 
+                        type="image/webp"
+                        media="(max-width: 767px)">
+                    <img src="{{ resizeImageCloudinary($boardingHouse->boarding_house_files->first()->url, 800, 450) }}" 
+                         srcset="{{ resizeImageCloudinary($boardingHouse->boarding_house_files->first()->url, 400, 225) }} 400w,
+                                 {{ resizeImageCloudinary($boardingHouse->boarding_house_files->first()->url, 800, 450) }} 800w"
+                         sizes="(max-width: 767px) 400px, 800px"
+                         class="hero-image" 
+                         loading="eager" 
+                         decoding="async" 
+                         alt="Hình ảnh {{ $boardingHouse->title }}"
+                         width="800" 
+                         height="450" />
+                </picture>
+                @endif
+            </div>
+            
+            <!-- Thumbnail Carousel -->
+            <section id="thumbnail-carousel" class="splide mb-4" aria-label="Ảnh phòng trọ được chọn hiển thị">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        @foreach($boardingHouse->boarding_house_files as $index => $file)
+                        <li class="splide__slide position-relative" aria-hidden="false">
+                            <picture>
+                                <source srcset="{{ resizeImageCloudinary($file->url, 300, 200, 'webp') }}" type="image/webp">
+                                <img src="{{ resizeImageCloudinary($file->url, 300, 200) }}"
+                                    alt="Thumbnail {{ $boardingHouse->title }} - Hình {{ $index + 1 }}" 
+                                    data-media-type="{{ $file->type }}"
+                                    data-src="{{ $file->url }}"
+                                    class="skeleton" 
+                                    loading="{{ $index < 6 ? 'eager' : 'lazy' }}" 
+                                    decoding="async"
+                                    width="300" 
+                                    height="200">
+                            </picture>
+                            @if($file->type === 'video')
+                            <div class="position-absolute top-0 left-0 h-100 w-100 bg-dark text-white d-flex justify-content-center align-items-center"
+                                style="--bs-bg-opacity:0.6;">
+                                <i class="fa-solid fa-video text-white fa-2x" aria-label="Video phòng trọ"></i>
+                            </div>
+                            @endif
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- Main Content Card -->
+            <div class="detail-content">
+                <!-- Title & Meta -->
+                <div>
+                    <h1 class="detail-title">{{ $boardingHouse->title }}</h1>
+                    <div class="detail-meta">
+                        <span>
+                            <i class="fa-solid fa-user"></i>
+                            Đăng bởi <strong>{{ $boardingHouse->user_create->firstname }}</strong>
+                        </span>
+                        <span>
+                            <i class="fa-solid fa-clock"></i>
+                            <time datetime="{{ $boardingHouse->updated_at }}">
+                                Cập nhật {{ dateForHumman($boardingHouse->updated_at) }}
+                            </time>
+                        </span>
+                        <span>
+                            <i class="fa-solid fa-map-marker-alt"></i>
+                            {{ $boardingHouse->district }}
+                        </span>
+                    </div>
                 </div>
                 
-                <section id="thumbnail-carousel" class="splide" aria-label="Ảnh phòng trọ được chọn hiển thị">
-                    <div class="splide__track">
-                        <ul class="splide__list">
-                            @foreach($boardingHouse->boarding_house_files as $index => $file)
-                            <li class="splide__slide rounded position-relative" aria-hidden="false">
-                                <picture>
-                                    <source srcset="{{ resizeImageCloudinary($file->url, 300, 200, 'webp') }}" type="image/webp">
-                                    <img src="{{ resizeImageCloudinary($file->url, 300, 200) }}"
-                                        alt="Thumbnail {{ $boardingHouse->title }} - Hình {{ $index + 1 }}" 
-                                        data-media-type="{{ $file->type }}"
-                                        data-src="{{ $file->url }}"
-                                        class="skeleton" 
-                                        loading="{{ $index < 6 ? 'eager' : 'lazy' }}" 
-                                        decoding="async"
-                                        width="300" 
-                                        height="200">
-                                </picture>
-                                @if($file->type === 'video')
-                                <div class="position-absolute top-0 left-0 h-100 w-100 bg-dark text-white d-flex justify-content-center align-items-center"
-                                    style="--bs-bg-opacity:0.6;">
-                                    <i class="fa-solid fa-video text-white" aria-label="Video phòng trọ"></i>
-                                </div>
-                                @endif
-                            </li>
-                            @endforeach
-                        </ul>
+                <!-- Price & Status -->
+                <div class="price-section">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+                        <div>
+                            <div class="price-amount">
+                                <span itemprop="price" content="{{ $boardingHouse->price }}">
+                                    {{ numberFormatVi($boardingHouse->price) }}
+                                </span>
+                                <span class="price-period">VNĐ/tháng</span>
+                            </div>
+                        </div>
+                        <span class="status-badge status-{{ $boardingHouse->status == 'available' ? 'available' : 'rented' }}">
+                            <i class="fa-solid fa-circle-check"></i>
+                            {{ $statues[$boardingHouse->status] }}
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Quick Features -->
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-bed"></i>
+                        </div>
+                        <div class="feature-text">
+                            <p class="feature-label">Loại phòng</p>
+                            <p class="feature-value">{{ $boardingHouse->category }}</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-home"></i>
+                        </div>
+                        <div class="feature-text">
+                            <p class="feature-label">Trạng thái</p>
+                            <p class="feature-value">{{ $statues[$boardingHouse->status] }}</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div class="feature-text">
+                            <p class="feature-label">Khu vực</p>
+                            <p class="feature-value">{{ $boardingHouse->district }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Description -->
+                <section class="mt-4">
+                    <h2 class="section-title">
+                        <i class="fa-solid fa-align-left me-2"></i>
+                        Mô Tả Chi Tiết
+                    </h2>
+                    <div class="description-content mt-3" itemprop="description">
+                        {!! $boardingHouse->content !!}
+                    </div>
+                </section>
+                
+                <!-- Address & Map -->
+                <section class="mt-4">
+                    <h2 class="section-title">
+                        <i class="fa-solid fa-map-location-dot me-2"></i>
+                        Địa Chỉ & Bản Đồ
+                    </h2>
+                    <div class="mt-3">
+                        <div class="d-flex align-items-start gap-2 mb-3">
+                            <i class="fa-solid fa-location-dot text-danger mt-1" style="font-size: 1.25rem;"></i>
+                            <address class="mb-0" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+                                <span itemprop="streetAddress">{{ $boardingHouse->address }}</span>, 
+                                <span itemprop="addressLocality">{{ $boardingHouse->ward }}</span>, 
+                                <span itemprop="addressRegion">{{ $boardingHouse->district }}</span>
+                            </address>
+                        </div>
+                        <div class="map-container">
+                            <iframe
+                                src="https://www.google.com/maps?q={{ urlencode($fullAddress) }}&output=embed"
+                                width="100%" 
+                                height="450" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                title="Bản đồ vị trí {{ $boardingHouse->title }}">
+                            </iframe>
+                        </div>
                     </div>
                 </section>
             </div>
-            
-            <div>
-                <h1 class="fw-bold fs-2 mt-1">{{ $boardingHouse->title }}</h1>
-                <p class="text-muted">
-                    Đăng bởi <strong>{{ $boardingHouse->user_create->firstname }}</strong> | 
-                    <time datetime="{{ $boardingHouse->updated_at }}">
-                        Cập nhật {{ dateForHumman($boardingHouse->updated_at) }}
-                    </time>
-                </p>
-            </div>
-            
-            <div class="fw-bold fs-3 text-success d-flex align-items-center" style="gap:5px;">
-                <span itemprop="price" content="{{ $boardingHouse->price }}">{{ numberFormatVi($boardingHouse->price) }}</span>
-                <span class="text-dark fs-6">/tháng</span>
-                <span class="{{ $boardingHouse->status == 'available' ? 'bg-success text-white' : 'bg-warning text-dark' }} py-1 px-2 rounded-pill fs-6"
-                    style="max-width: fit-content;font-size:.5em;">{{ $statues[$boardingHouse->status] }}</span>
-            </div>
-            
-            <section class="mt-3">
-                <h2 class="fw-bold h4">Mô Tả</h2>
-                <div itemprop="description">
-                    {!! $boardingHouse->content !!}
-                </div>
-            </section>
-            
-            <section class="mt-3">
-                <h2 class="fw-bold h4">Địa Chỉ</h2>
-                <address itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-                    <span itemprop="streetAddress">{{ $boardingHouse->address }}</span>, 
-                    <span itemprop="addressLocality">{{ $boardingHouse->ward }}</span>, 
-                    <span itemprop="addressRegion">{{ $boardingHouse->district }}</span>
-                </address>
-                <iframe
-                    src="https://www.google.com/maps?q={{ urlencode($fullAddress) }}&output=embed"
-                    width="100%" 
-                    height="450" 
-                    style="border:0;" 
-                    allowfullscreen="" 
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                    title="Bản đồ vị trí {{ $boardingHouse->title }}">
-                </iframe>
-            </section>
         </div>
 
         <!-- Contact Section -->
         <aside class="col-lg-4">
             <div class="contact-card position-sticky" style="top: 100px;" itemscope itemtype="https://schema.org/Person">
-                <h2 class="fw-bold h4">Thông Tin Liên Hệ</h2>
-                <p>
-                    <strong>
-                        <i class="fa-solid fa-user fa-fw fa-lg"></i>
-                        <span itemprop="name">{{ $boardingHouse->user_create->full_name }}</span>
-                    </strong>
-                </p>
-                <p>Zalo/SMS: 
+                <h2>
+                    <i class="fa-solid fa-address-card me-2"></i>
+                    Thông Tin Liên Hệ
+                </h2>
+                
+                <div class="contact-info">
+                    <i class="fa-solid fa-user"></i>
+                    <strong itemprop="name">{{ $boardingHouse->user_create->full_name }}</strong>
+                </div>
+                
+                <div class="contact-info">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span>Zalo/SMS:</span><br>
                     <a href="{{ getZaloLink($boardingHouse->phone ?? $boardingHouse->user_create->phone) }}"
                        aria-label="Liên hệ {{ $boardingHouse->user_create->full_name }}" 
                        target="_blank" 
                        rel="noopener"
-                       itemprop="telephone">{{ $boardingHouse->phone ?? $boardingHouse->user_create->phone }}</a>
-                </p>
-                <p><i class="fa-solid fa-envelope text-warning mr-2"></i> <span>********@*****.com</span></p>
-                <div class="contact__divide mx-auto my-2">Hoặc</div>
-                <button class="btn btn-success w-100" 
+                       itemprop="telephone">
+                        {{ $boardingHouse->phone ?? $boardingHouse->user_create->phone }}
+                    </a>
+                </div>
+                
+                <div class="contact-info">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>Email:</span><br>
+                    <span>********@*****.com</span>
+                </div>
+                
+                <div class="contact__divide mx-auto my-3">Hoặc</div>
+                
+                <button class="btn btn-success btn-appointment w-100" 
                         data-bs-toggle="modal" 
                         data-bs-target="#createAppointmentModal"
                         aria-label="Đặt lịch xem phòng {{ $boardingHouse->title }}">
-                    Đặt lịch xem phòng
+                    <i class="fa-solid fa-calendar-check"></i>
+                    Đặt Lịch Xem Phòng
                 </button>
             </div>
         </aside>
@@ -220,31 +306,48 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
 
     <!-- Related Rooms -->
     @if($boardingHouseRelation->count() > 0)
-    <section class="mt-5">
-        <h2 class="fw-bold mb-2 h3">Có Thể Bạn Cũng Quan Tâm</h2>
-        <div class="row g-3">
+    <section class="related-rooms-section">
+        <div class="text-center mb-4">
+            <h2 class="section-title">
+                <i class="fa-solid fa-home me-2"></i>
+                Có Thể Bạn Cũng Quan Tâm
+            </h2>
+            <p class="text-muted mt-2">Khám phá thêm các phòng trọ khác trong khu vực</p>
+        </div>
+        
+        <div class="row g-4">
             @foreach($boardingHouseRelation as $index => $relation)
-            <article class="col-md-3 col-6">
+            <article class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                 <a href="{{ route('rentalHome.show', ['id' => $relation->id, 'title' => $relation->slug]) }}"
-                   class="text-dark position-relative d-block">
+                   class="text-decoration-none d-block h-100">
                     <div class="related-room">
-                        <picture>
-                            <source srcset="{{ resizeImageCloudinary($relation->thumbnail, 400, 270, 'webp') }}" type="image/webp">
-                            <img src="{{ resizeImageCloudinary($relation->thumbnail, 400, 270) }}" 
-                                 alt="{{ $relation->title }}"
-                                 class="img-fluid rounded" 
-                                 loading="{{ $index < 4 ? 'eager' : 'lazy' }}" 
-                                 decoding="async"
-                                 width="400" 
-                                 height="270">
-                        </picture>
-                        <h3 class="mt-2 fw-bold fs-5">{{ $relation->title }}</h3>
-                        <span class="fs-6 {{ $relation->status == 'available' ? 'bg-success text-white' : 'bg-warning text-dark' }} p-1 position-absolute top-0 left-0"
-                              style="max-width: fit-content;">{{ $statues[$relation->status] }}</span>
-                        <p class="fw-bold text-success">
-                            {{ getShortPrice($relation->price) }}
-                            <span class="text-dark fs-6">/tháng</span>
-                        </p>
+                        <div class="related-room-card">
+                            <div class="related-room-image">
+                                <picture>
+                                    <source srcset="{{ resizeImageCloudinary($relation->thumbnail, 400, 270, 'webp') }}" type="image/webp">
+                                    <img src="{{ resizeImageCloudinary($relation->thumbnail, 400, 270) }}" 
+                                         alt="{{ $relation->title }}"
+                                         loading="{{ $index < 4 ? 'eager' : 'lazy' }}" 
+                                         decoding="async"
+                                         width="400" 
+                                         height="270">
+                                </picture>
+                                <span class="related-room-status {{ $relation->status == 'available' ? 'bg-success text-white' : 'bg-warning text-dark' }}">
+                                    {{ $statues[$relation->status] }}
+                                </span>
+                            </div>
+                            <div class="related-room-content">
+                                <h3 class="related-room-title">{{ $relation->title }}</h3>
+                                <div class="d-flex align-items-center gap-2 text-muted mb-2" style="font-size: 0.9rem;">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <span>{{ $relation->district }}</span>
+                                </div>
+                                <p class="related-room-price mb-0">
+                                    {{ getShortPrice($relation->price) }}
+                                    <span class="text-dark" style="font-size: 0.875rem; font-weight: 500;">/tháng</span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </a>
             </article>

@@ -48,7 +48,7 @@ class HomeController extends Controller
                                         'created_at'
                                     )
                                     ->orderByDesc('id')
-                                    ->limit(10)
+                                    ->limit(20)
                                     ->get();
 
         $nearlyCentreCity = BoardingHouse::with(['boarding_house_files:boarding_house_id,url'])

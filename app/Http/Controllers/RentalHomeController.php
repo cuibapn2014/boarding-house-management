@@ -19,7 +19,10 @@ class RentalHomeController extends Controller
             return [intval($min), intval($max)];
         }, $price);
 
-        $boardingHouses = BoardingHouse::when($request->filled('category'), function($query) use($category) {
+        $boardingHouses = BoardingHouse::when($request->filled('search'), function($query) use($request) {
+                                        $query->where('title', 'like', '%'.$request->search.'%');
+                                    })
+                                    ->when($request->filled('category'), function($query) use($category) {
                                         $query->whereIn('category', $category);
                                     })
                                     ->when($request->filled('price'), function($query) use($rangesPrice) {

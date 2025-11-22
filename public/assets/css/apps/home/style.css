@@ -1,71 +1,362 @@
-/* Featured Categories */
-.categories {
-    padding: 2rem 0;
+/* ========================================
+   HOMELY - Modern Home Rental Design
+   ======================================== */
+
+/* Header Styles */
+.header-new {
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-.categories h2 {
-    text-align: center;
-    margin-bottom: 1rem;
+.header-new .logo {
+    transition: all 0.3s ease;
 }
 
-.categories .grid {
+.header-new .logo:hover {
+    opacity: 0.8;
+}
+
+.header-new .search-header input {
+    border-radius: 24px 0 0 24px;
+    padding: 0.6rem 1rem;
+    border: 1px solid #dee2e6;
+}
+
+.header-new .search-header button {
+    border-radius: 0 24px 24px 0;
+    border: 1px solid #dee2e6;
+}
+
+.header-new .nav-links a {
+    transition: color 0.3s ease;
+}
+
+.header-new .nav-links a:hover {
+    color: #198754 !important;
+}
+
+/* Hero Section Styles */
+.hero-new {
+    min-height: 600px;
     display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.categories .card {
-    background: white;
+.hero-new .hero-image img {
+    object-fit: cover;
+    object-position: center;
+}
+
+.hero-new .min-vh-50 {
+    min-height: 50vh;
+}
+
+.search-bar-hero {
+    backdrop-filter: blur(10px);
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-bar-hero .form-select,
+.search-bar-hero .form-control {
+    border: 1px solid #dee2e6;
+    padding: 0.6rem 1rem;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    text-align: center;
-    width: 300px;
+}
+
+.search-bar-hero .form-select:focus,
+.search-bar-hero .form-control:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.15);
+}
+
+.search-bar-hero .btn-success {
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+}
+
+.quick-filters .badge {
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.quick-filters .badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Property Card Styles */
+.property-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-radius: 12px;
+}
+
+.property-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15) !important;
+}
+
+.property-card .card-img-top {
+    border-radius: 12px 12px 0 0;
     transition: transform 0.3s ease;
 }
 
-.categories .card:hover {
-    transform: translateY(-10px);
+.property-card:hover .card-img-top {
+    transform: scale(1.05);
 }
 
-.categories .card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.categories .card h3 {
-    padding: 0.5rem 0;
-    font-size: 1.3rem !important;
-    margin-bottom: 0 !important;
-}
-
-.item-img {
-    width: 15.5rem;
-    min-width: 15.5rem;
-    height: 200px;
-    object-fit: cover;
-}
-
-.__title {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+.property-card .property-image {
     overflow: hidden;
+    border-radius: 12px 12px 0 0;
 }
 
-div.hero .hero-overlay {
-    --bs-bg-opacity: 0.35;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
+.property-card .badge {
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 4px;
+}
+
+.property-card .btn-link {
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.property-card .btn-link:hover {
+    transform: scale(1.2);
+}
+
+.property-card .price {
+    color: #198754;
+}
+
+.property-card .card-title {
+    line-height: 1.4;
+    min-height: 48px;
+}
+
+/* Popular Locations Section */
+.popular-locations {
+    background: #ffffff;
+}
+
+.popular-locations h2 {
+    font-size: 1.75rem;
+    color: #212529;
+}
+
+/* Explore Areas Section */
+.explore-areas {
+    background: #f8f9fa;
+}
+
+.explore-areas h2 {
+    font-size: 1.75rem;
+    color: #212529;
+}
+
+.explore-areas .btn-outline-secondary {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.explore-areas .btn-outline-secondary:hover {
+    background-color: #198754;
+    border-color: #198754;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Why Choose Us Section */
+.why-choose-us {
+    background: #ffffff;
+}
+
+.why-choose-us h2 {
+    font-size: 1.75rem;
+    color: #212529;
+}
+
+.feature-card {
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.feature-card:hover {
+    border-color: #198754;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1) !important;
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border-radius: 50%;
+}
+
+.feature-title {
+    color: #212529;
+}
+
+.feature-desc {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* Footer Styles */
+.footer-new {
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+.footer-new h5 {
+    color: #212529;
+    font-size: 1rem;
+}
+
+.footer-new a {
+    transition: color 0.3s ease;
+}
+
+.footer-new a:hover {
+    color: #198754 !important;
+}
+
+.footer-new .social-links a {
+    transition: all 0.3s ease;
+}
+
+.footer-new .social-links a:hover {
+    transform: translateY(-2px);
+    color: #198754 !important;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 992px) {
+    .hero-new {
+        min-height: 500px;
+    }
+    
+    .hero-new h1 {
+        font-size: 2rem !important;
+    }
+    
+    .search-bar-hero {
+        padding: 1.5rem !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .hero-new {
+        min-height: 450px;
+    }
+    
+    .hero-new h1 {
+        font-size: 1.75rem !important;
+    }
+    
+    .search-bar-hero {
+        padding: 1rem !important;
+    }
+    
+    .property-card {
+        margin-bottom: 1rem;
+    }
+    
+    .quick-filters {
+        justify-content: center !important;
+    }
+    
+    .quick-filters .badge {
+        font-size: 0.8rem;
+    }
 }
 
 @media screen and (max-width: 576px) {
-    .item-img {
-        width: 100% !important;
+    .hero-new {
+        min-height: 400px;
     }
+    
+    .hero-new h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    .search-bar-hero {
+        padding: 0.75rem !important;
+    }
+    
+    .search-bar-hero .btn-success {
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    .popular-locations h2,
+    .explore-areas h2,
+    .why-choose-us h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Utility Classes */
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.shadow-hover:hover {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1) !important;
+}
+
+/* Loading Animation */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Accessibility */
+.visually-hidden-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
 }
