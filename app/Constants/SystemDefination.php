@@ -13,7 +13,15 @@ class SystemDefination
         'KTX' => 'Ký túc xá',
         'SLEEPBOX' => 'Sleepbox',
         'Phòng' => 'Phòng',
-        'Nhà nguyên căn' => 'Nhà nguyên căn'
+        'Nhà nguyên căn' => 'Nhà nguyên căn',
+
+        // UPDATE 23/11/2025
+        'Căn hộ/Chung cư' => 'Căn hộ/Chung cư',
+        'Nhà ở' => 'Nhà ở',
+        'Văn phòng/Mặt bằng' => 'Văn phòng/Mặt bằng',
+        'Phòng trọ' => 'Phòng trọ',
+        'Ký túc xá' => 'Ký túc xá',
+        'Sleepbox' => 'Sleepbox'
     ];
 
     const LIST_DISTRICT = [
