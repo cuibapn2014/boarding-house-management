@@ -158,15 +158,15 @@
                        rel="noopener noreferrer">
                         <i class="fa-brands fa-facebook fs-5"></i>
                     </a>
-                    <a href="https://twitter.com/nhatrototsaigon" 
+                    <!-- <a href="https://twitter.com/nhatrototsaigon" 
                        class="text-muted" 
                        aria-label="Theo dõi Nhatrototsaigon trên Twitter"
                        title="Twitter Nhatrototsaigon"
                        target="_blank"
                        rel="noopener noreferrer">
                         <i class="fa-brands fa-twitter fs-5"></i>
-                    </a>
-                    <a href="https://instagram.com/nhatrototsaigon" 
+                    </a> -->
+                    <a href="https://instagram.com/manhtuan.n7250" 
                        class="text-muted" 
                        aria-label="Theo dõi Nhatrototsaigon trên Instagram"
                        title="Instagram Nhatrototsaigon"
@@ -174,14 +174,14 @@
                        rel="noopener noreferrer">
                         <i class="fa-brands fa-instagram fs-5"></i>
                     </a>
-                    <a href="https://www.youtube.com/@nhatrototsaigon" 
+                    <!-- <a href="https://www.youtube.com/@nhatrototsaigon" 
                        class="text-muted" 
                        aria-label="Theo dõi Nhatrototsaigon trên YouTube"
                        title="YouTube Nhatrototsaigon"
                        target="_blank"
                        rel="noopener noreferrer">
                         <i class="fa-brands fa-youtube fs-5"></i>
-                    </a>
+                    </a> -->
                 </div>
                 <p class="text-muted small mb-0">
                     Kết nối với chúng tôi trên mạng xã hội

@@ -417,9 +417,8 @@ $categories = \App\Constants\SystemDefination::BOARDING_HOUSE_CATEGORY;
         "closes": "23:59"
     },
     "sameAs": [
-        "https://facebook.com/nhatrototsaigon",
-        "https://twitter.com/nhatrototsaigon",
-        "https://instagram.com/nhatrototsaigon"
+        "https://facebook.com/FakerHT",
+        "https://instagram.com/manhtuan.n7250"
     ],
     "areaServed": [
         {

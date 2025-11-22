@@ -199,8 +199,8 @@
                 "availableLanguage": "Vietnamese"
             },
             "sameAs": [
-                "https://facebook.com/nhatrototsaigon",
-                "https://twitter.com/nhatrototsaigon"
+                "https://facebook.com/FakerHT",
+                "https://instagram.com/manhtuan.n7250"
             ]
         },
         "potentialAction": {
