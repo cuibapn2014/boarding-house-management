@@ -124,7 +124,7 @@
             <div class="card user-card h-100">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-start mb-3">
-                        <img src="./img/team-1.jpg" class="user-avatar me-3" alt="avatar">
+                        <img src="{{ $user?->avatar ?? '/img/user-placeholder.png' }}" class="user-avatar me-3" alt="avatar">
                         <div class="flex-grow-1">
                             <h6 class="mb-1 font-weight-bold text-dark">
                                 {{ $user->firstname }} {{ $user->lastname }}
