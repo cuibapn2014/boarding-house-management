@@ -1,6 +1,10 @@
 const Dropzone = {
     files: [],
     index: 1,
+    maxImages: 5,  // Default for free plan
+    maxVideos: 1,  // Default for free plan
+    userPlan: 'free', // Default plan
+    isAdmin: false, // Default not admin
     destroy: function(selector) {
         $(document).off('click', selector);
         $(document).off('change', '.dropzone-input-file');
@@ -172,6 +176,25 @@ const Dropzone = {
         if (!accepts.includes(file.type)) {
             GlobalHelper.toastError(`File "${file.name}" không được hỗ trợ!`);
             return;
+        }
+
+        // Admin không bị giới hạn
+        if (!Dropzone.isAdmin) {
+            // Check file limits for free plan
+            if (Dropzone.userPlan === 'free') {
+                const currentImages = Dropzone.files.filter(f => f.type.includes('image')).length;
+                const currentVideos = Dropzone.files.filter(f => f.type.includes('video')).length;
+
+                if (file.type.includes('image') && currentImages >= Dropzone.maxImages) {
+                    GlobalHelper.toastError(`Gói Free chỉ được phép tải lên tối đa ${Dropzone.maxImages} ảnh!`);
+                    return;
+                }
+
+                if (file.type.includes('video') && currentVideos >= Dropzone.maxVideos) {
+                    GlobalHelper.toastError(`Gói Free chỉ được phép tải lên tối đa ${Dropzone.maxVideos} video!`);
+                    return;
+                }
+            }
         }
 
         const fileUrl = URL.createObjectURL(file);

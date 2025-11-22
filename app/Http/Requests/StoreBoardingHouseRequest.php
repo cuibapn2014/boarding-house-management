@@ -29,12 +29,71 @@ class StoreBoardingHouseRequest extends FormRequest
             'description' => 'required',
             'status' => 'required',
             'price' => 'required',
+            'files' => ['nullable', 'array', function ($attribute, $value, $fail) {
+                $this->validateFilesByPlan($value, $fail);
+            }],
             'files.*' => 'nullable|mimes:png,jpg,mp4,jpeg,webp',
             'phone' => 'nullable|digits:10',
             'district' => 'required',
             'ward' => 'required',
             'category' => 'required|in:' . $category
         ];
+    }
+
+    /**
+     * Validate files based on user's plan
+     */
+    protected function validateFilesByPlan($files, $fail)
+    {
+        $user = auth()->user();
+        
+        // Admin không bị giới hạn
+        if ($user->is_admin) {
+            return;
+        }
+        
+        $planCurrent = $user->plan_current ?? 'free';
+
+        // Only validate for free plan
+        if ($planCurrent === 'free') {
+            $imageCount = 0;
+            $videoCount = 0;
+
+            // Count new files being uploaded
+            foreach ($files as $file) {
+                $mimeType = $file->getMimeType();
+                
+                if (strpos($mimeType, 'image') !== false) {
+                    $imageCount++;
+                } elseif (strpos($mimeType, 'video') !== false) {
+                    $videoCount++;
+                }
+            }
+
+            // If editing, count existing files
+            $boardingHouseId = $this->route('boarding_house');
+            if ($boardingHouseId) {
+                $boardingHouse = \App\Models\BoardingHouse::with('boarding_house_files')->find($boardingHouseId);
+                if ($boardingHouse) {
+                    foreach ($boardingHouse->boarding_house_files as $existingFile) {
+                        if ($existingFile->type === 'image') {
+                            $imageCount++;
+                        } elseif ($existingFile->type === 'video') {
+                            $videoCount++;
+                        }
+                    }
+                }
+            }
+
+            // Check limits for free plan
+            if ($imageCount > 5) {
+                $fail('Gói Free chỉ được phép tải lên tối đa 5 ảnh (bao gồm cả ảnh cũ). Bạn hiện có ' . $imageCount . ' ảnh.');
+            }
+
+            if ($videoCount > 1) {
+                $fail('Gói Free chỉ được phép tải lên tối đa 1 video (bao gồm cả video cũ). Bạn hiện có ' . $videoCount . ' video.');
+            }
+        }
     }
 
     public function messages() : array

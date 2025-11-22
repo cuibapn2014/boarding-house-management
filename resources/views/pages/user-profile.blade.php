@@ -319,6 +319,69 @@
                 </div>
             </div>
 
+            <!-- Change Password Section -->
+            <div class="col-lg-8 mb-4" id="change-password-section">
+                <div class="card form-card">
+                    <div class="card-body p-4">
+                        <h5 class="section-title">
+                            <i class="fas fa-key"></i>
+                            Đổi mật khẩu
+                        </h5>
+
+                        <form role="form" method="POST" action="{{ route('profile.change-password') }}">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Mật khẩu hiện tại <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input class="form-control" type="password" name="current_password" 
+                                            id="current_password" placeholder="Nhập mật khẩu hiện tại" required>
+                                        <span class="input-group-text" onclick="togglePassword('current_password')" style="cursor: pointer;">
+                                            <i class="fas fa-eye" id="toggleCurrentPassword"></i>
+                                        </span>
+                                    </div>
+                                    @error('current_password')
+                                    <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Mật khẩu mới <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input class="form-control" type="password" name="new_password" 
+                                            id="new_password" placeholder="Nhập mật khẩu mới" required>
+                                        <span class="input-group-text" onclick="togglePassword('new_password')" style="cursor: pointer;">
+                                            <i class="fas fa-eye" id="toggleNewPassword"></i>
+                                        </span>
+                                    </div>
+                                    <small class="text-muted">Tối thiểu 8 ký tự</small>
+                                    @error('new_password')
+                                    <br><small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Xác nhận mật khẩu mới <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input class="form-control" type="password" name="new_password_confirmation" 
+                                            id="new_password_confirmation" placeholder="Nhập lại mật khẩu mới" required>
+                                        <span class="input-group-text" onclick="togglePassword('new_password_confirmation')" style="cursor: pointer;">
+                                            <i class="fas fa-eye" id="toggleConfirmPassword"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn submit-btn">
+                                        <i class="fas fa-lock me-2"></i>Đổi mật khẩu
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <!-- Sidebar Actions -->
             <div class="col-lg-4 mb-4">
                 <div class="card form-card">
@@ -339,7 +402,7 @@
                         <hr>
 
                         <h6 class="font-weight-bold text-sm mb-3">Bảo mật</h6>
-                        <a href="#" class="btn btn-outline-warning w-100 mb-2">
+                        <a href="#change-password-section" class="btn btn-outline-warning w-100 mb-2" onclick="scrollToChangePassword()">
                             <i class="fas fa-key me-2"></i>Đổi mật khẩu
                         </a>
 
@@ -397,5 +460,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Toggle password visibility
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const icon = field.nextElementSibling.querySelector('i');
+    
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        field.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+// Scroll to change password section
+function scrollToChangePassword() {
+    const section = document.getElementById('change-password-section');
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
 </script>
 @endpush

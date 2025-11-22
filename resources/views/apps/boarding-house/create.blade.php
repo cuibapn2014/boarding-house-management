@@ -206,7 +206,19 @@
                             <i class="fas fa-images"></i>
                             Hình ảnh & Video
                         </h5>
+                        @if(auth()->user()->is_admin)
+                        <p class="text-sm text-muted mb-3">
+                            <i class="fas fa-crown text-warning me-1"></i>
+                            <strong>Admin:</strong> Không giới hạn số lượng file
+                        </p>
+                        @elseif(auth()->user()->plan_current === 'free')
+                        <div class="alert alert-warning mb-3" style="font-size: 13px;">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Gói Free:</strong> Tối đa <strong>5 ảnh</strong> và <strong>1 video</strong>
+                        </div>
+                        @else
                         <p class="text-sm text-muted mb-3">Tải lên hình ảnh hoặc video về nhà trọ (tối đa 10 file)</p>
+                        @endif
                         @include('components.dropzone')
                     </div>
                 </div>
@@ -275,5 +287,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
 
 <script src="{{ asset('assets/js/helper/Dropzone.js') }}"></script>
+<script>
+    // Set user plan for Dropzone validation
+    Dropzone.userPlan = '{{ auth()->user()->plan_current ?? "free" }}';
+    Dropzone.isAdmin = {{ auth()->user()->is_admin ? 'true' : 'false' }};
+</script>
 <script src="{{ asset('assets/js/apps/boarding_house/form-page.js') }}"></script>
 @endpush

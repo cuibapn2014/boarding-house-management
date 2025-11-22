@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserProfileController extends Controller
 {
@@ -91,5 +92,43 @@ class UserProfileController extends Controller
         // Example: https://res.cloudinary.com/xxx/image/upload/v123456/avatars/abc123.jpg
         preg_match('/\/avatars\/([^\/]+)\.[^.]+$/', $url, $matches);
         return isset($matches[1]) ? 'avatars/' . $matches[1] : null;
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required'],
+            'new_password' => ['required', 'min:8', 'confirmed'],
+        ], [
+            'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại',
+            'new_password.required' => 'Vui lòng nhập mật khẩu mới',
+            'new_password.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự',
+            'new_password.confirmed' => 'Xác nhận mật khẩu không khớp',
+        ]);
+
+        /* @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Check if current password is correct
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng'])->withInput();
+        }
+
+        // Check if new password is different from current password
+        if (Hash::check($request->new_password, $user->password)) {
+            return back()->withErrors(['new_password' => 'Mật khẩu mới phải khác mật khẩu hiện tại'])->withInput();
+        }
+
+        DB::beginTransaction();
+        try {
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+            DB::commit();
+            
+            return back()->with('success', 'Đổi mật khẩu thành công');
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Lỗi khi đổi mật khẩu. Vui lòng thử lại.');
+        }
     }
 }

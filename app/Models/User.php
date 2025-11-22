@@ -29,7 +29,8 @@ class User extends Authenticatable
         'postal',
         'about',
         'phone',
-        'avatar'
+        'avatar',
+        'plan_current'
     ];
 
     /**

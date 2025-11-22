@@ -266,7 +266,14 @@
                             <i class="fas fa-cloud-upload-alt"></i>
                             Thêm hình ảnh mới
                         </h5>
+                        @if(auth()->user()->plan_current === 'free')
+                        <div class="alert alert-warning mb-3" style="font-size: 13px;">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Gói Free:</strong> Tối đa <strong>5 ảnh</strong> và <strong>1 video</strong> (bao gồm cả ảnh cũ)
+                        </div>
+                        @else
                         <p class="text-sm text-muted mb-3">Tải lên hình ảnh hoặc video về nhà trọ</p>
+                        @endif
                         @include('components.dropzone')
                     </div>
                 </div>
@@ -336,5 +343,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
 
 <script src="{{ asset('assets/js/helper/Dropzone.js') }}"></script>
+<script>
+    // Set user plan for Dropzone validation
+    Dropzone.userPlan = '{{ auth()->user()->plan_current ?? "free" }}';
+</script>
 <script src="{{ asset('assets/js/apps/boarding_house/form-page.js') }}"></script>
 @endpush

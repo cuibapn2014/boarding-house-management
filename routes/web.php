@@ -54,6 +54,7 @@ Route::group(['middleware' => 'auth'], function () {
 	// Profile routes
 	Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
 	Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
+	Route::post('/profile/change-password', [UserProfileController::class, 'changePassword'])->name('profile.change-password');
 	
 	// Static pages
 	Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static'); 
