@@ -22,6 +22,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;            
             
@@ -37,20 +38,31 @@ Route::get('/', function () {return redirect('/dashboard');})->middleware('auth'
 	Route::post('/change-password', [ChangePassword::class, 'update'])->middleware('guest')->name('change.perform');
 	Route::get('/dashboard', [HomeController::class, 'index'])->name('home')->middleware('auth');
 Route::group(['middleware' => 'auth'], function () {
+	// Boarding House routes
 	Route::get('/boarding-house/{id}/create-appointment', [\App\Http\Controllers\BoardingHouseController::class , 'createAppointment'])->name('boarding-house.createAppointment');
 	Route::post('/boarding-house/{id}/create-appointment', [\App\Http\Controllers\BoardingHouseController::class, 'storeAppointment'])->name('boarding-house.storeAppointment');
 	Route::resource('/boarding-house', \App\Http\Controllers\BoardingHouseController::class);
+	Route::delete('/boarding-house-file/{id}/delete', [\App\Http\Controllers\BoardingHouseFileController::class, 'destroy'])->name('boardingHouseFile.destroy');
 	
-	// Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
-	// Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');
+	// User Management routes
+	Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+	Route::post('/user', [UserController::class, 'store'])->name('user.store');
+	Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+	Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
+	Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+	
+	// Profile routes
 	Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
 	Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
+	
+	// Static pages
 	Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static'); 
 	Route::get('/sign-in-static', [PageController::class, 'signin'])->name('sign-in-static');
 	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static'); 
-	Route::get('/{page}', [PageController::class, 'index'])->name('page');
+	
+	// Logout
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-
-
-	Route::delete('/boarding-house-file/{id}/delete', [\App\Http\Controllers\BoardingHouseFileController::class, 'destroy'])->name('boardingHouseFile.destroy');
+	
+	// Page routes (must be last)
+	Route::get('/{page}', [PageController::class, 'index'])->name('page.index');
 });

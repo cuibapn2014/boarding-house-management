@@ -1,15 +1,37 @@
 const ApiHelper = {
-    callApi: async function(__url, __method, __data = {}, __headers = {}, additional = {},__beforeSend = null, __success = null, __error = null, __complete = null) {
+    callApi: async function(__url, __method, __data = {}, __headers = {}, additional = {},__beforeSend = null, __success = null, __error = null, __complete = null, showLoading = false, loadingText = 'Đang tải') {
+        // Show loading if enabled
+        if(showLoading && typeof GlobalHelper !== 'undefined' && GlobalHelper.showLoading) {
+            GlobalHelper.showLoading(loadingText);
+        }
+
         return await $.ajax({
             url: __url,
             method: __method,
             ...additional,
             headers: __headers,
             data: __data,
-            beforeSend: __beforeSend ?? ApiHelper._beforeSend,
+            beforeSend: function(xhr) {
+                if(__beforeSend) {
+                    __beforeSend(xhr);
+                } else {
+                    ApiHelper._beforeSend(xhr);
+                }
+            },
             success: __success ?? ApiHelper._success,
             error: __error ?? ApiHelper._error,
-            complete: __complete ?? ApiHelper._complete
+            complete: function(xhr, status) {
+                // Hide loading if enabled
+                if(showLoading && typeof GlobalHelper !== 'undefined' && GlobalHelper.hideLoading) {
+                    GlobalHelper.hideLoading();
+                }
+                
+                if(__complete) {
+                    __complete(xhr, status);
+                } else {
+                    ApiHelper._complete(xhr, status);
+                }
+            }
         });
     },
 

@@ -10,13 +10,57 @@ const BoardingHouse = {
         window.history.pushState({}, null, url);
 
         const handleSuccess = function(response) {
-            $('.card-body.list-data').replaceWith($(response).find('.card-body.list-data'));
+            // Parse HTML response WITHOUT executing scripts to avoid re-declaring variables
+            const $response = $($.parseHTML(response, document, false));
+            
+            // Find the content we need
+            let newListData = $response.filter('.row.list-data');
+            if(newListData.length === 0) {
+                newListData = $response.find('.row.list-data');
+            }
+            if(newListData.length > 0) {
+                $('.row.list-data').replaceWith(newListData);
+            }
+            
+            // Replace pagination using unique ID
+            const currentPagination = $('#pagination-container');
+            let newPagination = $response.filter('#pagination-container');
+            if(newPagination.length === 0) {
+                newPagination = $response.find('#pagination-container');
+            }
+            
+            if(newPagination.length > 0 && currentPagination.length > 0) {
+                currentPagination.replaceWith(newPagination);
+            } else if(newPagination.length > 0 && currentPagination.length === 0) {
+                $('.row.list-data').after(newPagination);
+            } else if(newPagination.length === 0 && currentPagination.length > 0) {
+                currentPagination.remove();
+            }
+            
+            // Update filter count if function exists
+            if(typeof updateFilterCount === 'function') {
+                updateFilterCount();
+            }
         }
 
         ApiHelper
-            .callApi(url, 'GET', {}, {}, {}, null, handleSuccess)
+            .callApi(
+                url, 
+                'GET', 
+                {}, 
+                {}, 
+                {}, 
+                null, 
+                handleSuccess, 
+                null, 
+                null, 
+                true, // Enable loading
+                'Đang tải dữ liệu' // Loading text
+            )
             .then(() => {})
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.error('❌ Error loading data:', err);
+            });
     },
 
     showModalCreate: function(e) {
@@ -47,7 +91,7 @@ const BoardingHouse = {
         const formData = new FormData(form[0]);
         const url = form.attr('action');
         const method = form.attr('method');
-        const _token = $('meta[name="csrf_token"]').attr('content');
+        const _token = $('meta[name="csrf-token"]').attr('content') || $('meta[name="csrf_token"]').attr('content');
 
         $('.input-error-message').remove();
 
@@ -83,7 +127,9 @@ const BoardingHouse = {
             () => modal.find('#btn-submit').prop('disabled', true), 
             handleSuccess,
             null,
-            () => modal.find('#btn-submit').prop('disabled', false)
+            () => modal.find('#btn-submit').prop('disabled', false),
+            true, // Enable loading
+            'Đang lưu nhà trọ' // Loading text
         )
         .then(() => {})
         .catch(err => {});
@@ -137,7 +183,7 @@ const BoardingHouse = {
         const formData = new FormData(form[0]);
         const url = form.attr('action');
         const method = form.attr('method');
-        const _token = $('meta[name="csrf_token"]').attr('content');
+        const _token = $('meta[name="csrf-token"]').attr('content') || $('meta[name="csrf_token"]').attr('content');
 
         $('.input-error-message').remove();
 
@@ -173,7 +219,9 @@ const BoardingHouse = {
             () => modal.find('#btn-submit').prop('disabled', true), 
             handleSuccess,
             null,
-            () => modal.find('#btn-submit').prop('disabled', false)
+            () => modal.find('#btn-submit').prop('disabled', false),
+            true, // Enable loading
+            'Đang cập nhật nhà trọ' // Loading text
         )
         .then(() => {})
         .catch(err => {});
@@ -181,7 +229,7 @@ const BoardingHouse = {
 
     removeFile: function(ele) {
         const url = ele.data('url');
-        const _token = $('meta[name="csrf_token"]').attr('content');
+        const _token = $('meta[name="csrf-token"]').attr('content') || $('meta[name="csrf_token"]').attr('content');
         
         const handleSuccess = function(response) {
             if(response.status == 'success') {
@@ -209,14 +257,18 @@ const BoardingHouse = {
 
     destroy: function(ele) {
         const url = ele.data('url');
-        const _token = $('meta[name="csrf_token"]').attr('content');
+        const _token = $('meta[name="csrf-token"]').attr('content') || $('meta[name="csrf_token"]').attr('content');
         const modalConfirm = $('#confirmDeleteBoardingHouseModal');
 
         const handleSuccess = function(response) {
             if(response.status == 'success') {
                 GlobalHelper.toastSuccess(response.message);
-                BoardingHouse.loadData();
                 modalConfirm.modal('hide');
+                
+                // Reload page after short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
                 return;
             }
 
@@ -232,7 +284,9 @@ const BoardingHouse = {
             () => modalConfirm.find('#btn-confirm-delete').prop('disabled', true), 
             handleSuccess,
             null,
-            () => modalConfirm.find('#btn-confirm-delete').prop('disabled', false)
+            () => modalConfirm.find('#btn-confirm-delete').prop('disabled', false),
+            true, // Enable loading
+            'Đang xóa nhà trọ' // Loading text
         )
         .then(() => {})
         .catch(err => {});
@@ -367,7 +421,7 @@ const BoardingHouse = {
         const formData = new FormData(form[0]);
         const url = form.attr('action');
         const method = form.attr('method');
-        const _token = $('meta[name="csrf_token"]').attr('content');
+        const _token = $('meta[name="csrf-token"]').attr('content') || $('meta[name="csrf_token"]').attr('content');
 
         $('.input-error-message').remove();
 
@@ -396,7 +450,9 @@ const BoardingHouse = {
             () => modal.find('#btn-submit').prop('disabled', true), 
             handleSuccess,
             null,
-            () => modal.find('#btn-submit').prop('disabled', false)
+            () => modal.find('#btn-submit').prop('disabled', false),
+            true, // Enable loading
+            'Đang tạo cuộc hẹn' // Loading text
         )
         .then(() => {})
         .catch(err => {});

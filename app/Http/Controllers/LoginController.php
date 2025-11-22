@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -19,22 +20,49 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $credentials = $request->only('email', 'password');
+        $remember = $request->boolean('remember', false);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('dashboard');
+            // Nếu request mong muốn JSON response (API request)
+            if ($request->wantsJson()) {
+                $user = Auth::user();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Đăng nhập thành công!',
+                    'data' => [
+                        'user' => [
+                            'id' => $user->id,
+                            'username' => $user->username,
+                            'email' => $user->email,
+                            'firstname' => $user->firstname,
+                            'lastname' => $user->lastname,
+                        ]
+                    ]
+                ]);
+            }
+
+            return redirect()->intended('dashboard')->with('success', 'Đăng nhập thành công!');
+        }
+
+        // Nếu request mong muốn JSON response (API request)
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Thông tin đăng nhập không chính xác.',
+                'errors' => [
+                    'email' => ['Thông tin đăng nhập không chính xác.']
+                ]
+            ], 401);
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+            'email' => 'Thông tin đăng nhập không chính xác.',
+        ])->withInput($request->only('email'));
     }
 
     public function logout(Request $request)
@@ -43,6 +71,14 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        // Nếu request mong muốn JSON response (API request)
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Đăng xuất thành công!'
+            ]);
+        }
 
         return redirect('/login');
     }

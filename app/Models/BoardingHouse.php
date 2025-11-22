@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use App\Trait\CommonTrait;
+use App\Trait\HasOwnership;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class BoardingHouse extends Model
 {
-    use HasFactory, CommonTrait;
+    use HasFactory, CommonTrait, HasOwnership;
 
     protected $table = 'boarding_houses';
 

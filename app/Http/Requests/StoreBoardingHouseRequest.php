@@ -40,11 +40,25 @@ class StoreBoardingHouseRequest extends FormRequest
     public function messages() : array
     {
         return [
-            'required' => 'Bắt buộc nhập',
-            'max' => ':attribute tối đa :max ký tự',
-            'mimes' => ':attribute không hợp lệ',
-            'digits' => ':attribute không hợp lệ',
-            'in' => ':attribute không hợp lệ'
+            'title.required' => 'Vui lòng nhập tiêu đề nhà trọ',
+            'title.max' => 'Tiêu đề không được vượt quá :max ký tự',
+            
+            'description.required' => 'Vui lòng nhập mô tả ngắn',
+            
+            'status.required' => 'Vui lòng chọn trạng thái',
+            
+            'price.required' => 'Vui lòng nhập giá thuê',
+            
+            'files.*.mimes' => 'File tải lên phải là ảnh (png, jpg, jpeg, webp) hoặc video (mp4)',
+            
+            'phone.digits' => 'Số điện thoại phải có đúng :digits chữ số',
+            
+            'district.required' => 'Vui lòng chọn quận/huyện',
+            
+            'ward.required' => 'Vui lòng chọn phường/xã',
+            
+            'category.required' => 'Vui lòng chọn danh mục',
+            'category.in' => 'Danh mục được chọn không hợp lệ',
         ];
     }
 

@@ -34,12 +34,33 @@ const GlobalHelper = {
     },
 
     initTinyEditor: function(selector) {
-      $(selector).tinymce({
+      // Check if TinyMCE is loaded
+      if(typeof tinymce === 'undefined') {
+        console.error('TinyMCE is not loaded. Please include TinyMCE script.');
+        return;
+      }
+
+      // Check if element exists
+      const element = document.querySelector(selector);
+      if(!element) {
+        console.error(`Element ${selector} not found for TinyMCE`);
+        return;
+      }
+
+      // Remove existing instance if any
+      const existingEditor = tinymce.get(element.id);
+      if(existingEditor) {
+        existingEditor.remove();
+      }
+
+      // Initialize TinyMCE
+      tinymce.init({
+        selector: selector,
         height: 500,
         menubar: false,
-        forced_root_block: false, // Ngăn không cho TinyMCE tự động thêm <p>
-        force_br_newlines: true,   // Sử dụng <br> khi nhấn Enter
-        force_p_newlines: false, 
+        forced_root_block: false,
+        force_br_newlines: true,
+        force_p_newlines: false,
         plugins: [
           'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
           'anchor', 'searchreplace', 'visualblocks', 'fullscreen',
@@ -47,7 +68,12 @@ const GlobalHelper = {
         ],
         toolbar: 'undo redo | blocks | bold italic backcolor | ' +
           'alignleft aligncenter alignright alignjustify | ' +
-          'bullist numlist outdent indent | removeformat | help'
+          'bullist numlist outdent indent | removeformat | help',
+        setup: function(editor) {
+          editor.on('init', function() {
+            console.log('✅ TinyMCE editor initialized:', selector);
+          });
+        }
       });
     },
 
@@ -67,5 +93,36 @@ const GlobalHelper = {
       const file = new File([blob], outputFileName, {type: blob.type});
 
       return file;
+    },
+
+    showLoading: function(text = 'Đang tải') {
+      const loadingOverlay = $('#globalLoading');
+      const loadingText = loadingOverlay.find('.loading-text');
+      
+      // Update text if provided
+      if(text) {
+        loadingText.html(`
+          ${text}
+          <span class="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        `);
+      }
+      
+      // Show loading with smooth animation
+      loadingOverlay.addClass('show');
+      $('body').css('overflow', 'hidden'); // Prevent scrolling
+    },
+
+    hideLoading: function() {
+      const loadingOverlay = $('#globalLoading');
+      
+      // Hide loading with smooth animation
+      setTimeout(() => {
+        loadingOverlay.removeClass('show');
+        $('body').css('overflow', ''); // Restore scrolling
+      }, 300); // Small delay for better UX
     }
 }

@@ -45,16 +45,26 @@ class StoreAppointmentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
-            'required'          => ':attribute bắt buộc nhập',
-            'regex'             => 'Định dạng không hợp lệ',
-            'date'              => 'Định dạng không hợp lệ',
-            'date_format'       => 'Định dạng không hợp lệ',
-            'numeric'           => 'Định dạng không hợp lệ',
-            'string'            => 'Định dạng không hợp lệ',
-            'gte'               => 'Giá trị phải >= :value',
-            'note.max'          => ':attribute tối đa :max ký tự',
-            'appointment.after' => 'Ngày hẹn phải sau hiện tại'
+            'customer_name.required' => 'Vui lòng nhập họ tên khách hàng',
+            
+            'phone.required' => 'Vui lòng nhập số điện thoại',
+            'phone.regex' => 'Số điện thoại không đúng định dạng (Ví dụ: 0912345678)',
+            
+            'total_person.required' => 'Vui lòng nhập số người ở',
+            'total_person.numeric' => 'Số người ở phải là số',
+            'total_person.gte' => 'Số người ở phải lớn hơn hoặc bằng :value',
+            
+            'total_bike.required' => 'Vui lòng nhập số xe',
+            'total_bike.gte' => 'Số xe phải lớn hơn hoặc bằng :value',
+            
+            'move_in_date.date_format' => 'Ngày chuyển vào không đúng định dạng (dd/mm/yyyy)',
+            
+            'note.string' => 'Ghi chú không hợp lệ',
+            'note.max' => 'Ghi chú không được vượt quá :max ký tự',
+            
+            'appointment_at.required' => 'Vui lòng chọn ngày giờ hẹn xem phòng',
+            'appointment_at.date_format' => 'Ngày giờ hẹn không đúng định dạng (dd/mm/yyyy HH:mm)',
+            'appointment_at.after' => 'Ngày giờ hẹn phải sau thời điểm hiện tại',
         ];
     }
 
