@@ -157,12 +157,219 @@ header button {
 
 @media screen and (max-width: 576px) {
     .logo span {
-        font-size: 1.5rem !important;
+        font-size: 1.3rem !important;
     }
 
     .logo small {
-        font-size: 1.2rem !important;
+        font-size: 1rem !important;
         margin-top: 2px !important;
+    }
+    
+    /* Header mobile optimization */
+    .header-new .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+    
+    .header-new nav {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+    
+    /* Search bar mobile */
+    .search-mobile {
+        padding-bottom: 0.75rem !important;
+    }
+    
+    .search-mobile .form-control {
+        font-size: 0.875rem;
+    }
+    
+    /* Footer mobile optimization */
+    .footer-new {
+        padding-top: 2rem !important;
+        padding-bottom: 1.5rem !important;
+        margin-top: 2rem !important;
+    }
+    
+    .footer-new .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+    
+    .footer-new .row {
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+    }
+    
+    .footer-new .col-lg-3,
+    .footer-new .col-md-6 {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        margin-bottom: 1.25rem !important;
+    }
+    
+    /* Logo section */
+    .footer-new .footer-logo .fs-4 {
+        font-size: 1.1rem !important;
+    }
+    
+    .footer-new .footer-logo small {
+        font-size: 0.8rem !important;
+    }
+    
+    .footer-new .footer-logo i {
+        font-size: 1rem !important;
+    }
+    
+    /* Description */
+    .footer-new p.text-muted {
+        font-size: 0.8rem !important;
+        margin-bottom: 0.75rem !important;
+        line-height: 1.4;
+    }
+    
+    /* Contact info */
+    .footer-new .contact-info {
+        font-size: 0.75rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    
+    .footer-new .contact-info div {
+        margin-bottom: 0.4rem !important;
+    }
+    
+    .footer-new .contact-info i {
+        font-size: 0.7rem;
+    }
+    
+    /* Headings */
+    .footer-new h5 {
+        font-size: 0.9rem !important;
+        margin-bottom: 0.65rem !important;
+    }
+    
+    /* Lists */
+    .footer-new ul {
+        margin-bottom: 0;
+    }
+    
+    .footer-new ul li {
+        margin-bottom: 0.4rem !important;
+    }
+    
+    .footer-new ul li a {
+        font-size: 0.75rem !important;
+    }
+    
+    .footer-new ul li i {
+        font-size: 0.65rem;
+    }
+    
+    /* Contact buttons */
+    .footer-contact-actions {
+        max-width: 100%;
+        margin-top: 0.5rem;
+    }
+    
+    .footer-contact-actions .btn {
+        font-size: 0.8rem !important;
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    .footer-contact-actions .btn i {
+        font-size: 0.75rem;
+    }
+    
+    /* Footer bottom */
+    .footer-new .border-top {
+        margin-top: 1.5rem !important;
+        padding-top: 1rem !important;
+    }
+    
+    .footer-new .border-top .small {
+        font-size: 0.7rem !important;
+        line-height: 1.4;
+    }
+    
+    .footer-new .border-top .col-md-6 {
+        margin-bottom: 0.75rem !important;
+    }
+    
+    /* Social links */
+    .footer-new .social-links {
+        gap: 1rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .footer-new .social-links i {
+        font-size: 1.1rem !important;
+    }
+    
+    /* Hide some elements on mobile for cleaner look */
+    .footer-new .col-lg-3:nth-child(2),
+    .footer-new .col-lg-3:nth-child(3),
+    .footer-new .col-lg-3:nth-child(4) {
+        /* display: none; */
+        width: 100%;
+        max-width: 50%;
+        flex: 0 0 50%;
+    }
+    
+    /* Make remaining columns full width */
+    .footer-new .col-lg-3:nth-child(1) {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+    
+    /* Breadcrumb mobile */
+    .breadcrumb {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+        font-size: 0.7rem;
+    }
+    
+    /* Mobile sidebar improvements */
+    .offcanvas-body {
+        padding: 1rem;
+    }
+    
+    .offcanvas-header {
+        padding: 1rem;
+    }
+    
+    /* Main content spacing */
+    #main-content {
+        padding-top: 1rem;
+    }
+    
+    /* Scroll to top button mobile */
+    #scroll-to-top {
+        bottom: 80px;
+        right: 15px;
+        width: 42px;
+        height: 42px;
+    }
+}
+
+/* Extra small devices optimization */
+@media screen and (max-width: 375px) {
+    .logo span {
+        font-size: 1.2rem !important;
+    }
+
+    .logo small {
+        font-size: 0.9rem !important;
+    }
+    
+    .container {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
     }
 }
 
@@ -192,5 +399,165 @@ header button {
     }
      100% {
         background-position: 468px 0;
+    }
+}
+
+/* ==================== Contact Buttons Global Styles ==================== */
+/* Header Contact Styles */
+.nav-links .btn-outline-primary {
+    transition: all 0.3s ease;
+    border-width: 2px;
+}
+
+.nav-links .btn-outline-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+/* Footer Contact Buttons */
+.footer-contact-actions .btn-footer-call {
+    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+    border: none;
+    color: white !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+}
+
+.footer-contact-actions .btn-footer-call:hover {
+    background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+}
+
+.footer-contact-actions .btn-footer-zalo {
+    background: linear-gradient(135deg, #0068ff 0%, #0052cc 100%);
+    border: none;
+    color: white !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 104, 255, 0.3);
+}
+
+.footer-contact-actions .btn-footer-zalo:hover {
+    background: linear-gradient(135deg, #0052cc 0%, #003d99 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 104, 255, 0.4);
+}
+
+/* ==================== Floating Action Buttons ==================== */
+.floating-contact-buttons {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fab-button {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white !important;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.fab-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+.fab-button:active {
+    transform: scale(0.95);
+}
+
+.fab-call {
+    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+    animation: pulse-call 2s infinite;
+}
+
+.fab-call:hover {
+    background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+}
+
+.fab-zalo {
+    background: linear-gradient(135deg, #0068ff 0%, #0052cc 100%);
+    animation: pulse-zalo 2s infinite;
+}
+
+.fab-zalo:hover {
+    background: linear-gradient(135deg, #0052cc 0%, #003d99 100%);
+}
+
+/* Animations for FAB */
+@keyframes pulse-call {
+    0%, 100% {
+        box-shadow: 0 4px 20px rgba(66, 153, 225, 0.4), 0 0 0 0 rgba(66, 153, 225, 0.7);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(66, 153, 225, 0.4), 0 0 0 15px rgba(66, 153, 225, 0);
+    }
+}
+
+@keyframes pulse-zalo {
+    0%, 100% {
+        box-shadow: 0 4px 20px rgba(0, 104, 255, 0.4), 0 0 0 0 rgba(0, 104, 255, 0.7);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(0, 104, 255, 0.4), 0 0 0 15px rgba(0, 104, 255, 0);
+    }
+}
+
+.fab-button i {
+    animation: shake-icon 3s infinite;
+}
+
+@keyframes shake-icon {
+    0%, 100% { transform: rotate(0deg); }
+    10%, 30% { transform: rotate(-15deg); }
+    20%, 40% { transform: rotate(15deg); }
+    50%, 90% { transform: rotate(0deg); }
+}
+
+/* Responsive Design for FAB */
+@media screen and (max-width: 768px) {
+    .floating-contact-buttons {
+        bottom: 80px;
+        right: 15px;
+    }
+    
+    .fab-button {
+        width: 50px;
+        height: 50px;
+        font-size: 1.3rem;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .floating-contact-buttons {
+        bottom: 70px;
+        right: 10px;
+    }
+    
+    .fab-button {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+    }
+}
+
+/* Hide FAB when scroll to top button is visible to avoid overlap */
+@media screen and (max-width: 576px) {
+    .floating-contact-buttons {
+        gap: 10px;
     }
 }

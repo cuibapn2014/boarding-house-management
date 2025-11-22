@@ -16,7 +16,7 @@
                     Nền tảng cho thuê phòng trọ, nhà nguyên căn uy tín hàng đầu tại TP. Hồ Chí Minh. 
                     Giúp bạn tìm được nơi ở hoàn hảo một cách nhanh chóng và tiện lợi.
                 </p>
-                <div class="contact-info small text-muted">
+                <div class="contact-info small text-muted mb-3">
                     <div class="mb-2">
                         <i class="fa-solid fa-envelope me-2"></i>
                         <a href="mailto:nmtworks.7250@gmail.com" class="text-muted text-decoration-none">nmtworks.7250@gmail.com</a>
@@ -26,10 +26,27 @@
                         <a href="tel:0388794195" class="text-muted text-decoration-none">0388 794 195</a>
                     </div>
                 </div>
+                {{-- Quick Contact Buttons --}}
+                <div class="footer-contact-actions d-flex flex-column gap-2">
+                    <a href="tel:0388794195" 
+                       class="btn btn-footer-call btn-sm d-flex align-items-center justify-content-center gap-2"
+                       title="Gọi ngay hotline">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>Gọi Ngay</span>
+                    </a>
+                    <a href="{{ getZaloLink('0388794195') }}" 
+                       target="_blank"
+                       rel="noopener"
+                       class="btn btn-footer-zalo btn-sm d-flex align-items-center justify-content-center gap-2"
+                       title="Chat Zalo với chúng tôi">
+                        <i class="fa-brands fa-whatsapp"></i>
+                        <span>Chat Zalo</span>
+                    </a>
+                </div>
             </div>
 
             {{-- Danh mục cho thuê --}}
-            <div class="col-lg-3 col-md-6 mb-4">
+            <div class="col-lg-3 col-md-6 mb-4 text-dark">
                 <h5 class="fw-bold mb-3 fs-6">Danh Mục Cho Thuê</h5>
                 <ul class="list-unstyled">
                     <li class="mb-2">
@@ -68,7 +85,7 @@
             </div>
 
             {{-- Chính sách --}}
-            <div class="col-lg-3 col-md-6 mb-4">
+            <div class="col-lg-3 col-md-6 mb-4 text-dark">
                 <h5 class="fw-bold mb-3 fs-6">Chính Sách</h5>
                 <ul class="list-unstyled">
                     <li class="mb-2">
@@ -99,7 +116,7 @@
             </div>
 
             {{-- Hỗ trợ --}}
-            <div class="col-lg-3 col-md-6 mb-4">
+            <div class="col-lg-3 col-md-6 mb-4 text-dark ">
                 <h5 class="fw-bold mb-3 fs-6">Hỗ Trợ</h5>
                 <ul class="list-unstyled">
                     <li class="mb-2">

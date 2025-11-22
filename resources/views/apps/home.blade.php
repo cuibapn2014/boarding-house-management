@@ -88,9 +88,9 @@ $categories = \App\Constants\SystemDefination::BOARDING_HOUSE_CATEGORY;
         <div class="container">
             <h2 id="popular-locations-heading" class="fw-bold mb-4">Địa Điểm Được Quan Tâm Nhiều Nhất</h2>
             
-            <div class="row g-4" role="list">
+            <div class="row g-3 g-md-4" role="list">
                 @foreach($latestPosts as $index => $boardingHouse)
-                <article class="col-lg-3 col-md-4 col-sm-6 col-12" role="listitem" itemscope itemtype="https://schema.org/RealEstate">
+                <article class="col-lg-3 col-md-4 col-sm-6 col-6" role="listitem" itemscope itemtype="https://schema.org/RealEstate">
                     <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" 
                        class="text-decoration-none"
                        aria-label="Xem chi tiết {{ $boardingHouse->title }}">
@@ -126,7 +126,7 @@ $categories = \App\Constants\SystemDefination::BOARDING_HOUSE_CATEGORY;
                             {{-- Property Info --}}
                             <div class="card-body p-3">
                                 <h3 class="card-title fs-6 fw-semibold text-dark mb-2 text-truncate" 
-                                    style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;white-space: normal;"
+                                    style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;white-space: normal;min-height: 40px;"
                                     itemprop="name">
                                     {{ $boardingHouse->title }}
                                 </h3>

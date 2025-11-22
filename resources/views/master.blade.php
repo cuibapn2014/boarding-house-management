@@ -267,6 +267,24 @@
         <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
     </button>
 
+    {{-- Floating Action Buttons --}}
+    <div class="floating-contact-buttons">
+        <a href="tel:0388794195" 
+           class="fab-button fab-call"
+           aria-label="Gọi điện ngay"
+           title="Gọi ngay: 0388 794 195">
+            <i class="fa-solid fa-phone"></i>
+        </a>
+        <a href="{{ getZaloLink('0388794195') }}" 
+           target="_blank"
+           rel="noopener"
+           class="fab-button fab-zalo"
+           aria-label="Chat Zalo"
+           title="Chat Zalo với chúng tôi">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+    </div>
+
     @include('components.loading')
 
     {{-- Large JSON-LD schemas --}}

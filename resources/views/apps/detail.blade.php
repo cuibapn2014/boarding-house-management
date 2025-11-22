@@ -291,6 +291,25 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                     <span>********@*****.com</span>
                 </div>
                 
+                <!-- Contact Action Buttons -->
+                <div class="contact-actions mt-3">
+                    <a href="tel:{{ $boardingHouse->phone ?? $boardingHouse->user_create->phone }}" 
+                       class="btn btn-call w-100 mb-2"
+                       aria-label="Gọi điện cho {{ $boardingHouse->user_create->full_name }}">
+                        <i class="fa-solid fa-phone"></i>
+                        Gọi Ngay
+                    </a>
+                    
+                    <a href="{{ getZaloLink($boardingHouse->phone ?? $boardingHouse->user_create->phone) }}" 
+                       class="btn btn-zalo w-100 mb-2"
+                       target="_blank"
+                       rel="noopener"
+                       aria-label="Chat Zalo với {{ $boardingHouse->user_create->full_name }}">
+                        <i class="fa-brands fa-whatsapp"></i>
+                        Chat Zalo
+                    </a>
+                </div>
+                
                 <div class="contact__divide mx-auto my-3">Hoặc</div>
                 
                 <button class="btn btn-success btn-appointment w-100" 
@@ -315,9 +334,9 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
             <p class="text-muted mt-2">Khám phá thêm các phòng trọ khác trong khu vực</p>
         </div>
         
-        <div class="row g-4">
+        <div class="row g-3 g-md-4">
             @foreach($boardingHouseRelation as $index => $relation)
-            <article class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <article class="col-xl-3 col-lg-4 col-md-6 col-6">
                 <a href="{{ route('rentalHome.show', ['id' => $relation->id, 'title' => $relation->slug]) }}"
                    class="text-decoration-none d-block h-100">
                     <div class="related-room">

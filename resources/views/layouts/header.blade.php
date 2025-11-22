@@ -30,7 +30,20 @@
             {{-- Navigation Links --}}
             <ul class="nav-links d-none d-md-flex mb-0 align-items-center" style="gap: 1.5rem;">
                 <li>
-                    <a href="#" class="text-decoration-none text-dark fw-normal">Yêu thích</a>
+                    <a href="tel:0388794195" class="text-decoration-none d-flex align-items-center" title="Gọi ngay hotline">
+                        <i class="fa-solid fa-phone text-success me-2"></i>
+                        <span class="text-dark fw-bold">0388 794 195</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ getZaloLink('0388794195') }}" 
+                       target="_blank" 
+                       rel="noopener"
+                       class="btn btn-outline-primary btn-sm px-3 rounded-pill d-flex align-items-center"
+                       title="Chat Zalo với chúng tôi">
+                        <i class="fa-brands fa-whatsapp me-1"></i>
+                        Zalo
+                    </a>
                 </li>
                 <li>
                     <a href="{{ route('contact.index') }}" class="text-decoration-none text-dark fw-normal">Trợ giúp</a>
@@ -85,6 +98,23 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
         </div>
         <div class="offcanvas-body">
+            {{-- Quick Contact Actions --}}
+            <div class="mb-3 pb-3 border-bottom">
+                <div class="d-flex flex-column gap-2">
+                    <a href="tel:0388794195" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>Gọi Ngay: 0388 794 195</span>
+                    </a>
+                    <a href="{{ getZaloLink('0388794195') }}" 
+                       target="_blank"
+                       rel="noopener"
+                       class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center gap-2">
+                        <i class="fa-brands fa-whatsapp"></i>
+                        <span>Chat Zalo</span>
+                    </a>
+                </div>
+            </div>
+            
             <div class="d-flex flex-column" style="gap: 1rem;">
                 <a href="{{ route('home.index') }}" class="text-decoration-none text-dark py-2 border-bottom">
                     <i class="fa-solid fa-house fa-fw me-2"></i>

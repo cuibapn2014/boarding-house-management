@@ -34,8 +34,140 @@ div.hero .hero-overlay {
     overflow: hidden;
 }
 
+/* ==================== Mobile Optimizations ==================== */
+@media screen and (max-width: 992px) {
+    .item-img {
+        width: 180px !important;
+        min-width: 180px;
+        height: 160px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .list-home .row {
+        margin: 0 -0.5rem;
+    }
+    
+    .list-home .col-12 {
+        padding: 0 0.5rem;
+    }
+    
+    .item-img {
+        width: 140px !important;
+        min-width: 140px;
+        height: 140px;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+    
+    .__title {
+        font-size: 0.9rem;
+        line-height: 1.3;
+        -webkit-line-clamp: 2;
+    }
+}
+
 @media screen and (max-width: 576px) {
+    /* 2-column grid layout for mobile */
+    .list-home {
+        padding: 0 !important;
+    }
+    
+    .list-home .d-flex {
+        margin: 0 -0.375rem;
+    }
+    
+    .list-home .col-6,
+    .list-home .col-12 {
+        padding: 0 0.375rem !important;
+        margin-bottom: 0.75rem;
+    }
+    
+    /* Vertical card layout for mobile */
+    .list-home .card {
+        flex-direction: column !important;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e9ecef;
+        height: 100%;
+    }
+    
     .item-img {
         width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        height: 130px !important;
+        border-radius: 8px 8px 0 0 !important;
+    }
+    
+    .item-info,
+    .card-body {
+        padding: 0.65rem !important;
+        width: 100%;
+    }
+    
+    .__title {
+        font-size: 0.825rem !important;
+        font-weight: 600;
+        line-height: 1.3;
+        margin-bottom: 0.3rem;
+        -webkit-line-clamp: 2;
+        max-height: 2.1em;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .text-sm,
+    .text-muted {
+        font-size: 0.7rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    .text-md,
+    .fw-bold {
+        font-size: 0.85rem !important;
+    }
+    
+    .badge {
+        font-size: 0.65rem !important;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    /* Container spacing */
+    .container {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+    
+    /* Filter button */
+    #btn-open-filter-sidebar {
+        font-size: 0.875rem;
+        padding: 0.4rem 0.8rem;
+        margin-right: 0.5rem !important;
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Results summary */
+    .list-home .h4 {
+        font-size: 1.1rem !important;
+    }
+    
+    /* Hide icon on small screens */
+    .item-info i,
+    .card-body i {
+        display: none;
     }
 }

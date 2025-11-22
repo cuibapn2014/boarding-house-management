@@ -70,6 +70,7 @@ class RentalHomeController extends Controller
                                             'price',
                                             'status',
                                             'tags',
+                                            'phone',
                                             'updated_at',
                                             'created_by'
                                         ]);
