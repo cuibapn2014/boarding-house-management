@@ -52,7 +52,7 @@
                     @auth
                         <a href="#" class="btn btn-success btn-sm px-4 rounded-pill">Đăng tin ngay</a>
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-success btn-sm px-4 rounded-pill">Đăng nhập/Đăng ký</a>
+                        <a href="#" class="btn btn-success btn-sm px-4 rounded-pill">Đăng nhập/Đăng ký</a>
                     @endauth
                 </li>
             </ul>
@@ -135,7 +135,7 @@
                 @auth
                     <a href="#" class="btn btn-success mt-3">Đăng tin ngay</a>
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-success mt-3">Đăng nhập/Đăng ký</a>
+                    <a href="#" class="btn btn-success mt-3">Đăng nhập/Đăng ký</a>
                 @endauth
             </div>
             <div class="mt-4 pt-4 border-top">
