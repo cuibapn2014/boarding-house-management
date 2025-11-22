@@ -111,6 +111,7 @@
 
     $status = SystemDefination::BOARDING_HOUSE_STATUS;
     $categories = SystemDefination::BOARDING_HOUSE_CATEGORY;
+    $furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
 @endphp
 
 <div class="container-fluid py-4">
@@ -266,7 +267,12 @@
                             <i class="fas fa-cloud-upload-alt"></i>
                             Thêm hình ảnh mới
                         </h5>
-                        @if(auth()->user()->plan_current === 'free')
+                        @if(auth()->user()->is_admin)
+                        <p class="text-sm text-muted mb-3">
+                            <i class="fas fa-crown text-warning me-1"></i>
+                            <strong>Admin:</strong> Không giới hạn số lượng file
+                        </p>
+                        @elseif(auth()->user()->plan_current === 'free')
                         <div class="alert alert-warning mb-3" style="font-size: 13px;">
                             <i class="fas fa-info-circle me-2"></i>
                             <strong>Gói Free:</strong> Tối đa <strong>5 ảnh</strong> và <strong>1 video</strong> (bao gồm cả ảnh cũ)
@@ -293,6 +299,16 @@
                             <select id="status" name="status" class="form-control">
                                 @foreach($status as $k => $st)
                                 <option value="{{ $k }}" {{ $boardingHouse->status == $k ? 'selected' : '' }}>{{ $st }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Tình trạng nội thất</label>
+                            <select id="furniture_status" name="furniture_status" class="form-control">
+                                <option value="">Chọn tình trạng nội thất</option>
+                                @foreach($furnitureStatus as $k => $fs)
+                                <option value="{{ $k }}" {{ $boardingHouse->furniture_status == $k ? 'selected' : '' }}>{{ $fs }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -346,6 +362,7 @@
 <script>
     // Set user plan for Dropzone validation
     Dropzone.userPlan = '{{ auth()->user()->plan_current ?? "free" }}';
+    Dropzone.isAdmin = {{ auth()->user()->is_admin ? 'true' : 'false' }};
 </script>
 <script src="{{ asset('assets/js/apps/boarding_house/form-page.js') }}"></script>
 @endpush

@@ -14,7 +14,7 @@ $(document).ready(function() {
         delaySearch = setTimeout(() => search($(this)), 550);
     })
 
-    $(document).on('change', '#byCategory, #byStatus, #byPublish', function(e) {
+    $(document).on('change', '#byCategory, #byStatus, #byFurnitureStatus, #byPublish', function(e) {
         clearTimeout(delaySearch);
         delaySearch = setTimeout(() => search($(this)), 550);
     })
@@ -94,7 +94,7 @@ $(document).ready(function() {
     });
 
     // Update filter count on any filter change
-    $(document).on('change', '#byCategory, #byStatus, #byPublish', function() {
+    $(document).on('change', '#byCategory, #byStatus, #byFurnitureStatus, #byPublish', function() {
         updateFilterCount();
     });
 
@@ -142,6 +142,7 @@ function updateFilterCount() {
     if(formSearch.find('#byCategory').val() !== '') count++;
     if(formSearch.find('#byFromPrice').val().trim() !== '') count++;
     if(formSearch.find('#byToPrice').val().trim() !== '') count++;
+    if(formSearch.find('#byFurnitureStatus').val() !== '') count++;
     if(formSearch.find('#byPublish').val() !== '') count++;
     
     // Update filter count badge
@@ -164,6 +165,7 @@ function clearAllFilters() {
     formSearch.find('#byFromPrice').val('');
     formSearch.find('#byToPrice').val('');
     formSearch.find('#byStatus').val('');
+    formSearch.find('#byFurnitureStatus').val('');
     formSearch.find('#byPublish').val('');
     
     // Reset quick filter badges to "Tất cả"

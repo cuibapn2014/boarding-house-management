@@ -82,6 +82,7 @@ class UserController extends Controller
             'country' => ['nullable', 'string', 'max:100'],
             'postal' => ['nullable', 'string', 'max:20'],
             'about' => ['nullable', 'string', 'max:500'],
+            'plan_current' => ['nullable', 'string', 'in:free,premium'],
         ]);
 
         $updateData = [
@@ -100,6 +101,11 @@ class UserController extends Controller
         // Only update password if provided
         if (!empty($validated['password'])) {
             $updateData['password'] = $validated['password']; // Will be hashed by model
+        }
+
+        // Only admin can update plan_current
+        if (auth()->user()->is_admin && isset($validated['plan_current'])) {
+            $updateData['plan_current'] = $validated['plan_current'];
         }
 
         $user->update($updateData);

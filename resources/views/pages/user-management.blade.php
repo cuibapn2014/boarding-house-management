@@ -138,14 +138,23 @@
                             </p>
                             @endif
                         </div>
-                        <div>
+                        <div class="text-end">
                             @if($user->is_admin)
-                            <span class="user-role-badge bg-danger-soft text-danger">
+                            <span class="user-role-badge bg-danger-soft text-danger d-block mb-2">
                                 <i class="fas fa-crown me-1"></i>Admin
                             </span>
                             @else
-                            <span class="user-role-badge bg-primary-soft text-primary">
+                            <span class="user-role-badge bg-primary-soft text-primary d-block mb-2">
                                 <i class="fas fa-user me-1"></i>User
+                            </span>
+                            @endif
+                            @if($user->plan_current == 'premium')
+                            <span class="user-role-badge bg-warning text-white d-block">
+                                <i class="fas fa-star me-1"></i>Premium
+                            </span>
+                            @else
+                            <span class="user-role-badge bg-secondary text-white d-block">
+                                <i class="fas fa-gift me-1"></i>Free
                             </span>
                             @endif
                         </div>

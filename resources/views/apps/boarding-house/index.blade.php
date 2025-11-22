@@ -228,6 +228,7 @@ use App\Constants\SystemDefination;
 
 $status = SystemDefination::BOARDING_HOUSE_STATUS;
 $categories = SystemDefination::BOARDING_HOUSE_CATEGORY;
+$furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
 @endphp
 <div class="container-fluid py-4">
     <!-- Header Actions -->
@@ -336,6 +337,17 @@ $categories = SystemDefination::BOARDING_HOUSE_CATEGORY;
                                         </div>
                                         <div class="col-lg-3 col-md-6">
                                             <label class="form-label text-sm font-weight-bold mb-1">
+                                                <i class="fas fa-couch me-1 text-muted"></i>Nội thất
+                                            </label>
+                                            <select class="form-control form-control-sm" id="byFurnitureStatus" name="byFurnitureStatus">
+                                                <option value="">Tất cả</option>
+                                                @foreach($furnitureStatus as $key => $value)
+                                                <option value="{{ $key }}">{{ $value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6">
+                                            <label class="form-label text-sm font-weight-bold mb-1">
                                                 <i class="fas fa-eye me-1 text-muted"></i>Hiển thị
                                             </label>
                                             <select class="form-control form-control-sm" id="byPublish" name="byPublish">
@@ -392,9 +404,15 @@ $categories = SystemDefination::BOARDING_HOUSE_CATEGORY;
                             @endif
                         </div>
 
-                        <p class="text-xs text-muted mb-3">
+                        <p class="text-xs text-muted mb-2">
                             <i class="fas fa-tag me-1"></i>{{ $boardingHouse->category }}
                         </p>
+
+                        @if($boardingHouse->furniture_status)
+                        <p class="text-xs text-muted mb-2">
+                            <i class="fas fa-couch me-1"></i>{{ $furnitureStatus[$boardingHouse->furniture_status] ?? '' }}
+                        </p>
+                        @endif
 
                         <p class="text-xs text-muted mb-3">
                             <i class="far fa-clock me-1"></i>Tạo: {{ date('d/m/Y H:i', strtotime($boardingHouse->created_at)) }}

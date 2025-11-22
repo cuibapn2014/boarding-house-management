@@ -13,6 +13,25 @@ class BoardingHouse extends Model
 
     protected $table = 'boarding_houses';
 
+    protected $fillable = [
+        'title',
+        'category',
+        'description',
+        'content',
+        'district',
+        'ward',
+        'address',
+        'phone',
+        'price',
+        'status',
+        'furniture_status',
+        'is_publish',
+        'tags',
+        'completion_id',
+        'created_by',
+        'updated_by',
+    ];
+
     public function user_create() 
     {
         return $this->belongsTo(\App\Models\User::class, 'created_by', 'id');

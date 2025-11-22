@@ -80,6 +80,7 @@
 
     $status = SystemDefination::BOARDING_HOUSE_STATUS;
     $categories = SystemDefination::BOARDING_HOUSE_CATEGORY;
+    $furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
 @endphp
 
 <div class="container-fluid py-4">
@@ -238,6 +239,16 @@
                             <select id="status" name="status" class="form-control">
                                 @foreach($status as $k => $st)
                                 <option value="{{ $k }}">{{ $st }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Tình trạng nội thất</label>
+                            <select id="furniture_status" name="furniture_status" class="form-control">
+                                <option value="">Chọn tình trạng nội thất</option>
+                                @foreach($furnitureStatus as $k => $fs)
+                                <option value="{{ $k }}">{{ $fs }}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -44,6 +44,9 @@ class BoardingHouseController extends Controller
             ->when($request->filled('byStatus'), function($query) use($request) {
                 $query->where('status', $request->byStatus);
             })
+            ->when($request->filled('byFurnitureStatus'), function($query) use($request) {
+                $query->where('furniture_status', $request->byFurnitureStatus);
+            })
             ->when($request->filled('byPublish'), function($query) use($request) {
                 $query->where('is_publish', $request->byPublish);
             })
@@ -55,6 +58,7 @@ class BoardingHouseController extends Controller
                 'category',
                 'price',
                 'status',
+                'furniture_status',
                 'is_publish',
                 'created_at',
             )
@@ -107,6 +111,10 @@ class BoardingHouseController extends Controller
      */
     private function optimizeContentWithAI(string $content): ?string
     {
+        if(! auth()->user()->is_admin || auth()->user()->plan_current === 'free') {
+            return $content;
+        }
+
         try {
             $message = $content . "\n Hãy viết lại cái mô tả trên sao cho seo được điểm tốt. Lưu ý không viết kiểu markdown. Dùng các thẻ của HTML để biểu diễn các xuống dòng hay icon chẳng hạn. Có thể dùng emoji cho sinh động cũng được";
             $response = $this->chatGptUtils->sendMessageUsingChat($message);
@@ -122,6 +130,10 @@ class BoardingHouseController extends Controller
      */
     private function generateTagsWithAI(string $content, array $defaultTags): string
     {
+        if(! auth()->user()->is_admin || auth()->user()->plan_current === 'free') {
+            return implode(', ', $defaultTags);
+        }
+
         try {
             $message = $content . "\n Hãy tạo ra những keywords hiệu quả cho bài viết này giúp tôi, những từ khoá liên quan cũng được. Response chỉ trả lời kết quả không cần giải thích";
             $response = $this->chatGptUtils->sendMessageUsingChat($message);
@@ -144,18 +156,19 @@ class BoardingHouseController extends Controller
     private function createBoardingHouse($request, $content, $tags): BoardingHouse
     {
         $boardingHouse = new BoardingHouse();
-        $boardingHouse->title       = trim($request->input('title'));
-        $boardingHouse->category    = $request->input('category');
-        $boardingHouse->description = trim($request->input('description'));
-        $boardingHouse->content     = $content;
-        $boardingHouse->district    = $request->input('district');
-        $boardingHouse->ward        = $request->input('ward');
-        $boardingHouse->address     = trim($request->input('address'));
-        $boardingHouse->phone       = trim($request->input('phone'));
-        $boardingHouse->price       = numberRemoveComma($request->input('price'));
-        $boardingHouse->status      = $request->input('status');
-        $boardingHouse->is_publish  = $request->has('is_publish') && $request->input('is_publish') === 'on';
-        $boardingHouse->tags        = $tags;
+        $boardingHouse->title            = trim($request->input('title'));
+        $boardingHouse->category         = $request->input('category');
+        $boardingHouse->description      = trim($request->input('description'));
+        $boardingHouse->content          = $content;
+        $boardingHouse->district         = $request->input('district');
+        $boardingHouse->ward             = $request->input('ward');
+        $boardingHouse->address          = trim($request->input('address'));
+        $boardingHouse->phone            = trim($request->input('phone'));
+        $boardingHouse->price            = numberRemoveComma($request->input('price'));
+        $boardingHouse->status           = $request->input('status');
+        $boardingHouse->furniture_status = $request->input('furniture_status');
+        $boardingHouse->is_publish       = $request->has('is_publish') && $request->input('is_publish') === 'on';
+        $boardingHouse->tags             = $tags;
         $boardingHouse->save();
         
         return $boardingHouse;
@@ -207,18 +220,19 @@ class BoardingHouseController extends Controller
             $tags = array_map(fn($item) => $item->value, json_decode($request->tags));
             
             DB::transaction(function () use ($request, $boardingHouse, $tags) {
-                $boardingHouse->title       = trim($request->input('title'));
-                $boardingHouse->category    = $request->input('category');
-                $boardingHouse->description = trim($request->input('description'));
-                $boardingHouse->content     = trim($request->input('content'));
-                $boardingHouse->district    = $request->input('district');
-                $boardingHouse->ward        = $request->input('ward');
-                $boardingHouse->address     = trim($request->input('address'));
-                $boardingHouse->phone       = trim($request->input('phone'));
-                $boardingHouse->price       = numberRemoveComma($request->input('price'));
-                $boardingHouse->status      = $request->input('status');
-                $boardingHouse->is_publish  = $request->has('is_publish') && $request->input('is_publish') === 'on';
-                $boardingHouse->tags        = implode(', ', $tags);
+                $boardingHouse->title            = trim($request->input('title'));
+                $boardingHouse->category         = $request->input('category');
+                $boardingHouse->description      = trim($request->input('description'));
+                $boardingHouse->content          = trim($request->input('content'));
+                $boardingHouse->district         = $request->input('district');
+                $boardingHouse->ward             = $request->input('ward');
+                $boardingHouse->address          = trim($request->input('address'));
+                $boardingHouse->phone            = trim($request->input('phone'));
+                $boardingHouse->price            = numberRemoveComma($request->input('price'));
+                $boardingHouse->status           = $request->input('status');
+                $boardingHouse->furniture_status = $request->input('furniture_status');
+                $boardingHouse->is_publish       = $request->has('is_publish') && $request->input('is_publish') === 'on';
+                $boardingHouse->tags             = implode(', ', $tags);
                 $boardingHouse->save();
 
                 // Upload new files if any
