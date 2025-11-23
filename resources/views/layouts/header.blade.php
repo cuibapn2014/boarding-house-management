@@ -49,11 +49,7 @@
                     <a href="{{ route('contact.index') }}" class="text-decoration-none text-dark fw-normal">Trợ giúp</a>
                 </li>
                 <li>
-                    @auth
-                        <a href="#" class="btn btn-success btn-sm px-4 rounded-pill">Đăng tin ngay</a>
-                    @else
-                        <a href="#" class="btn btn-success btn-sm px-4 rounded-pill">Đăng nhập/Đăng ký</a>
-                    @endauth
+                    <a href="{{ adminPortalUrl('boarding-house/create') }}" class="btn btn-success btn-sm px-4 rounded-pill">Đăng tin ngay</a>
                 </li>
             </ul>
 
@@ -69,7 +65,7 @@
         </nav>
 
         {{-- Search Bar Mobile --}}
-        <div class="search-mobile d-lg-none pb-3">
+        <!-- <div class="search-mobile d-lg-none pb-3">
             <form action="{{ route('rentalHome.index') }}" method="GET">
                 <div class="input-group">
                     <input type="text" 
@@ -82,7 +78,7 @@
                     </button>
                 </div>
             </form>
-        </div>
+        </div> -->
     </div>
 
     {{-- Mobile Sidebar --}}
@@ -132,11 +128,7 @@
                     <i class="fa-solid fa-headset fa-fw me-2"></i>
                     <span>Trợ giúp</span>
                 </a>
-                @auth
-                    <a href="#" class="btn btn-success mt-3">Đăng tin ngay</a>
-                @else
-                    <a href="#" class="btn btn-success mt-3">Đăng nhập/Đăng ký</a>
-                @endauth
+                <a href="{{ adminPortalUrl('boarding-house/create') }}" class="btn btn-success mt-3">Đăng tin ngay</a>
             </div>
             <div class="mt-4 pt-4 border-top">
                 <div class="d-flex flex-column" style="gap: 0.5rem;">

@@ -1,5 +1,5 @@
 <?php
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
 function numberRemoveComma(mixed $input) {
     return str_replace(',', '.', str_replace('.', '', $input));
 }
@@ -63,4 +63,16 @@ function convertDateWithFormat(?string $input, string $formatInput, string $form
     $date = \Carbon\Carbon::createFromFormat($formatInput, $input);
 
     return $date->format($formatOutput);
+}
+
+function adminPortalUrl($path = '') : ?string {
+    $url = env('PORTAL_BASE_URL');
+    if($path) {
+        $path = ltrim($path, '/');
+        $url .= "{$path}";
+
+        return $url;
+    }
+
+    return null;
 }

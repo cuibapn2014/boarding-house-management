@@ -77,6 +77,16 @@
             min-width: 120px;
             max-width: 250px;
         }
+        
+        .list-home .col-6 {
+            padding: 0 0.5rem !important;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .list-home #room-list {
+            margin: 0 -0.5rem;
+        }
     }
 </style>
 @endpush
@@ -191,7 +201,7 @@ $currentFilters = array_filter([
 
             <div class="d-flex flex-wrap justify-content-md-center" id="room-list" role="list">
                 @forelse($boardingHouses as $index => $boardingHouse)
-                <article class="col-md-12 col-6 px-1" 
+                <article class="col-md-12 col-6" 
                          role="listitem" 
                          itemscope 
                          itemtype="https://schema.org/RealEstate">
