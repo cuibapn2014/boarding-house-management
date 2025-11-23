@@ -55,7 +55,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (!Auth::attempt($credentials)) {
+        if (!Auth::attempt($credentials, $request->has('remember'))) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Thông tin đăng nhập không chính xác'
