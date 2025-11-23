@@ -29,7 +29,7 @@ class SocialAuthController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-            
+
             // Check if user exists with this Google ID
             $user = User::where('google_id', $googleUser->id)->first();
             
@@ -85,12 +85,12 @@ class SocialAuthController extends Controller
         $username = explode('@', $googleUser->email)[0];
         $originalUsername = $username;
         $counter = 1;
-        
+
         while (User::where('username', $username)->exists()) {
             $username = $originalUsername . $counter;
             $counter++;
         }
-        
+
         return User::create([
             'username' => $username,
             'firstname' => $firstname,
@@ -100,7 +100,7 @@ class SocialAuthController extends Controller
             'avatar' => $googleUser->avatar,
             'provider' => 'google',
             'email_verified_at' => now(),
-            'password' => null // No password for social login
+            'password' => Hash::make(Str::random(10)) // No password for social login
         ]);
     }
 }
