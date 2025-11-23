@@ -150,7 +150,18 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
             <div class="detail-content">
                 <!-- Title & Meta -->
                 <div>
-                    <h1 class="detail-title">{{ $boardingHouse->title }}</h1>
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h1 class="detail-title mb-0 flex-grow-1">{{ $boardingHouse->title }}</h1>
+                        <button class="btn btn-outline-danger save-listing-btn ms-3" 
+                                data-boarding-house-id="{{ $boardingHouse->id }}"
+                                data-saved="false"
+                                onclick="toggleSaveListing(this);"
+                                title="Lưu tin"
+                                aria-label="Lưu tin này">
+                            <i class="fa-regular fa-heart me-1"></i>
+                            <span class="d-none d-sm-inline">Lưu tin</span>
+                        </button>
+                    </div>
                     <div class="detail-meta">
                         <span>
                             <i class="fa-solid fa-user"></i>
@@ -415,6 +426,12 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
 <script src="{{ asset('assets/js/helper/ApiHelper.js') }}" defer></script>
 <script src="{{ asset('/assets/js/core/splide.min.js') }}"></script>
 <script src="{{ asset('assets/js/apps/rental/detail_rental_script.js') }}?v=1.3" defer></script>
+<script src="{{ asset('assets/js/apps/rental/SavedListing.js') }}" defer></script>
+
+{{-- Set authentication status for JavaScript --}}
+<script>
+    window.isAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
+</script>
 @endpush
 
 @push('seo')

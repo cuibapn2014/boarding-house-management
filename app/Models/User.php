@@ -28,7 +28,10 @@ class User extends Authenticatable
         'country',
         'postal',
         'about',
-        'phone'
+        'phone',
+        'google_id',
+        'avatar',
+        'provider'
     ];
 
     protected $appends = [
@@ -73,5 +76,30 @@ class User extends Authenticatable
     public function getFullNameAttribute() : string
     {
         return "{$this->lastname} {$this->firstname}";
+    }
+
+    /**
+     * Get the saved listings for the user
+     */
+    public function savedListings()
+    {
+        return $this->hasMany(SavedListing::class);
+    }
+
+    /**
+     * Get the boarding houses saved by the user
+     */
+    public function savedBoardingHouses()
+    {
+        return $this->belongsToMany(BoardingHouse::class, 'saved_listings', 'user_id', 'boarding_house_id')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Check if user has saved a specific boarding house
+     */
+    public function hasSavedBoardingHouse($boardingHouseId)
+    {
+        return $this->savedListings()->where('boarding_house_id', $boardingHouseId)->exists();
     }
 }

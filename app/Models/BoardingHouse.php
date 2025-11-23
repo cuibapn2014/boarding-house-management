@@ -53,4 +53,29 @@ class BoardingHouse extends Model
     {
         return Str::slug($this->title);
     }
+
+    /**
+     * Get the saved listings for this boarding house
+     */
+    public function savedListings()
+    {
+        return $this->hasMany(SavedListing::class);
+    }
+
+    /**
+     * Get the users who saved this boarding house
+     */
+    public function savedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'saved_listings', 'boarding_house_id', 'user_id')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Get count of users who saved this listing
+     */
+    public function getSavedCountAttribute()
+    {
+        return $this->savedListings()->count();
+    }
 }

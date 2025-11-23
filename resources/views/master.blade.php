@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>@yield('title')</title>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
     {{-- Security Headers --}}
     @if(app()->environment('production'))
@@ -167,6 +168,126 @@
         .lazyload.loaded {
             opacity: 1;
         }
+
+        /* User Dropdown Styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            z-index: 1000;
+            display: none;
+            min-width: 220px;
+            padding: 0.5rem 0;
+            margin: 0.125rem 0 0;
+            font-size: 1rem;
+            color: #212529;
+            text-align: left;
+            list-style: none;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid rgba(0,0,0,.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.1);
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 1rem;
+            clear: both;
+            font-weight: 400;
+            color: #212529;
+            text-align: inherit;
+            text-decoration: none;
+            white-space: nowrap;
+            background-color: transparent;
+            border: 0;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover,
+        .dropdown-item:focus {
+            background-color: #f8f9fa;
+            color: #16181b;
+        }
+
+        .dropdown-item:active {
+            background-color: #e9ecef;
+        }
+
+        /* Logout button in dropdown */
+        .dropdown-item.text-danger:hover {
+            background-color: #fff5f5;
+            color: #dc3545 !important;
+        }
+
+        .dropdown-divider {
+            height: 0;
+            margin: 0.5rem 0;
+            overflow: hidden;
+            border-top: 1px solid #e9ecef;
+        }
+
+        /* Dropdown toggle */
+        .dropdown-toggle::after {
+            display: inline-block;
+            margin-left: 0.255em;
+            vertical-align: 0.255em;
+            content: "";
+            border-top: 0.3em solid;
+            border-right: 0.3em solid transparent;
+            border-bottom: 0;
+            border-left: 0.3em solid transparent;
+        }
+
+        /* Compact Header Styles */
+        .header-new {
+            padding: 0;
+        }
+
+        .header-new .py-3 {
+            padding-top: 0.75rem !important;
+            padding-bottom: 0.75rem !important;
+        }
+
+        .nav-links {
+            font-size: 0.9rem;
+        }
+
+        .nav-links .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .nav-links i {
+            font-size: 1.1rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1199px) {
+            .nav-links {
+                gap: 0.5rem !important;
+            }
+        }
+
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .logo .fs-4 {
+                font-size: 1.1rem !important;
+            }
+            
+            .search-header {
+                margin-left: 1rem !important;
+                margin-right: 1rem !important;
+            }
+        }
     </style>
 
     {{-- Enhanced Global Schema --}}
@@ -296,6 +417,48 @@
 
     {{-- Enhanced main script --}}
     <script>
+        // Initialize Bootstrap dropdowns
+        document.addEventListener('DOMContentLoaded', function() {
+            // Try Bootstrap 5 initialization
+            if (typeof bootstrap !== 'undefined' && bootstrap.Dropdown) {
+                var dropdownElementList = [].slice.call(document.querySelectorAll('[data-bs-toggle="dropdown"]'));
+                var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+                    return new bootstrap.Dropdown(dropdownToggleEl);
+                });
+            }
+            // Fallback to Bootstrap 4 / jQuery
+            else if (typeof $ !== 'undefined' && $.fn.dropdown) {
+                $('[data-bs-toggle="dropdown"]').dropdown();
+            }
+            // Manual implementation as last resort
+            else {
+                document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(function(element) {
+                    element.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        var menu = this.nextElementSibling;
+                        if (menu && menu.classList.contains('dropdown-menu')) {
+                            // Close all other dropdowns
+                            document.querySelectorAll('.dropdown-menu.show').forEach(function(m) {
+                                if (m !== menu) m.classList.remove('show');
+                            });
+                            // Toggle current dropdown
+                            menu.classList.toggle('show');
+                        }
+                    });
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.dropdown')) {
+                        document.querySelectorAll('.dropdown-menu.show').forEach(function(menu) {
+                            menu.classList.remove('show');
+                        });
+                    }
+                });
+            }
+        });
+
         // Performance optimization
         document.addEventListener('DOMContentLoaded', function() {
             // Scroll to top functionality

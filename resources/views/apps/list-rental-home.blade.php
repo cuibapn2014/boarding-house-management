@@ -255,6 +255,16 @@ $currentFilters = array_filter([
                                  itemprop="category">
                                 {{ $categories[$boardingHouse->category] }}
                             </div>
+
+                            {{-- Save Button --}}
+                            <button class="btn btn-link position-absolute top-0 end-0 p-2 save-listing-btn" 
+                                    data-boarding-house-id="{{ $boardingHouse->id }}"
+                                    data-saved="false"
+                                    onclick="event.preventDefault(); event.stopPropagation(); toggleSaveListing(this);"
+                                    title="Lưu tin"
+                                    aria-label="Lưu tin này">
+                                <i class="fa-regular fa-heart fs-4 text-danger"></i>
+                            </button>
                         </div>
                     </a>
                 </article>
@@ -412,6 +422,12 @@ $currentFilters = array_filter([
 <script src="{{ asset('assets/js/helper/ApiHelper.js') }}" defer></script>
 <script src="{{ asset('assets/js/apps/rental/script.js') }}" defer></script>
 <script src="{{ asset('assets/js/apps/rental/Rental.js') }}" defer></script>
+<script src="{{ asset('assets/js/apps/rental/SavedListing.js') }}" defer></script>
+
+{{-- Set authentication status for JavaScript --}}
+<script>
+    window.isAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
+</script>
 
 {{-- Enhanced filter functionality --}}
 <script>
