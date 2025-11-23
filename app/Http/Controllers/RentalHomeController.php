@@ -69,6 +69,7 @@ class RentalHomeController extends Controller
                                             'ward',
                                             'price',
                                             'status',
+                                            'furniture_status',
                                             'tags',
                                             'phone',
                                             'updated_at',

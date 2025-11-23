@@ -9,6 +9,12 @@ class SystemDefination
         'rented' => 'Đã cho thuê'
     ];
 
+    const FURNITURE_STATUS = [
+        'full' => 'Đầy đủ nội thất',
+        'basic' => 'Nội thất cơ bản',
+        'empty' => 'Không nội thất'
+    ];
+
     const BOARDING_HOUSE_CATEGORY = [
         'KTX' => 'Ký túc xá',
         'SLEEPBOX' => 'Sleepbox',

@@ -23,6 +23,7 @@ class StoreBoardingHouseRequest extends FormRequest
     public function rules(): array
     {
         $category = implode(',',array_keys(SystemDefination::BOARDING_HOUSE_CATEGORY));
+        $furnitureStatus = implode(',',array_keys(SystemDefination::FURNITURE_STATUS));
         return [
             //
             'title' => 'required|max:255',
@@ -33,7 +34,8 @@ class StoreBoardingHouseRequest extends FormRequest
             'phone' => 'nullable|digits:10',
             'district' => 'required',
             'ward' => 'required',
-            'category' => 'required|in:' . $category
+            'category' => 'required|in:' . $category,
+            'furniture_status' => 'nullable|in:' . $furnitureStatus
         ];
     }
 
@@ -60,7 +62,8 @@ class StoreBoardingHouseRequest extends FormRequest
             'phone' => 'Liên hệ/Zalo',
             'district' => 'Quận/Huyện',
             'ward' => 'Phường/Xã',
-            'category' => 'Danh mục'
+            'category' => 'Danh mục',
+            'furniture_status' => 'Tình trạng nội thất'
         ];
     }
 }

@@ -65,6 +65,7 @@
 @section('content')
 @php
 $statues = \App\Constants\SystemDefination::BOARDING_HOUSE_STATUS;
+$furnitureStatuses = \App\Constants\SystemDefination::FURNITURE_STATUS;
 $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHouse->district}";
 @endphp
 
@@ -197,7 +198,7 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                             <p class="feature-value">{{ $boardingHouse->category }}</p>
                         </div>
                     </div>
-                    <div class="feature-item">
+                    <!-- <div class="feature-item">
                         <div class="feature-icon">
                             <i class="fa-solid fa-home"></i>
                         </div>
@@ -205,7 +206,7 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                             <p class="feature-label">Trạng thái</p>
                             <p class="feature-value">{{ $statues[$boardingHouse->status] }}</p>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="feature-item">
                         <div class="feature-icon">
                             <i class="fa-solid fa-location-dot"></i>
@@ -215,6 +216,17 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                             <p class="feature-value">{{ $boardingHouse->district }}</p>
                         </div>
                     </div>
+                    @if($boardingHouse->furniture_status)
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-couch"></i>
+                        </div>
+                        <div class="feature-text">
+                            <p class="feature-label">Nội thất</p>
+                            <p class="feature-value">{{ $furnitureStatuses[$boardingHouse->furniture_status] ?? 'Chưa cập nhật' }}</p>
+                        </div>
+                    </div>
+                    @endif
                 </div>
                 
                 <!-- Description -->
