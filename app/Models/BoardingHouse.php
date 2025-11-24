@@ -78,4 +78,9 @@ class BoardingHouse extends Model
     {
         return $this->savedListings()->count();
     }
+
+    public function scopePublished($query)
+    {
+        return $query->where('is_publish', true);
+    }
 }

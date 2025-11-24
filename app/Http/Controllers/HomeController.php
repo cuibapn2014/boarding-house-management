@@ -35,6 +35,7 @@ class HomeController extends Controller
         ];
 
         $latestPosts = BoardingHouse::with(['boarding_house_files:boarding_house_id,url'])
+                                    ->published()
                                     ->select(
                                         'id',
                                         'title',
@@ -52,6 +53,7 @@ class HomeController extends Controller
                                     ->get();
 
         $nearlyCentreCity = BoardingHouse::with(['boarding_house_files:boarding_house_id,url'])
+                                        ->published()
                                         ->select(
                                             'id',
                                             'title',

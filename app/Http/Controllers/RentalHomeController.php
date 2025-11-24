@@ -36,6 +36,7 @@ class RentalHomeController extends Controller
                                     ->when($request->filled('district'), function($query) use($district) {
                                         $query->whereIn('district', $district);
                                     })
+                                    ->published()
                                     ->select(
                                         'id',
                                         'title',
@@ -58,7 +59,7 @@ class RentalHomeController extends Controller
 
     public function show($id, $title)
     {
-        $boardingHouse = BoardingHouse::find($id, [
+        $boardingHouse = BoardingHouse::published()->find($id, [
                                             'id',
                                             'title',
                                             'description',
@@ -78,7 +79,7 @@ class RentalHomeController extends Controller
 
         if(!$boardingHouse || $title != $boardingHouse->slug) abort(404);
 
-        $boardingHouseRelation = BoardingHouse::where('district', $boardingHouse->district)
+        $boardingHouseRelation = BoardingHouse::published()->where('district', $boardingHouse->district)
                                             ->where('id', '!=', $boardingHouse->id)
                                             ->where('status', 'available')
                                             ->select(
