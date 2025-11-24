@@ -187,12 +187,12 @@ const BoardingHouseFormPage = {
         });
 
         // Number separator
-        $('.number-separator').on('keyup', function() {
-            const value = $(this).val().replace(/,/g, '');
-            if(!isNaN(value) && value !== '') {
-                $(this).val(parseInt(value).toLocaleString('en-US'));
-            }
-        });
+        // $('.number-separator').on('keyup', function() {
+        //     const value = $(this).val().replace(/,/g, '');
+        //     if(!isNaN(value) && value !== '') {
+        //         $(this).val(parseInt(value).toLocaleString('en-US'));
+        //     }
+        // });
     },
 
     submitForm: function(form) {

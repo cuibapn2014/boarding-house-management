@@ -164,7 +164,7 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="row mb-4">
+    {{-- <div class="row mb-4">
         <div class="col-md-4 mb-3">
             <div class="stats-card">
                 <div class="stats-number">12</div>
@@ -183,7 +183,7 @@
                 <div class="stats-label">Tỷ lệ lấp đầy</div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Profile Form -->
     <form role="form" method="POST" action={{ route('profile.update') }} enctype="multipart/form-data">

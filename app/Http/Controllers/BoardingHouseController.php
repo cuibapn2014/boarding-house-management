@@ -212,7 +212,7 @@ class BoardingHouseController extends Controller
             return $this->responseError('Dữ liệu không tồn tại hoặc đã bị xoá!');
         }
 
-        if ($boardingHouse->create_by != auth()->id() && auth()->id() != 1) {
+        if ($boardingHouse->canEdit()) {
             return $this->responseError('Không có quyền chỉnh sửa');
         }
 
@@ -257,7 +257,7 @@ class BoardingHouseController extends Controller
             return $this->responseError('Dữ liệu không tồn tại hoặc đã bị xoá!');
         }
 
-        if ($boardingHouse->create_by != auth()->id() && auth()->id() != 1) {
+        if ($boardingHouse->canDelete()) {
             return $this->responseError('Không có quyền xoá!');
         }
 
