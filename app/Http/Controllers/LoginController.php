@@ -46,7 +46,7 @@ class LoginController extends Controller
                 ]);
             }
 
-            return redirect()->intended('dashboard')->with('success', 'Đăng nhập thành công!');
+            return redirect()->intended('boarding-house')->with('success', 'Đăng nhập thành công!');
         }
 
         // Nếu request mong muốn JSON response (API request)

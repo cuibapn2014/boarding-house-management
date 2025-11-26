@@ -46,4 +46,14 @@ class BoardingHouse extends Model
     {
         return $this->hasMany(\App\Models\BoardingHouseFile::class, 'boarding_house_id', 'id');
     }
+
+    public function canEdit(): bool
+    {
+        return $this->created_by === auth()->id() || auth()->id() === 1;
+    }
+
+    public function canDelete(): bool
+    {
+        return $this->created_by === auth()->id() || auth()->id() === 1;
+    }
 }
