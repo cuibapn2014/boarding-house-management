@@ -243,6 +243,14 @@
                                 @endif
                             </p>
                             <p class="text-xs mb-2">
+                                <strong>Trạng thái:</strong> 
+                                @if(($user->status ?? 'active') == 'active')
+                                    <span class="badge bg-success">Active</span>
+                                @else
+                                    <span class="badge bg-danger">Lock</span>
+                                @endif
+                            </p>
+                            <p class="text-xs mb-2">
                                 <strong>Tạo lúc:</strong> {{ date('d/m/Y H:i', strtotime($user->created_at)) }}
                             </p>
                             <p class="text-xs mb-0">
@@ -265,6 +273,23 @@
                             </select>
                             <small class="text-muted d-block mt-1">
                                 <i class="fas fa-info-circle me-1"></i>Chỉ Admin mới có thể thay đổi gói dịch vụ
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-lock text-danger me-2"></i>Trạng thái
+                            </label>
+                            <select class="form-select" name="status">
+                                <option value="active" {{ ($user->status ?? 'active') == 'active' ? 'selected' : '' }}>
+                                    Active - Hoạt động
+                                </option>
+                                <option value="lock" {{ ($user->status ?? 'active') == 'lock' ? 'selected' : '' }}>
+                                    Lock - Khóa
+                                </option>
+                            </select>
+                            <small class="text-muted d-block mt-1">
+                                <i class="fas fa-info-circle me-1"></i>Chỉ Admin mới có thể thay đổi trạng thái
                             </small>
                         </div>
                         @endif

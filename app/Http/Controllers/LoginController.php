@@ -26,11 +26,34 @@ class LoginController extends Controller
         $remember = $request->boolean('remember', false);
 
         if (Auth::attempt($credentials, $remember)) {
+            $user = Auth::user();
+            
+            // Kiểm tra nếu user bị lock
+            if (($user->status ?? 'active') === 'lock') {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                
+                // Nếu request mong muốn JSON response (API request)
+                if ($request->wantsJson()) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.',
+                        'errors' => [
+                            'email' => ['Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.']
+                        ]
+                    ], 403);
+                }
+
+                return back()->withErrors([
+                    'email' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.',
+                ])->withInput($request->only('email'));
+            }
+
             $request->session()->regenerate();
 
             // Nếu request mong muốn JSON response (API request)
             if ($request->wantsJson()) {
-                $user = Auth::user();
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Đăng nhập thành công!',

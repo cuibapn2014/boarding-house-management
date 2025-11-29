@@ -30,7 +30,8 @@ class User extends Authenticatable
         'about',
         'phone',
         'avatar',
-        'plan_current'
+        'plan_current',
+        'status'
     ];
 
     /**

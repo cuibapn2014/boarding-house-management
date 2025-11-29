@@ -34,6 +34,7 @@ class UserController extends Controller
             'country' => ['nullable', 'string', 'max:100'],
             'postal' => ['nullable', 'string', 'max:20'],
             'about' => ['nullable', 'string', 'max:500'],
+            'status' => ['nullable', 'string', 'in:active,lock'],
         ]);
 
         $user = User::create([
@@ -48,6 +49,7 @@ class UserController extends Controller
             'country' => $validated['country'] ?? null,
             'postal' => $validated['postal'] ?? null,
             'about' => $validated['about'] ?? null,
+            'status' => $validated['status'] ?? 'active',
         ]);
 
         return redirect()->route('page.index', 'user-management')
@@ -83,6 +85,7 @@ class UserController extends Controller
             'postal' => ['nullable', 'string', 'max:20'],
             'about' => ['nullable', 'string', 'max:500'],
             'plan_current' => ['nullable', 'string', 'in:free,premium'],
+            'status' => ['nullable', 'string', 'in:active,lock'],
         ]);
 
         $updateData = [
@@ -106,6 +109,11 @@ class UserController extends Controller
         // Only admin can update plan_current
         if (auth()->user()->is_admin && isset($validated['plan_current'])) {
             $updateData['plan_current'] = $validated['plan_current'];
+        }
+
+        // Only admin can update status
+        if (auth()->user()->is_admin && isset($validated['status'])) {
+            $updateData['status'] = $validated['status'];
         }
 
         $user->update($updateData);

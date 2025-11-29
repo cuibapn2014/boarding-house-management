@@ -19,7 +19,7 @@
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     }
     .filter-badge {
-        padding: 8px 16px;
+        padding: 5px 15px;
         border-radius: 20px;
         font-size: 13px;
         font-weight: 600;
@@ -48,11 +48,13 @@
         }
     }
     .clear-filter-btn {
+        display: none;
         opacity: 0;
         pointer-events: none;
         transition: all 0.3s ease;
     }
     .clear-filter-btn.show {
+        display: block;
         opacity: 1;
         pointer-events: auto;
     }
@@ -241,7 +243,7 @@ $furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
                 </div> -->
                 <div class="header-actions">
                     <a href="{{ route('boarding-house.create') }}" class="btn add-btn">
-                        <i class="fas fa-plus me-2"></i>Thêm Nhà trọ mới
+                        <i class="fas fa-plus me-2"></i>Thêm tin mới
                     </a>
                     <button id="btn-advance-filter" class="btn btn-light position-relative" type="button"
                         data-bs-toggle="collapse" data-bs-target="#advance-filter" aria-expanded="false">
@@ -276,7 +278,7 @@ $furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
                             </div>
                             <div class="col-lg-7 col-md-12">
                                 <div class="filter-container">
-                                    <div class="d-flex gap-2 flex-wrap align-items-center justify-content-lg-end">
+                                    <div class="d-flex gap-1 flex-wrap align-items-center justify-content-lg-end">
                                         <span class="filter-badge border-primary text-primary active" data-filter="all">
                                             <i class="fas fa-layer-group me-1"></i>Tất cả
                                         </span>

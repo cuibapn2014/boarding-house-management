@@ -89,8 +89,8 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h4 class="text-dark font-weight-bold mb-0">Thêm Nhà trọ mới</h4>
-                    <p class="text-sm text-muted mb-0">Điền thông tin chi tiết về nhà trọ</p>
+                    <h4 class="text-dark font-weight-bold mb-0">Thêm tin đăng mới</h4>
+                    <p class="text-sm text-muted mb-0">Điền thông tin chi tiết về tin đăng</p>
                 </div>
                 <a href="{{ route('boarding-house.index') }}" class="btn btn-outline-secondary">
                     <i class="fas fa-arrow-left me-2"></i>Quay lại
@@ -279,7 +279,7 @@
                         <!-- Action Buttons -->
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn submit-btn">
-                                <i class="fas fa-save me-2"></i>Lưu Nhà trọ
+                                <i class="fas fa-save me-2"></i>Lưu tin đăng
                             </button>
                             <a href="{{ route('boarding-house.index') }}" class="btn cancel-btn">
                                 <i class="fas fa-times me-2"></i>Hủy bỏ

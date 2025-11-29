@@ -149,12 +149,21 @@
                             </span>
                             @endif
                             @if($user->plan_current == 'premium')
-                            <span class="user-role-badge bg-warning text-white d-block">
+                            <span class="user-role-badge bg-warning text-white d-block mb-2">
                                 <i class="fas fa-star me-1"></i>Premium
                             </span>
                             @else
-                            <span class="user-role-badge bg-secondary text-white d-block">
+                            <span class="user-role-badge bg-secondary text-white d-block mb-2">
                                 <i class="fas fa-gift me-1"></i>Free
+                            </span>
+                            @endif
+                            @if($user->status == 'active')
+                            <span class="user-role-badge bg-success text-white d-block">
+                                <i class="fas fa-check-circle me-1"></i>Active
+                            </span>
+                            @else
+                            <span class="user-role-badge bg-danger text-white d-block">
+                                <i class="fas fa-lock me-1"></i>Lock
                             </span>
                             @endif
                         </div>
