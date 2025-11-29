@@ -111,8 +111,8 @@
                             style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg');
               background-size: cover;">
                             <span class="mask bg-gradient-primary opacity-6"></span>
-                            <h4 class="mt-5 text-white font-weight-bolder position-relative">"Quản lý nhà trọ dễ dàng"</h4>
-                            <p class="text-white position-relative">Hệ thống quản lý nhà trọ hiện đại, tiện lợi và chuyên nghiệp.</p>
+                            <h4 class="mt-5 text-white font-weight-bolder position-relative">"Quản lý tin đăng dễ dàng"</h4>
+                            <p class="text-white position-relative">Hệ thống quản lý tin đăng hiện đại, tiện lợi và chuyên nghiệp.</p>
                         </div>
                     </div>
                 </div>

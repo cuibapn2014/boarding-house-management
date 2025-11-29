@@ -51,13 +51,13 @@ class ForgotPassword extends Notification
         );
 
         return (new MailMessage)
-            ->subject('Đặt lại mật khẩu - Hệ thống quản lý nhà trọ')
+            ->subject('Đặt lại mật khẩu - Hệ thống quản lý tin đăng')
             ->greeting('Xin chào!')
             ->line('Bạn nhận được email này vì chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.')
             ->action('Đặt lại mật khẩu', $url)
             ->line('Liên kết đặt lại mật khẩu này sẽ hết hạn sau 12 giờ.')
             ->line('Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.')
-            ->salutation('Trân trọng, Hệ thống quản lý nhà trọ');
+            ->salutation('Trân trọng, Hệ thống quản lý tin đăng');
     }
 
     /**

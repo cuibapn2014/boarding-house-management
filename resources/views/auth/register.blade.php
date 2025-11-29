@@ -11,7 +11,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-5 text-center mx-auto">
                         <h1 class="text-white mb-2 mt-5">Chào mừng!</h1>
-                        <p class="text-lead text-white">Tạo tài khoản miễn phí để sử dụng hệ thống quản lý nhà trọ hiện đại và chuyên nghiệp.</p>
+                        <p class="text-lead text-white">Tạo tài khoản miễn phí để sử dụng hệ thống quản lý tin đăng hiện đại và chuyên nghiệp.</p>
                     </div>
                 </div>
             </div>
