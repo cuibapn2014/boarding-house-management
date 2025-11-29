@@ -267,7 +267,7 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                             </address>
                         </div>
                         <div class="map-container">
-                            @if(!! $boardingHouse->map_link)
+                            @if(! $boardingHouse->map_link)
                             <iframe
                                 src="https://www.google.com/maps?q={{ urlencode($fullAddress) }}&output=embed"
                                 width="100%" 
@@ -449,7 +449,7 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
 
 @push('seo')
 <!-- Enhanced Meta Tags -->
-<meta name="description" content="{{ $boardingHouse->meta_description ?? $boardingHouse->description }}">
+<meta name="description" content="{{ $boardingHouse->description }}">
 <meta name="keywords" content="{{ $boardingHouse->tags }}, cho thuê phòng trọ, {{ $boardingHouse->district }}, {{ $boardingHouse->ward }}">
 <meta name="author" content="{{ $boardingHouse->user_create->firstname }}">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -477,7 +477,7 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
 <!-- Twitter Card Enhanced -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $boardingHouse->title }}">
-<meta name="twitter:description" content="{{ $boardingHouse->meta_description ?? $boardingHouse->description }}">
+<meta name="twitter:description" content="{{ $boardingHouse->description }}">
 <meta name="twitter:image" content="{{ resizeImageCloudinary($boardingHouse->thumbnail, 1200, 630) }}">
 <meta name="twitter:image:alt" content="Hình ảnh {{ $boardingHouse->title }}">
 
