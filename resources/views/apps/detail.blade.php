@@ -110,6 +110,7 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                          loading="eager" 
                          decoding="async" 
                          alt="Hình ảnh {{ $boardingHouse->title }}"
+                         fetchpriority="high"
                          width="800" 
                          height="450" />
                 </picture>
