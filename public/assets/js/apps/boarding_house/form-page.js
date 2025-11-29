@@ -9,6 +9,7 @@ const BoardingHouseFormPage = {
         this.initTagify();
         this.initTinyEditor();
         this.initDistrictSelect();
+        this.initSEO();
         this.bindEvents();
     },
 
@@ -68,6 +69,227 @@ const BoardingHouseFormPage = {
                 <option value="${item.name}" ${item.name === wardSelected ? 'selected' : ''}>${item.name}</option>
             `);
         });
+    },
+
+    initSEO: function() {
+        const self = this;
+        
+        // Auto-fill meta title from title
+        $('#title').on('blur', function() {
+            const title = $(this).val().trim();
+            const metaTitle = $('#meta_title');
+            if(title && !metaTitle.val()) {
+                metaTitle.val(title.substring(0, 70));
+                self.validateMetaTitle();
+            }
+        });
+
+        // Auto-fill meta description from description
+        $('#description').on('blur', function() {
+            const description = $(this).val().trim();
+            const metaDescription = $('#meta_description');
+            if(description && !metaDescription.val()) {
+                metaDescription.val(description.substring(0, 320));
+                self.validateMetaDescription();
+            }
+        });
+
+        // Real-time validation for meta title
+        $('#meta_title').on('input', function() {
+            self.validateMetaTitle();
+            self.updateKeywordStats();
+        });
+
+        // Real-time validation for meta description
+        $('#meta_description').on('input', function() {
+            self.validateMetaDescription();
+            self.updateKeywordStats();
+        });
+
+        // Update keyword stats when tags or content changes
+        $('#tags').on('input', function() {
+            self.updateKeywordStats();
+        });
+
+        // Update keyword stats when content changes (TinyMCE)
+        if(typeof tinymce !== 'undefined') {
+            tinymce.get('content')?.on('keyup', function() {
+                self.updateKeywordStats();
+            });
+        }
+
+        // Initial validation
+        self.validateMetaTitle();
+        self.validateMetaDescription();
+        self.updateKeywordStats();
+    },
+
+    validateMetaTitle: function() {
+        const metaTitle = $('#meta_title');
+        const value = metaTitle.val().trim();
+        const length = value.length;
+        const feedback = $('#meta_title_feedback');
+        
+        feedback.empty();
+        
+        if(!value) {
+            return;
+        }
+
+        let isValid = true;
+        let message = '';
+        let className = '';
+
+        // Check length (Google recommends 50-60, but accepts 30-60)
+        if(length < 50) {
+            isValid = false;
+            message = `Độ dài tiêu đề quá ngắn (dưới 50 ký tự) hoặc quá dài (trên 60 ký tự). Trong tiêu đề nên chứa ít nhất một từ khóa chính.`;
+            className = 'text-danger';
+        } else if(length > 60) {
+            isValid = false;
+            message = `Độ dài tiêu đề quá ngắn (dưới 50 ký tự) hoặc quá dài (trên 60 ký tự). Trong tiêu đề nên chứa ít nhất một từ khóa chính.`;
+            className = 'text-danger';
+        } else {
+            // Check if contains main keyword
+            const keywords = this.getKeywords();
+            const hasKeyword = keywords.some(keyword => 
+                value.toLowerCase().includes(keyword.toLowerCase())
+            );
+            
+            if(!hasKeyword && keywords.length > 0) {
+                isValid = false;
+                message = `Độ dài tiêu đề quá ngắn (dưới 50 ký tự) hoặc quá dài (trên 60 ký tự). Trong tiêu đề nên chứa ít nhất một từ khóa chính.`;
+                className = 'text-danger';
+            } else {
+                message = `✓ Độ dài tốt (${length}/50-60 ký tự)`;
+                className = 'text-success';
+            }
+        }
+
+        if(message) {
+            feedback.html(`<small class="${className}">${message}</small>`);
+        }
+
+        // Update input border
+        if(isValid) {
+            metaTitle.removeClass('is-invalid').addClass('is-valid');
+        } else {
+            metaTitle.removeClass('is-valid').addClass('is-invalid');
+        }
+    },
+
+    validateMetaDescription: function() {
+        const metaDescription = $('#meta_description');
+        const value = metaDescription.val().trim();
+        const length = value.length;
+        const feedback = $('#meta_description_feedback');
+        
+        feedback.empty();
+        
+        if(!value) {
+            return;
+        }
+
+        let isValid = true;
+        let message = '';
+        let className = '';
+
+        // Check length (Google recommends 120-160)
+        if(length < 120) {
+            isValid = false;
+            message = `Độ dài mô tả quá ngắn (dưới 120 ký tự) hoặc quá dài (trên 160 ký tự). Trong mô tả nên chứa ít nhất một từ khóa chính.`;
+            className = 'text-danger';
+        } else if(length > 160) {
+            isValid = false;
+            message = `Độ dài mô tả quá ngắn (dưới 120 ký tự) hoặc quá dài (trên 160 ký tự). Trong mô tả nên chứa ít nhất một từ khóa chính.`;
+            className = 'text-danger';
+        } else {
+            // Check if contains main keyword
+            const keywords = this.getKeywords();
+            const hasKeyword = keywords.some(keyword => 
+                value.toLowerCase().includes(keyword.toLowerCase())
+            );
+            
+            if(!hasKeyword && keywords.length > 0) {
+                isValid = false;
+                message = `Độ dài mô tả quá ngắn (dưới 120 ký tự) hoặc quá dài (trên 160 ký tự). Trong mô tả nên chứa ít nhất một từ khóa chính.`;
+                className = 'text-danger';
+            } else {
+                message = `✓ Độ dài tốt (${length}/120-160 ký tự)`;
+                className = 'text-success';
+            }
+        }
+
+        if(message) {
+            feedback.html(`<small class="${className}">${message}</small>`);
+        }
+
+        // Update textarea border
+        if(isValid) {
+            metaDescription.removeClass('is-invalid').addClass('is-valid');
+        } else {
+            metaDescription.removeClass('is-valid').addClass('is-invalid');
+        }
+    },
+
+    getKeywords: function() {
+        const tagsInput = $('#tags');
+        if(!tagsInput.length) return [];
+        
+        // Get Tagify instance
+        const tagify = tagsInput[0].tagify;
+        if(!tagify) return [];
+        
+        const tags = tagify.value || [];
+        return tags.map(tag => {
+            if(typeof tag === 'string') return tag;
+            return tag.value || tag;
+        }).filter(Boolean);
+    },
+
+    updateKeywordStats: function() {
+        const keywords = this.getKeywords();
+        if(keywords.length === 0) {
+            $('#keyword-stats').hide();
+            return;
+        }
+
+        // Get content from title, description, meta title, meta description, and content
+        const title = $('#title').val() || '';
+        const description = $('#description').val() || '';
+        const metaTitle = $('#meta_title').val() || '';
+        const metaDescription = $('#meta_description').val() || '';
+        const content = this.getEditorContent() || '';
+        
+        // Combine all text
+        const allText = `${title} ${description} ${metaTitle} ${metaDescription} ${content}`.toLowerCase();
+        
+        // Count total words
+        const words = allText.split(/\s+/).filter(word => word.length > 0);
+        const totalWords = words.length;
+        
+        if(totalWords === 0) {
+            $('#keyword-stats').hide();
+            return;
+        }
+
+        // Count keyword occurrences
+        let totalOccurrences = 0;
+        keywords.forEach(keyword => {
+            const regex = new RegExp(keyword.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+            const matches = allText.match(regex);
+            if(matches) {
+                totalOccurrences += matches.length;
+            }
+        });
+
+        // Calculate keyword density
+        const density = totalWords > 0 ? ((totalOccurrences / totalWords) * 100).toFixed(2) : '0.00';
+        
+        // Update display
+        $('#keyword-density').text(`Mật độ từ khóa: ${density}%.`);
+        $('#keyword-occurrences').text(`Xuất hiện: ${totalOccurrences}/${keywords.length}`);
+        $('#keyword-stats').show();
     },
 
     initDistrictSelect: function() {

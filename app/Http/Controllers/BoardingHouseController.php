@@ -163,7 +163,11 @@ class BoardingHouseController extends Controller
         $boardingHouse->district         = $request->input('district');
         $boardingHouse->ward             = $request->input('ward');
         $boardingHouse->address          = trim($request->input('address'));
+        $boardingHouse->map_link         = $request->filled('map_link') ? trim($request->input('map_link')) : null;
         $boardingHouse->phone            = trim($request->input('phone'));
+        $boardingHouse->meta_title       = $request->filled('meta_title') ? trim($request->input('meta_title')) : null;
+        $boardingHouse->meta_description = $request->filled('meta_description') ? trim($request->input('meta_description')) : null;
+        $boardingHouse->canonical_url     = $request->filled('canonical_url') ? trim($request->input('canonical_url')) : null;
         $boardingHouse->price            = numberRemoveComma($request->input('price'));
         $boardingHouse->status           = $request->input('status');
         $boardingHouse->furniture_status = $request->input('furniture_status');
@@ -227,7 +231,11 @@ class BoardingHouseController extends Controller
                 $boardingHouse->district         = $request->input('district');
                 $boardingHouse->ward             = $request->input('ward');
                 $boardingHouse->address          = trim($request->input('address'));
+                $boardingHouse->map_link         = $request->filled('map_link') ? trim($request->input('map_link')) : null;
                 $boardingHouse->phone            = trim($request->input('phone'));
+                $boardingHouse->meta_title       = $request->filled('meta_title') ? trim($request->input('meta_title')) : null;
+                $boardingHouse->meta_description = $request->filled('meta_description') ? trim($request->input('meta_description')) : null;
+                $boardingHouse->canonical_url     = $request->filled('canonical_url') ? trim($request->input('canonical_url')) : null;
                 $boardingHouse->price            = numberRemoveComma($request->input('price'));
                 $boardingHouse->status           = $request->input('status');
                 $boardingHouse->furniture_status = $request->input('furniture_status');

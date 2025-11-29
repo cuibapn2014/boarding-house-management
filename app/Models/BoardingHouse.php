@@ -21,6 +21,7 @@ class BoardingHouse extends Model
         'district',
         'ward',
         'address',
+        'map_link',
         'phone',
         'price',
         'status',

@@ -116,7 +116,7 @@
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Tiêu đề <span class="text-danger">*</span></label>
                                 <input id="title" name="title" class="form-control" type="text" 
-                                    placeholder="Ví dụ: Phòng trọ cao cấp gần ĐH Bách Khoa">
+                                    placeholder="Ví dụ: Phòng trọ cao cấp gần ĐH Bách Khoa" maxlength="255">
                             </div>
 
                             <div class="col-md-6 mb-3">
@@ -141,7 +141,7 @@
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Mô tả ngắn</label>
                                 <input id="description" name="description" class="form-control" type="text" 
-                                    placeholder="Mô tả ngắn gọn về nhà trọ">
+                                    placeholder="Mô tả ngắn gọn về nhà trọ" maxlength="255">
                             </div>
 
                             <div class="col-md-12 mb-3">
@@ -156,7 +156,52 @@
                                 <label class="form-label">Từ khoá (SEO)</label>
                                 <input class="form-control" id="tags" data-color="dark" type="text" name="tags" 
                                     value="" placeholder="Nhập từ khóa và nhấn Enter" />
+                                <div id="keyword-stats" class="mt-2" style="display: none;">
+                                    <small class="text-muted">
+                                        <span id="keyword-density">Mật độ từ khóa: 0.00%.</span>
+                                        <span id="keyword-occurrences" class="ms-2">Xuất hiện: 0/0</span>
+                                    </small>
+                                </div>
                                 <small class="text-muted">Nhập các từ khóa liên quan để tối ưu tìm kiếm</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Section -->
+                <div class="card form-card mt-4">
+                    <div class="card-body p-4">
+                        <h5 class="section-title">
+                            <i class="fas fa-search"></i>
+                            SEO
+                            <button type="button" class="btn btn-sm btn-link p-0 ms-2" data-bs-toggle="collapse" data-bs-target="#seoSection" aria-expanded="true" aria-controls="seoSection">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </h5>
+                        <div class="collapse show" id="seoSection">
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">* Meta title</label>
+                                    <input id="meta_title" name="meta_title" class="form-control" type="text" 
+                                        placeholder="Tự động lấy từ tiêu đề" maxlength="70">
+                                    <div id="meta_title_feedback" class="mt-1"></div>
+                                    <small class="text-muted">Độ dài tối ưu: 50-60 ký tự. Google hiển thị tối đa 60 ký tự.</small>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Meta description</label>
+                                    <textarea id="meta_description" name="meta_description" class="form-control" 
+                                        rows="3" placeholder="Tự động lấy từ mô tả" maxlength="320"></textarea>
+                                    <div id="meta_description_feedback" class="mt-1"></div>
+                                    <small class="text-muted">Độ dài tối ưu: 120-160 ký tự. Google hiển thị tối đa 160 ký tự.</small>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Canonical URL</label>
+                                    <input id="canonical_url" name="canonical_url" class="form-control" type="url" 
+                                        placeholder="Tự động lấy từ URL hiện tại" maxlength="500">
+                                    <small class="text-muted">URL chuẩn của trang (tự động lấy từ route nếu để trống)</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -189,6 +234,13 @@
                                 <label class="form-label">Địa chỉ cụ thể <span class="text-danger">*</span></label>
                                 <input id="address" name="address" class="form-control" type="text" 
                                     placeholder="Số nhà, tên đường...">
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Link bản đồ (Google Maps)</label>
+                                <input id="map_link" name="map_link" class="form-control" type="url" 
+                                    placeholder="https://maps.google.com/...">
+                                <small class="text-muted">Dán link Google Maps để hiển thị vị trí trên bản đồ (tùy chọn)</small>
                             </div>
 
                             <div class="col-md-12 mb-3">

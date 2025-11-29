@@ -34,6 +34,7 @@ class StoreBoardingHouseRequest extends FormRequest
             }],
             'files.*' => 'nullable|mimes:png,jpg,mp4,jpeg,webp',
             'phone' => 'nullable|digits:10',
+            'map_link' => 'nullable|url|max:500',
             'district' => 'required',
             'ward' => 'required',
             'category' => 'required|in:' . $category
@@ -112,6 +113,9 @@ class StoreBoardingHouseRequest extends FormRequest
             
             'phone.digits' => 'Số điện thoại phải có đúng :digits chữ số',
             
+            'map_link.url' => 'Link bản đồ phải là một URL hợp lệ',
+            'map_link.max' => 'Link bản đồ không được vượt quá :max ký tự',
+            
             'district.required' => 'Vui lòng chọn quận/huyện',
             
             'ward.required' => 'Vui lòng chọn phường/xã',
@@ -131,6 +135,7 @@ class StoreBoardingHouseRequest extends FormRequest
             'price' => 'Giá',
             'files' => 'Tệp tin',
             'phone' => 'Liên hệ/Zalo',
+            'map_link' => 'Link bản đồ',
             'district' => 'Quận/Huyện',
             'ward' => 'Phường/Xã',
             'category' => 'Danh mục'
