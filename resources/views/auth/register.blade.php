@@ -80,6 +80,20 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label text-dark">Số điện thoại <span class="text-danger">*</span></label>
+                                    <input type="text" 
+                                           name="phone" 
+                                           id="phone"
+                                           class="form-control form-control-lg @error('phone') is-invalid @enderror" 
+                                           placeholder="0246256256" 
+                                           value="{{ old('phone') }}"
+                                           required>
+                                    @error('phone')
+                                        <div class="invalid-feedback">{{ $phone }}</div>
+                                    @enderror
+                                </div>
                                 
                                 <div class="mb-3">
                                     <label for="password" class="form-label text-dark">Mật khẩu <span class="text-danger">*</span></label>
