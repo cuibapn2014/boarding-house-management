@@ -227,6 +227,10 @@
                 </a>
                 @endauth
                 
+                <a href="{{ route('about.index') }}" class="text-decoration-none text-dark py-2 border-bottom">
+                    <i class="fa-solid fa-info-circle fa-fw me-2"></i>
+                    <span>Giới thiệu</span>
+                </a>
                 <a href="{{ route('contact.index') }}" class="text-decoration-none text-dark py-2 border-bottom">
                     <i class="fa-solid fa-headset fa-fw me-2"></i>
                     <span>Trợ giúp</span>

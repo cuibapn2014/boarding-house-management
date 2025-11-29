@@ -3,6 +3,7 @@ use App\Constants\SystemDefination;
 
 $categories = SystemDefination::BOARDING_HOUSE_CATEGORY;
 $districts  = SystemDefination::LIST_DISTRICT;
+$furnitureStatuses = SystemDefination::FURNITURE_STATUS;
 @endphp
 <form class="form-search">
     <!-- Lọc theo Tiện ích -->
@@ -37,10 +38,21 @@ $districts  = SystemDefination::LIST_DISTRICT;
         </div>
     </div>
 
+    <!-- Lọc theo Tình trạng nội thất -->
+    <div class="mb-4">
+        <label class="form-label fw-bold">Tình trạng nội thất</label>
+        @foreach($furnitureStatuses as $key => $status)
+        <div class="form-check">
+            <input class="form-check-input" name="furniture_status[]" type="checkbox" id="furniture_{{ \Str::slug($key) }}" value="{{ $key }}" />
+            <label class="form-check-label" for="furniture_{{ \Str::slug($key) }}">{{ $status }}</label>
+        </div>
+        @endforeach
+    </div>
+
     <!-- Lọc theo Địa điểm -->
     <div class="mb-4">
         <label for="locationSelect" class="form-label fw-bold">Khu vực</label>
-        <div class="d-flex flex-wrap" style="gap:8px; 5px;">
+        <div class="d-flex flex-wrap" style="gap:8px; padding: 5px 0;">
             @foreach($districts as $district)
                 <label for="filter_d_{{ \Str::slug($district) }}">
                     <input id="filter_d_{{ \Str::slug($district) }}" type="checkbox" class="tag-district d-none" name="district[]" value="{{ $district }}"/>

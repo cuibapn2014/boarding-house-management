@@ -120,6 +120,14 @@
                 <h5 class="fw-bold mb-3 fs-6">Hỗ Trợ</h5>
                 <ul class="list-unstyled">
                     <li class="mb-2">
+                        <a href="{{ route('about.index') }}" 
+                           class="text-muted text-decoration-none small"
+                           title="Giới thiệu về chúng tôi">
+                            <i class="fa-solid fa-chevron-right me-2 small"></i>
+                            Giới Thiệu
+                        </a>
+                    </li>
+                    <li class="mb-2">
                         <a href="{{ route('contact.index') }}" 
                            class="text-muted text-decoration-none small"
                            title="Liên hệ với chúng tôi">

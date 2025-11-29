@@ -13,6 +13,7 @@ class RentalHomeController extends Controller
         $category = (array) $request->input('category', []);
         $price    = (array) $request->input('price', []);
         $district = (array) $request->input('district', []);
+        $furnitureStatus = (array) $request->input('furniture_status', []);
 
         $rangesPrice = array_map(function(string $item) {
             list($min, $max) = explode('-', $item);
@@ -35,6 +36,9 @@ class RentalHomeController extends Controller
                                     })
                                     ->when($request->filled('district'), function($query) use($district) {
                                         $query->whereIn('district', $district);
+                                    })
+                                    ->when($request->filled('furniture_status'), function($query) use($furnitureStatus) {
+                                        $query->whereIn('furniture_status', $furnitureStatus);
                                     })
                                     ->published()
                                     ->select(

@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('gioi-thieu', [\App\Http\Controllers\AboutController::class, 'index'])->name('about.index');
 Route::get('chinh-sach-bao-mat', [\App\Http\Controllers\PrivacyController::class, 'index'])->name('privacy.index');
 Route::get('lien-he', [\App\Http\Controllers\ContactController::class, 'index'])->name('contact.index');
 Route::post('lien-he', [\App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');

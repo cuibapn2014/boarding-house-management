@@ -66,10 +66,43 @@
         max-width: 320px;
     }
     
+    /* Filter form optimization */
+    .form-search {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .form-search .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    .form-search .form-check {
+        margin-bottom: 0.5rem;
+        padding-left: 1.75rem;
+    }
+    
+    .form-search .form-check-label {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .form-search .form-label {
+        font-size: 0.95rem;
+        margin-bottom: 0.75rem;
+    }
+    
     /* Loading states */
     .loading-state {
         opacity: 0.7;
         pointer-events: none;
+    }
+    
+    /* Mobile filter sidebar */
+    .offcanvas-body .form-search {
+        padding-bottom: 1rem;
     }
     
     @media (max-width: 768px) {
@@ -81,11 +114,64 @@
         .list-home .col-6 {
             padding: 0 0.5rem !important;
         }
+        
+        /* Filter sidebar on mobile */
+        .filter__rental-home {
+            min-width: auto;
+            max-width: 100%;
+        }
+        
+        /* Offcanvas filter */
+        .offcanvas-body {
+            padding: 1rem;
+        }
+        
+        .form-search .form-check {
+            margin-bottom: 0.4rem;
+            padding-left: 1.5rem;
+        }
+        
+        .form-search .form-check-label {
+            font-size: 0.875rem;
+        }
+        
+        .form-search .form-label {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-search .mb-4 {
+            margin-bottom: 1.25rem !important;
+        }
     }
     
     @media (max-width: 576px) {
         .list-home #room-list {
             margin: 0 -0.5rem;
+        }
+        
+        /* Compact filter on small mobile */
+        .form-search .form-check {
+            margin-bottom: 0.35rem;
+            padding-left: 1.25rem;
+        }
+        
+        .form-search .form-check-label {
+            font-size: 0.8rem;
+        }
+        
+        .form-search .form-label {
+            font-size: 0.85rem;
+        }
+        
+        .form-search .mb-4 {
+            margin-bottom: 1rem !important;
+        }
+        
+        /* Ensure filter doesn't overflow */
+        .offcanvas-body {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
     }
 </style>
@@ -101,6 +187,7 @@ $currentFilters = array_filter([
     'district' => request('district'),
     'price_min' => request('price_min'),
     'price_max' => request('price_max'),
+    'furniture_status' => request('furniture_status'),
 ]);
 @endphp
 

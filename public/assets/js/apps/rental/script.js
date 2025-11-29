@@ -9,7 +9,7 @@ $(document).ready(function() {
         Rental.loadData($(this));
     });
 
-    $(document).on('change', 'input[name="price[]"], input[name="category[]"], input[name="district[]"]', function(e) {
+    $(document).on('change', 'input[name="price[]"], input[name="category[]"], input[name="district[]"], input[name="furniture_status[]"]', function(e) {
         clearTimeout(delaySearch);
 
         delaySearch = setTimeout(() => Rental.filter($(this)), 550);
