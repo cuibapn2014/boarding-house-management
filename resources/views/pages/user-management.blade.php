@@ -108,7 +108,7 @@
                         </div>
                         <div class="col-md-6 text-end mt-3 mt-md-0">
                             <a href="{{ route('user.create') }}" class="btn add-btn">
-                                <i class="fas fa-user-plus me-2"></i>Thêm người dùng mới
+                                <i class="fas fa-user-plus me-2"></i>Thêm
                             </a>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
-@section('title', 'Quản lý Nhà trọ')
+@section('title', 'Quản lý tin đăng')
 @push('css')
 <style>
     .boarding-house-card {
@@ -224,7 +224,7 @@
 </style>
 @endpush
 @section('content')
-@include('layouts.navbars.auth.topnav', ['title' => 'Quản lý Nhà trọ'])
+@include('layouts.navbars.auth.topnav', ['title' => 'Quản lý tin đăng'])
 @php
 use App\Constants\SystemDefination;
 
@@ -243,7 +243,7 @@ $furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
                 </div> -->
                 <div class="header-actions">
                     <a href="{{ route('boarding-house.create') }}" class="btn add-btn">
-                        <i class="fas fa-plus me-2"></i>Thêm tin mới
+                        <i class="fas fa-plus me-2"></i>Thêm
                     </a>
                     <button id="btn-advance-filter" class="btn btn-light position-relative" type="button"
                         data-bs-toggle="collapse" data-bs-target="#advance-filter" aria-expanded="false">
@@ -374,7 +374,7 @@ $furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
             @php
             $thumbnail = $boardingHouse?->boarding_house_files?->where('type', 'image')?->first();
             @endphp
-            <div class="col-xl-4 col-md-6 mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card boarding-house-card h-100">
                     <div class="thumbnail-wrapper">
                         @if($thumbnail && $thumbnail->type === 'image')
