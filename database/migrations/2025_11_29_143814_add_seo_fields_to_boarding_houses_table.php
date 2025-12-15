@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('boarding_houses', function (Blueprint $table) {
-            //
+            $table->string('meta_title', 70)->nullable()->after('tags');
+            $table->text('meta_description')->nullable()->after('meta_title');
+            $table->string('canonical_url', 500)->nullable()->after('meta_description');
         });
     }
 
@@ -22,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('boarding_houses', function (Blueprint $table) {
-            //
+            $table->dropColumn(['meta_title', 'meta_description', 'canonical_url']);
         });
     }
 };
