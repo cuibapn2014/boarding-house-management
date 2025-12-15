@@ -99,6 +99,7 @@ class UserController extends Controller
             'country' => $validated['country'] ?? null,
             'postal' => $validated['postal'] ?? null,
             'about' => $validated['about'] ?? null,
+            'status' => $validated['status'] ?? 'active',
         ];
 
         // Only update password if provided
