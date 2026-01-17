@@ -50,6 +50,7 @@ class UserController extends Controller
             'postal' => $validated['postal'] ?? null,
             'about' => $validated['about'] ?? null,
             'status' => $validated['status'] ?? 'active',
+            'plan_current' => 'free',
         ]);
 
         return redirect()->route('page.index', 'user-management')
@@ -100,6 +101,7 @@ class UserController extends Controller
             'postal' => $validated['postal'] ?? null,
             'about' => $validated['about'] ?? null,
             'status' => $validated['status'] ?? 'active',
+            'plan_current' => $validated['plan_current'] ?? 'free',
         ];
 
         // Only update password if provided

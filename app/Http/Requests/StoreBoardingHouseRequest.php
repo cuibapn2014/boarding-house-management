@@ -35,6 +35,9 @@ class StoreBoardingHouseRequest extends FormRequest
             'files.*' => 'nullable|mimes:png,jpg,mp4,jpeg,webp',
             'phone' => 'nullable|digits:10',
             'map_link' => 'nullable|url|max:500',
+            'meta_title' => 'nullable|string|max:70',
+            'meta_description' => 'nullable|string|max:320',
+            'canonical_url' => 'nullable|url|max:500',
             'district' => 'required',
             'ward' => 'required',
             'category' => 'required|in:' . $category
