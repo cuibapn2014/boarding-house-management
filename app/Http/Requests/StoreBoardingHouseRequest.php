@@ -40,7 +40,19 @@ class StoreBoardingHouseRequest extends FormRequest
             'canonical_url' => 'nullable|url|max:500',
             'district' => 'required',
             'ward' => 'required',
-            'category' => 'required|in:' . $category
+            'category' => 'required|in:' . $category,
+            'require_deposit' => 'nullable',
+            'deposit_amount' => [
+                'nullable',
+                'min:0',
+                function ($attribute, $value, $fail) {
+                    if ($this->input('require_deposit') === 'on' && empty($value)) {
+                        $fail('Vui lòng nhập số tiền cọc khi yêu cầu cọc.');
+                    }
+                }
+            ],
+            'min_contract_months' => 'nullable|integer|min:1',
+            'area' => 'nullable|integer|min:1'
         ];
     }
 
@@ -125,6 +137,15 @@ class StoreBoardingHouseRequest extends FormRequest
             
             'category.required' => 'Vui lòng chọn danh mục',
             'category.in' => 'Danh mục được chọn không hợp lệ',
+            
+            'deposit_amount.integer' => 'Số tiền cọc phải là số nguyên',
+            'deposit_amount.min' => 'Số tiền cọc phải lớn hơn hoặc bằng 0',
+            
+            'min_contract_months.integer' => 'Số tháng hợp đồng tối thiểu phải là số nguyên',
+            'min_contract_months.min' => 'Số tháng hợp đồng tối thiểu phải lớn hơn 0',
+            
+            'area.integer' => 'Diện tích phải là số nguyên',
+            'area.min' => 'Diện tích phải lớn hơn 0',
         ];
     }
 
@@ -141,7 +162,11 @@ class StoreBoardingHouseRequest extends FormRequest
             'map_link' => 'Link bản đồ',
             'district' => 'Quận/Huyện',
             'ward' => 'Phường/Xã',
-            'category' => 'Danh mục'
+            'category' => 'Danh mục',
+            'require_deposit' => 'Yêu cầu cọc',
+            'deposit_amount' => 'Số tiền cọc',
+            'min_contract_months' => 'Hợp đồng tối thiểu',
+            'area' => 'Diện tích'
         ];
     }
 }

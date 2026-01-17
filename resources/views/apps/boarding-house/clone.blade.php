@@ -148,6 +148,45 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Diện tích (m²)</label>
+                                <div class="input-group">
+                                    <input id="area" name="area" class="form-control" type="number" 
+                                        placeholder="Nhập diện tích" min="1" value="{{ $boardingHouse->area ?? '' }}" autocomplete="off">
+                                    <span class="input-group-text">m²</span>
+                                </div>
+                                <small class="text-muted">Không bắt buộc</small>
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" name="require_deposit" type="checkbox" id="require-deposit" {{ $boardingHouse->require_deposit ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="require-deposit">
+                                        <span class="font-weight-bold">Yêu cầu cọc</span>
+                                        <p class="text-xs text-muted mb-0">Có cần cọc trước khi thuê không?</p>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3" id="deposit-amount-wrapper" style="display: {{ $boardingHouse->require_deposit ? 'block' : 'none' }};">
+                                <label class="form-label">Số tiền cọc <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input id="deposit_amount" name="deposit_amount" class="form-control number-separator" type="text" 
+                                        placeholder="0" value="{{ $boardingHouse->deposit_amount ? numberFormatVi($boardingHouse->deposit_amount) : '' }}" autocomplete="off">
+                                    <span class="input-group-text">VNĐ</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Hợp đồng tối thiểu</label>
+                                <div class="input-group">
+                                    <input id="min_contract_months" name="min_contract_months" class="form-control" type="number" 
+                                        placeholder="Nhập số tháng" min="1" value="{{ $boardingHouse->min_contract_months ?? '' }}" autocomplete="off">
+                                    <span class="input-group-text">tháng</span>
+                                </div>
+                                <small class="text-muted">Không bắt buộc</small>
+                            </div>
+
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Mô tả ngắn</label>
                                 <input id="description" name="description" class="form-control" type="text" 
@@ -372,4 +411,25 @@
     Dropzone.isAdmin = {{ auth()->user()->is_admin ? 'true' : 'false' }};
 </script>
 <script src="{{ asset('assets/js/apps/boarding_house/form-page.js') }}?v=1.0.0"></script>
+<script>
+    // Toggle deposit amount field based on require_deposit checkbox
+    document.addEventListener('DOMContentLoaded', function() {
+        const requireDepositCheckbox = document.getElementById('require-deposit');
+        const depositAmountWrapper = document.getElementById('deposit-amount-wrapper');
+        const depositAmountInput = document.getElementById('deposit_amount');
+
+        if (requireDepositCheckbox && depositAmountWrapper) {
+            requireDepositCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    depositAmountWrapper.style.display = 'block';
+                    depositAmountInput.setAttribute('required', 'required');
+                } else {
+                    depositAmountWrapper.style.display = 'none';
+                    depositAmountInput.removeAttribute('required');
+                    depositAmountInput.value = '';
+                }
+            });
+        }
+    });
+</script>
 @endpush

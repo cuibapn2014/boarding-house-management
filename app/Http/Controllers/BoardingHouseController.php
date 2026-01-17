@@ -27,7 +27,8 @@ class BoardingHouseController extends Controller
     public function index(Request $request)
     {
         $boardingHouses = BoardingHouse::with([
-                'boarding_house_files:id,boarding_house_id,type,url'
+                'boarding_house_files:id,boarding_house_id,type,url',
+                'user_create:id,firstname,lastname,email,phone,avatar'
             ])
             ->when($request->filled('byTitle'), function($query) use($request) {
                 $query->where('title', 'like', '%'.$request->byTitle.'%');
@@ -61,6 +62,7 @@ class BoardingHouseController extends Controller
                 'furniture_status',
                 'is_publish',
                 'created_at',
+                'created_by',
             )
             ->paginate(20)
             ->withQueryString();
@@ -169,6 +171,10 @@ class BoardingHouseController extends Controller
         $boardingHouse->meta_description = $request->filled('meta_description') ? trim($request->input('meta_description')) : null;
         $boardingHouse->canonical_url     = $request->filled('canonical_url') ? trim($request->input('canonical_url')) : null;
         $boardingHouse->price            = numberRemoveComma($request->input('price'));
+        $boardingHouse->require_deposit  = $request->has('require_deposit') && $request->input('require_deposit') === 'on';
+        $boardingHouse->deposit_amount    = $request->filled('deposit_amount') ? numberRemoveComma($request->input('deposit_amount')) : null;
+        $boardingHouse->min_contract_months = $request->filled('min_contract_months') ? (int)$request->input('min_contract_months') : null;
+        $boardingHouse->area              = $request->filled('area') ? (int)$request->input('area') : null;
         $boardingHouse->status           = $request->input('status');
         $boardingHouse->furniture_status = $request->input('furniture_status');
         $boardingHouse->is_publish       = $request->has('is_publish') && $request->input('is_publish') === 'on';
@@ -237,6 +243,10 @@ class BoardingHouseController extends Controller
                 $boardingHouse->meta_description = $request->filled('meta_description') ? trim($request->input('meta_description')) : null;
                 $boardingHouse->canonical_url     = $request->filled('canonical_url') ? trim($request->input('canonical_url')) : null;
                 $boardingHouse->price            = numberRemoveComma($request->input('price'));
+                $boardingHouse->require_deposit  = $request->has('require_deposit') && $request->input('require_deposit') === 'on';
+                $boardingHouse->deposit_amount    = $request->filled('deposit_amount') ? numberRemoveComma($request->input('deposit_amount')) : null;
+                $boardingHouse->min_contract_months = $request->filled('min_contract_months') ? (int)$request->input('min_contract_months') : null;
+                $boardingHouse->area              = $request->filled('area') ? (int)$request->input('area') : null;
                 $boardingHouse->status           = $request->input('status');
                 $boardingHouse->furniture_status = $request->input('furniture_status');
                 $boardingHouse->is_publish       = $request->has('is_publish') && $request->input('is_publish') === 'on';

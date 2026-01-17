@@ -32,6 +32,8 @@ Route::get('/', function () {return redirect('/boarding-house');})->middleware('
 	Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->name('register.perform');
 	Route::get('/login', [LoginController::class, 'show'])->middleware('guest')->name('login');
 	Route::post('/login', [LoginController::class, 'login'])->middleware('guest')->name('login.perform');
+	Route::get('/auth/google', [LoginController::class, 'redirectToGoogle'])->middleware('guest')->name('google.login');
+	Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback'])->middleware('guest')->name('google.callback');
 	Route::get('/reset-password', [ResetPassword::class, 'show'])->middleware('guest')->name('reset-password');
 	Route::post('/reset-password', [ResetPassword::class, 'send'])->middleware('guest')->name('reset.perform');
 	Route::get('/change-password', [ChangePassword::class, 'show'])->middleware('guest')->name('change-password');

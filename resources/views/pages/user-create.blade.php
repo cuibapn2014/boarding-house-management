@@ -81,10 +81,10 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h4 class="text-dark font-weight-bold mb-0">Thêm người dùng mới</h4>
-                    <p class="text-sm text-muted mb-0">Tạo tài khoản người dùng mới</p>
+                    <h4 class="text-dark font-weight-bold mb-0"></h4>
+                    <p class="text-sm text-muted mb-0"></p>
                 </div>
-                <a href="{{ route('page.index', 'user-management') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('page.index', 'user-management') }}" class="btn btn-light">
                     <i class="fas fa-arrow-left me-2"></i>Quay lại
                 </a>
             </div>

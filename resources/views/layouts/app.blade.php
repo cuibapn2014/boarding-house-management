@@ -170,7 +170,7 @@
                 </div>
             @endif
             @include('layouts.navbars.auth.sidenav')
-                <main class="main-content border-radius-lg">
+                <main class="main-content border-radius-lg position-relative">
                     @yield('content')
                 </main>
             {{-- @include('components.fixed-plugin') --}}
