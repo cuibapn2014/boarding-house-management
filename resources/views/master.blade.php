@@ -58,6 +58,9 @@
     <link rel="preload" href="{{ asset('assets/fonts/Roboto-Regular.ttf') }}" as="font" type="font/ttf" crossorigin>
     <link rel="preload" href="{{ asset('assets/fonts/Roboto-Bold.ttf') }}" as="font" type="font/ttf" crossorigin>
     
+    {{-- Page-specific Preloads (for LCP optimization) --}}
+    @stack('preload')
+    
     {{-- FontAwesome CSS --}}
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free-6.7.2-web/css/solid.min.css') }}">

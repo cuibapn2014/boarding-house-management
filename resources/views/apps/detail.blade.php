@@ -31,10 +31,13 @@
         object-fit: contain;
     }
 
-    /* Optimize layout shift */
+    /* Simple Hero Container */
     .hero-container {
         aspect-ratio: 16/9;
-        background-color: #f8f9fa;
+        background: #f8f9fa;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     
     .hero-image {
@@ -43,12 +46,18 @@
         object-fit: cover;
     }
     
+    .splide__slide {
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    
     .splide__slide img {
         aspect-ratio: 3/2;
         object-fit: cover;
     }
     
-    /* Skeleton optimization */
+    /* Skeleton */
     .skeleton {
         background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
         background-size: 200% 100%;
@@ -58,6 +67,309 @@
     @keyframes loading {
         0% { background-position: 200% 0; }
         100% { background-position: -200% 0; }
+    }
+    
+    /* Simple Detail Content */
+    .detail-content {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-top: 1.5rem;
+    }
+    
+    .detail-title {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: #1a202c;
+        line-height: 1.4;
+        margin-bottom: 1rem;
+    }
+    
+    .detail-meta {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        color: #718096;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .detail-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .detail-meta i {
+        color: #667eea;
+        font-size: 0.9rem;
+    }
+    
+    /* Simple Price Section */
+    .price-section {
+        background: #667eea;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+    }
+    
+    .price-amount {
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: white;
+        margin: 0;
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+    }
+    
+    .price-period {
+        font-size: 1rem;
+        font-weight: 500;
+        opacity: 0.95;
+    }
+    
+    .deposit-info {
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        border-left: 3px solid #ffc107;
+        margin-top: 1rem;
+    }
+    
+    .deposit-info small {
+        color: white !important;
+    }
+    
+    .deposit-info strong {
+        color: white;
+        font-weight: 600;
+    }
+    
+    /* Simple Features Grid */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #667eea;
+        border-radius: 10px;
+        color: white;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+    
+    .feature-label {
+        font-size: 0.8rem;
+        color: #718096;
+        margin: 0 0 0.25rem 0;
+        font-weight: 500;
+    }
+    
+    .feature-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0;
+    }
+    
+    /* Simple Section Titles */
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .section-title i {
+        color: #667eea;
+        font-size: 1.25rem;
+    }
+    
+    /* Simple Pricing Details Card */
+    .pricing-details-card {
+        background: #f8f9fa;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+    }
+    
+    .pricing-detail-item {
+        padding: 1.25rem;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        height: 100%;
+    }
+    
+    .pricing-detail-item i {
+        font-size: 1.25rem;
+        color: #667eea;
+    }
+    
+    /* Simple Description */
+    .description-content {
+        line-height: 1.8;
+        color: #4a5568;
+        font-size: 1rem;
+    }
+    
+    .description-content p {
+        margin-bottom: 1rem;
+    }
+    
+    /* Simple Map Container */
+    .map-container {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    /* Simple Save Button */
+    .save-listing-btn {
+        border-radius: 8px;
+        padding: 0.625rem 1.25rem;
+        font-weight: 600;
+        border: 1px solid #dc3545;
+    }
+    
+    .save-listing-btn[data-saved="true"] {
+        background: #dc3545;
+        color: white;
+    }
+    
+    /* Simple Status Badge */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+    
+    .status-available {
+        background: #48bb78;
+        color: white;
+    }
+    
+    .status-rented {
+        background: #ed8936;
+        color: white;
+    }
+    
+    /* Simple Breadcrumb */
+    .breadcrumb {
+        background: white;
+        padding: 0.875rem 1.25rem;
+        margin-bottom: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .detail-content {
+            padding: 1.25rem;
+        }
+        
+        .detail-title {
+            font-size: 1.5rem;
+        }
+        
+        .price-section {
+            padding: 1.25rem;
+        }
+        
+        .price-amount {
+            font-size: 1.75rem;
+        }
+        
+        .features-grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        .feature-item {
+            padding: 0.875rem;
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1.1rem;
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+        }
+        
+        .pricing-details-card {
+            padding: 1rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .detail-content {
+            padding: 1rem;
+        }
+        
+        .detail-title {
+            font-size: 1.25rem;
+        }
+        
+        .detail-meta {
+            font-size: 0.85rem;
+            gap: 1rem;
+        }
+        
+        .price-amount {
+            font-size: 1.5rem;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+        
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+        }
     }
 </style>
 @endpush
@@ -69,15 +381,15 @@ $furnitureStatuses = \App\Constants\SystemDefination::FURNITURE_STATUS;
 $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHouse->district}";
 @endphp
 
-<div class="container" style="margin-top: 20px;">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb mb-0" itemscope itemtype="https://schema.org/BreadcrumbList">
             <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                <a href="/" itemprop="item"><span itemprop="name">Trang chủ</span></a>
+                <a href="/" itemprop="item" class="text-decoration-none"><span itemprop="name">Trang chủ</span></a>
                 <meta itemprop="position" content="1" />
             </li>
             <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                <a href="{{ route('rentalHome.index') }}" itemprop="item"><span itemprop="name">Danh sách cho thuê</span></a>
+                <a href="{{ route('rentalHome.index') }}" itemprop="item" class="text-decoration-none"><span itemprop="name">Danh sách cho thuê</span></a>
                 <meta itemprop="position" content="2" />
             </li>
             <li class="breadcrumb-item active" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
@@ -114,6 +426,10 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                          width="800" 
                          height="450" />
                 </picture>
+                @else
+                <div class="d-flex align-items-center justify-content-center h-100 bg-light">
+                    <i class="fa-solid fa-image fa-3x text-muted"></i>
+                </div>
                 @endif
             </div>
             
@@ -150,23 +466,23 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
             <!-- Main Content Card -->
             <div class="detail-content">
                 <!-- Title & Meta -->
-                <div>
-                    <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3">
                         <h1 class="detail-title mb-0 flex-grow-1">{{ $boardingHouse->title }}</h1>
-                        <button class="btn btn-outline-danger save-listing-btn ms-3" 
+                        <button class="btn btn-outline-danger save-listing-btn" 
                                 data-boarding-house-id="{{ $boardingHouse->id }}"
                                 data-saved="false"
                                 onclick="toggleSaveListing(this);"
                                 title="Lưu tin"
                                 aria-label="Lưu tin này">
-                            <i class="fa-regular fa-heart me-1"></i>
-                            <span class="d-none d-sm-inline">Lưu tin</span>
+                            <i class="fa-regular fa-heart"></i>
+                            <span class="d-none d-sm-inline ms-2">Lưu tin</span>
                         </button>
                     </div>
                     <div class="detail-meta">
                         <span>
                             <i class="fa-solid fa-user"></i>
-                            Đăng bởi <strong>{{ $boardingHouse->user_create->firstname }}</strong>
+                            Đăng bởi <strong class="text-dark">{{ $boardingHouse->user_create->firstname }}</strong>
                         </span>
                         <span>
                             <i class="fa-solid fa-clock"></i>
@@ -176,15 +492,15 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                         </span>
                         <span>
                             <i class="fa-solid fa-map-marker-alt"></i>
-                            {{ $boardingHouse->district }}
+                            <strong class="text-dark">{{ $boardingHouse->district }}</strong>
                         </span>
                     </div>
                 </div>
                 
                 <!-- Price & Status -->
                 <div class="price-section">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap">
-                        <div>
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="flex-grow-1">
                             <div class="price-amount">
                                 <span itemprop="price" content="{{ $boardingHouse->price }}">
                                     {{ numberFormatVi($boardingHouse->price) }}
@@ -210,15 +526,17 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                             <p class="feature-value">{{ $boardingHouse->category }}</p>
                         </div>
                     </div>
-                    <!-- <div class="feature-item">
+                    @if($boardingHouse->area)
+                    <div class="feature-item">
                         <div class="feature-icon">
-                            <i class="fa-solid fa-home"></i>
+                            <i class="fa-solid fa-ruler-combined"></i>
                         </div>
                         <div class="feature-text">
-                            <p class="feature-label">Trạng thái</p>
-                            <p class="feature-value">{{ $statues[$boardingHouse->status] }}</p>
+                            <p class="feature-label">Diện tích</p>
+                            <p class="feature-value">{{ numberFormatVi($boardingHouse->area) }} m²</p>
                         </div>
-                    </div> -->
+                    </div>
+                    @endif
                     <div class="feature-item">
                         <div class="feature-icon">
                             <i class="fa-solid fa-location-dot"></i>
@@ -239,7 +557,100 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                         </div>
                     </div>
                     @endif
+                    @if($boardingHouse->require_deposit)
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                        </div>
+                        <div class="feature-text">
+                            <p class="feature-label">Yêu cầu cọc</p>
+                            <p class="feature-value">{{ $boardingHouse->deposit_amount ? numberFormatVi($boardingHouse->deposit_amount) . ' VNĐ' : 'Có' }}</p>
+                        </div>
+                    </div>
+                    @endif
+                    @if($boardingHouse->min_contract_months)
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-calendar-days"></i>
+                        </div>
+                        <div class="feature-text">
+                            <p class="feature-label">Hợp đồng tối thiểu</p>
+                            <p class="feature-value">{{ $boardingHouse->min_contract_months }} tháng</p>
+                        </div>
+                    </div>
+                    @endif
                 </div>
+                
+                <!-- Pricing Details -->
+                @if($boardingHouse->require_deposit || $boardingHouse->min_contract_months || $boardingHouse->area)
+                <section class="mt-4">
+                    <h2 class="section-title">
+                        <i class="fa-solid fa-money-bill-trend-up me-2"></i>
+                        Thông Tin Giá & Điều Kiện
+                    </h2>
+                    <div class="pricing-details-card mt-3">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="pricing-detail-item">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-money-bill-wave text-primary"></i>
+                                        <strong>Giá thuê</strong>
+                                    </div>
+                                    <p class="mb-0 text-muted">
+                                        <span class="h5 text-dark">{{ numberFormatVi($boardingHouse->price) }} VNĐ</span>
+                                        <span class="ms-1">/tháng</span>
+                                    </p>
+                                </div>
+                            </div>
+                            @if($boardingHouse->require_deposit)
+                            <div class="col-md-6">
+                                <div class="pricing-detail-item">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-hand-holding-dollar text-warning"></i>
+                                        <strong>Tiền cọc</strong>
+                                    </div>
+                                    <p class="mb-0 text-muted">
+                                        @if($boardingHouse->deposit_amount)
+                                            <span class="h5 text-dark">{{ numberFormatVi($boardingHouse->deposit_amount) }} VNĐ</span>
+                                        @else
+                                            <span class="text-dark">Yêu cầu cọc</span>
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+                            @endif
+                            @if($boardingHouse->min_contract_months)
+                            <div class="col-md-6">
+                                <div class="pricing-detail-item">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-file-contract text-info"></i>
+                                        <strong>Hợp đồng tối thiểu</strong>
+                                    </div>
+                                    <p class="mb-0">
+                                        <span class="h5 text-dark">{{ $boardingHouse->min_contract_months }}</span>
+                                        <span class="text-muted ms-1">tháng</span>
+                                    </p>
+                                </div>
+                            </div>
+                            @endif
+                            @if($boardingHouse->area)
+                            <div class="col-md-6">
+                                <div class="pricing-detail-item">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="fa-solid fa-ruler-combined text-success"></i>
+                                        <strong>Diện tích</strong>
+                                    </div>
+                                    <p class="mb-0">
+                                        <span class="h5 text-dark">{{ numberFormatVi($boardingHouse->area) }}</span>
+                                        <span class="text-muted ms-1">m²</span>
+                                    </p>
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                </section>
+                @endif
                 
                 <!-- Description -->
                 <section class="mt-4">
@@ -300,10 +711,13 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
         <!-- Contact Section -->
         <aside class="col-lg-4">
             <div class="contact-card position-sticky" style="top: 100px;" itemscope itemtype="https://schema.org/Person">
-                <h2>
-                    <i class="fa-solid fa-address-card me-2"></i>
-                    Thông Tin Liên Hệ
-                </h2>
+                <div class="contact-header mb-4">
+                    <h2 class="mb-0">
+                        <i class="fa-solid fa-address-card me-2"></i>
+                        Thông Tin Liên Hệ
+                    </h2>
+                    <!-- <p class="text-muted mb-0 mt-2" style="font-size: 0.875rem;">Liên hệ trực tiếp với chủ nhà</p> -->
+                </div>
                 
                 <div class="contact-info">
                     <i class="fa-solid fa-user"></i>
@@ -322,19 +736,19 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                     </a>
                 </div>
                 
-                <div class="contact-info">
+                <!-- <div class="contact-info">
                     <i class="fa-solid fa-envelope"></i>
                     <span>Email:</span><br>
                     <span>********@*****.com</span>
-                </div>
+                </div> -->
                 
                 <!-- Contact Action Buttons -->
-                <div class="contact-actions mt-3">
+                <div class="contact-actions">
                     <a href="tel:{{ $boardingHouse->phone ?? $boardingHouse->user_create->phone }}" 
                        class="btn btn-call w-100 mb-2"
                        aria-label="Gọi điện cho {{ $boardingHouse->user_create->full_name }}">
-                        <i class="fa-solid fa-phone"></i>
-                        Gọi Ngay
+                        <i class="fa-solid fa-phone me-2"></i>
+                        <span>Gọi Ngay</span>
                     </a>
                     
                     <a href="{{ getZaloLink($boardingHouse->phone ?? $boardingHouse->user_create->phone) }}" 
@@ -342,8 +756,8 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                        target="_blank"
                        rel="noopener"
                        aria-label="Chat Zalo với {{ $boardingHouse->user_create->full_name }}">
-                        <i class="fa-brands fa-whatsapp"></i>
-                        Chat Zalo
+                        <i class="fa-brands fa-whatsapp me-2"></i>
+                        <span>Chat Zalo</span>
                     </a>
                 </div>
                 
@@ -429,6 +843,37 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
     'b_title' => $boardingHouse->slug,
     'b_id' => $boardingHouse->id
 ])
+
+<!-- Mobile Fixed Contact Bar -->
+<div class="mobile-contact-bar d-lg-none">
+    <div class="mobile-contact-price">
+        <span class="mobile-price-label">Giá thuê</span>
+        <span class="mobile-price-value">{{ getShortPrice($boardingHouse->price) }}/th</span>
+    </div>
+    <div class="mobile-contact-actions">
+        <a href="tel:{{ $boardingHouse->phone ?? $boardingHouse->user_create->phone }}" 
+           class="mobile-btn mobile-btn-call"
+           aria-label="Gọi điện">
+            <i class="fa-solid fa-phone"></i>
+            <span>Gọi ngay</span>
+        </a>
+        <a href="{{ getZaloLink($boardingHouse->phone ?? $boardingHouse->user_create->phone) }}" 
+           class="mobile-btn mobile-btn-zalo"
+           target="_blank"
+           rel="noopener"
+           aria-label="Chat Zalo">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>Zalo</span>
+        </a>
+        <button class="mobile-btn mobile-btn-appointment" 
+                data-bs-toggle="modal" 
+                data-bs-target="#createAppointmentModal"
+                aria-label="Đặt lịch xem phòng">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Đặt lịch</span>
+        </button>
+    </div>
+</div>
 @endsection
 
 @push('js')

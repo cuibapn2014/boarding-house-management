@@ -1,16 +1,30 @@
-<div class="hero-new position-relative overflow-hidden">
-    {{-- Hero Background Image --}}
+<div class="hero-new position-relative overflow-hidden" style="min-height: 500px; contain: layout style paint; display: flex; justify-content: center; flex-direction: column;">
+    {{-- Hero Background Image - Optimized for LCP --}}
     <div class="hero-image position-absolute w-100 h-100 top-0 start-0">
-        <img class="w-100 h-100 object-fit-cover" 
+        {{-- Preload hint in head for critical image --}}
+        @push('preload')
+        <link rel="preload" 
+              as="image" 
+              href="{{ asset('assets/images/hero-background.webp') }}" 
+              imagesrcset="{{ asset('assets/images/hero-bg.webp') }} 575w, {{ asset('assets/images/hero-background.webp') }} 768w"
+              imagesizes="100vw"
+              fetchpriority="high">
+        @endpush
+        
+        {{-- Main hero image with explicit dimensions to prevent CLS --}}
+        <img class="w-100 h-100 object-fit-cover"
              src="{{ asset('assets/images/hero-background.webp') }}" 
              srcset="{{ asset('assets/images/hero-bg.webp') }} 575w, 
-                     {{ asset('assets/images/hero-background.webp') }} 768w" 
-             sizes="(max-width: 575px) 100vw, (min-width: 576px) 100vw" 
+                     {{ asset('assets/images/hero-background.webp') }} 768w,
+                     {{ asset('assets/images/hero-background.webp') }} 1200w" 
+             sizes="100vw"
+             width="1920"
+             height="800"
              alt="Tìm nơi an cư, bắt đầu cuộc sống mới" 
              loading="eager" 
              fetchpriority="high"
-             decoding="async" />
-        <div class="hero-overlay position-absolute w-100 h-100 top-0 start-0 bg-dark" style="opacity: 0.3;"></div>
+             decoding="sync" />
+        <div class="hero-overlay position-absolute w-100 h-100 top-0 start-0" style="background-color: rgba(0,0,0,0.3);"></div>
     </div>
 
     {{-- Hero Content --}}

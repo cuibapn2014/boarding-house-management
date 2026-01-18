@@ -51,10 +51,28 @@ class RentalHomeController extends Controller
                                         'ward',
                                         'price',
                                         'status',
+                                        'area',
                                         'created_at'
                                     )
-                                    // ->groupBy('id')
-                                    ->orderByDesc('id')
+                                    ->when($request->filled('sort'), function($query) use($request) {
+                                        switch($request->sort) {
+                                            case 'oldest':
+                                                $query->orderBy('id', 'asc');
+                                                break;
+                                            case 'price_low':
+                                                $query->orderBy('price', 'asc');
+                                                break;
+                                            case 'price_high':
+                                                $query->orderBy('price', 'desc');
+                                                break;
+                                            case 'newest':
+                                            default:
+                                                $query->orderByDesc('id');
+                                                break;
+                                        }
+                                    }, function($query) {
+                                        $query->orderByDesc('id');
+                                    })
                                     ->paginate(20)
                                     ->withQueryString();
 
@@ -63,27 +81,39 @@ class RentalHomeController extends Controller
 
     public function show($id, $title)
     {
-        $boardingHouse = BoardingHouse::published()->find($id, [
-                                            'id',
-                                            'title',
-                                            'description',
-                                            'content',
-                                            'category',
-                                            'address',
-                                            'district',
-                                            'ward',
-                                            'price',
-                                            'status',
-                                            'furniture_status',
-                                            'tags',
-                                            'phone',
-                                            'updated_at',
-                                            'created_by'
-                                        ]);
+        $boardingHouse = BoardingHouse::published()
+                                    ->with([
+                                        'user_create:id,firstname,lastname,phone',
+                                        'boarding_house_files:id,boarding_house_id,type,url'
+                                    ])
+                                    ->select(
+                                        'id',
+                                        'title',
+                                        'description',
+                                        'content',
+                                        'category',
+                                        'address',
+                                        'district',
+                                        'ward',
+                                        'price',
+                                        'status',
+                                        'furniture_status',
+                                        'tags',
+                                        'phone',
+                                        'map_link',
+                                        'require_deposit',
+                                        'deposit_amount',
+                                        'min_contract_months',
+                                        'area',
+                                        'updated_at',
+                                        'created_by'
+                                    )
+                                    ->find($id);
 
         if(!$boardingHouse || $title != $boardingHouse->slug) abort(404);
 
-        $boardingHouseRelation = BoardingHouse::published()->where('district', $boardingHouse->district)
+        $boardingHouseRelation = BoardingHouse::published()
+                                            ->where('district', $boardingHouse->district)
                                             ->where('id', '!=', $boardingHouse->id)
                                             ->where('status', 'available')
                                             ->select(
@@ -93,6 +123,8 @@ class RentalHomeController extends Controller
                                                 'district',
                                                 'price',
                                                 'status',
+                                                'area',
+                                                'created_at'
                                             )
                                             ->inRandomOrder()
                                             ->take(8)

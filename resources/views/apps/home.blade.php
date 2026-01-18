@@ -110,23 +110,24 @@ $categories = \App\Constants\SystemDefination::BOARDING_HOUSE_CATEGORY;
                                 
                                 {{-- Status Badge --}}
                                 @if($index < 3)
-                                <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1">HOT</span>
+                                <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1 shadow-sm">HOT</span>
                                 @elseif($index < 6)
-                                <span class="badge bg-success position-absolute top-0 end-0 m-2 px-2 py-1">MỚI</span>
+                                <span class="badge bg-success position-absolute top-0 end-0 m-2 px-2 py-1 shadow-sm">MỚI</span>
                                 @endif
 
                                 {{-- Favorite Icon --}}
-                                <button class="btn btn-link position-absolute top-0 start-0 m-2 p-0 text-white" 
+                                <button class="btn btn-link position-absolute top-0 start-0 m-2 p-1 text-white bg-dark bg-opacity-25 rounded-circle" 
                                         type="button" 
-                                        aria-label="Thêm vào yêu thích">
-                                    <i class="fa-regular fa-heart fs-5"></i>
+                                        aria-label="Thêm vào yêu thích"
+                                        style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+                                    <i class="fa-regular fa-heart fs-6"></i>
                                 </button>
                             </div>
 
                             {{-- Property Info --}}
-                            <div class="card-body p-3">
-                                <h3 class="card-title fs-6 fw-semibold text-dark mb-2 text-truncate" 
-                                    style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;white-space: normal;min-height: 40px;"
+                            <div class="card-body p-3 d-flex flex-column">
+                                <h3 class="card-title fs-6 fw-semibold text-dark mb-2" 
+                                    style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; white-space: normal; min-height: 40px; line-height: 1.4;"
                                     itemprop="name">
                                     {{ $boardingHouse->title }}
                                 </h3>
@@ -146,12 +147,17 @@ $categories = \App\Constants\SystemDefination::BOARDING_HOUSE_CATEGORY;
                                     </span>
                                 </address>
                                 
-                                <div class="small text-muted">
-                                    <i class="fa-solid fa-expand-arrows-alt me-1"></i>
-                                    <span>25m²</span>
-                                    <span class="mx-2">•</span>
-                                    <i class="fa-solid fa-clock me-1"></i>
-                                    <span>{{ dateForHumman($boardingHouse->created_at) }}</span>
+                                <div class="small text-muted d-flex align-items-center flex-wrap gap-2">
+                                    @if(isset($boardingHouse->area) && $boardingHouse->area)
+                                    <span class="d-flex align-items-center">
+                                        <i class="fa-solid fa-expand-arrows-alt me-1 text-primary"></i>
+                                        <span>{{ $boardingHouse->area }}m²</span>
+                                    </span>
+                                    @endif
+                                    <span class="d-flex align-items-center">
+                                        <i class="fa-solid fa-clock me-1"></i>
+                                        <span>{{ dateForHumman($boardingHouse->created_at) }}</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>

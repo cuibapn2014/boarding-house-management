@@ -46,6 +46,7 @@ class HomeController extends Controller
                                         'ward',
                                         'price',
                                         'status',
+                                        'area',
                                         'created_at'
                                     )
                                     ->orderByDesc('id')
@@ -62,6 +63,7 @@ class HomeController extends Controller
                                             'ward',
                                             'price',
                                             'status',
+                                            'area',
                                             'created_at'
                                         )
                                         ->orderByDesc('id')

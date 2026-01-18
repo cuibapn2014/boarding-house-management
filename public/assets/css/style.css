@@ -121,6 +121,61 @@ header button {
     object-fit: cover;
 }
 
+/* Hero New Section - LCP & CLS Optimized */
+.hero-new {
+    min-height: 500px;
+    aspect-ratio: 1920 / 800;
+    contain: layout style paint;
+    content-visibility: visible;
+}
+
+.hero-new .hero-image {
+    will-change: auto;
+}
+
+.hero-new .hero-image img {
+    aspect-ratio: 1920 / 800;
+    object-fit: cover;
+    object-position: center;
+    content-visibility: auto;
+}
+
+/* Prevent CLS with placeholder background */
+.hero-new::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2d5a3d 0%, #1a3a25 100%);
+    z-index: -1;
+}
+
+/* Responsive hero heights to prevent CLS */
+@media screen and (max-width: 991px) {
+    .hero-new {
+        min-height: 450px;
+        aspect-ratio: auto;
+    }
+    
+    .hero-new .hero-image img {
+        aspect-ratio: auto;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .hero-new {
+        min-height: 550px;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .hero-new {
+        min-height: 600px;
+    }
+}
+
 #loading {
     width: 100%;
     height: 100vh;
@@ -354,6 +409,15 @@ header button {
         right: 15px;
         width: 42px;
         height: 42px;
+    }
+
+    .floating-contact-buttons {
+        display: none !important;
+    }
+    
+    #scroll-to-top {
+        bottom: 90px !important;
+        right: 10px !important;
     }
 }
 

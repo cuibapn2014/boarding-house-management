@@ -153,7 +153,7 @@ div.hero .hero-overlay {
     }
     
     .list-home .d-flex {
-        margin: 0 -0.5rem;
+        margin: 0 0rem;
     }
     
     .list-home .col-6,
@@ -242,6 +242,6 @@ div.hero .hero-overlay {
     /* Hide icon on small screens */
     .item-info i,
     .card-body i {
-        display: none;
+        /* display: none; */
     }
 }

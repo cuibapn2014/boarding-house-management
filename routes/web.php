@@ -24,8 +24,8 @@ use App\Http\Controllers\UserProfileController;
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {
-    Route::get('/dang-nhap', [LoginController::class, 'show'])->name('login');
-    Route::post('/dang-nhap', [LoginController::class, 'login'])->name('login.perform');
+    Route::get('/login', [LoginController::class, 'show'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.perform');
     Route::get('/dang-ky', [RegisterController::class, 'create'])->name('register');
     Route::post('/dang-ky', [RegisterController::class, 'store'])->name('register.perform');
     
