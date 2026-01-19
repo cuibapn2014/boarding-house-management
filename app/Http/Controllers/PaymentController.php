@@ -163,11 +163,19 @@ class PaymentController extends Controller
      */
     public function confirm(ConfirmTransactionRequest $request)
     {
-          
         $payment = $this->paymentService->processPaymentCompletion($request->code, $request->toArray());
 
         if (!$payment) {
             return back()->with('error', 'Không tìm thấy thanh toán');
         }
+    }
+
+    public function confirmWithCode(string $paymentCode)
+    {
+        $payment = $this->paymentService->processPaymentCompletion($paymentCode, []);
+        if (!$payment) {
+            return back()->with('error', 'Không tìm thấy thanh toán');
+        }
+        return redirect()->route('payment.show', $payment->payment_code);
     }
 }

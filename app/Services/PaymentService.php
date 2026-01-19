@@ -16,7 +16,9 @@ use App\Events\PaymentCreated;
 use App\Events\PaymentCompleted;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use SePay\SePayClient;
 
 class PaymentService implements PaymentServiceInterface
 {
@@ -123,15 +125,35 @@ class PaymentService implements PaymentServiceInterface
      */
     public function processPaymentCompletion(string $paymentCode, array $sepayData): ?Payment
     {
-        return DB::transaction(function () use ($paymentCode, $sepayData) {
-            $payment = $this->repository->findByCode($paymentCode);
+        $merchantId = env('SEPAY_MERCHANT_ID');
+        $secretKey = env('SEPAY_SECRET');
+        $environment = env('SEPAY_ENV');
+        $sepay = new SePayClient(
+            $merchantId,
+            $secretKey,
+            $environment
+        );
+
+        $orders = $sepay->orders()->retrieve($paymentCode);
+        $order = null;
+        if ($orders) {
+            $order = collect($orders['data']);
+        }
+
+        if($order->empty() || $order['order_status'] !== 'CAPTURED') {
+            Log::warning("Payment not found for code: {$paymentCode}");
+            return null;
+        }
+
+        return DB::transaction(function () use ($paymentCode, $sepayData, $order) {
+            $payment = $this->repository->findByCode($order['order_invoice_number']);
 
             if (!$payment) {
                 Log::warning("Payment not found for code: {$paymentCode}");
                 return null;
             }
 
-            if ($payment->isCompleted()) {
+            if ($payment->isCompleted() && $order['order_status'] === 'CAPTURED') {
                 Log::info("Payment already completed: {$paymentCode}");
                 return $payment;
             }
@@ -154,7 +176,7 @@ class PaymentService implements PaymentServiceInterface
             $payment->refresh();
 
             // Process point top-up if payment type is point top-up
-            if ($payment->payment_type === Payment::TYPE_POINT_TOP_UP) {
+            if ($payment->payment_type === Payment::TYPE_POINT_TOP_UP && $order['order_status'] === 'CAPTURED') {
                 $this->processPointTopUpInTransaction($payment);
             }
 

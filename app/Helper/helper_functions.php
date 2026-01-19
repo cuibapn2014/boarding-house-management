@@ -48,6 +48,7 @@ function generatePaymentButton($amount, $description, $paymentCode = null)
         ->orderAmount($amount)
         ->operation('PURCHASE')
         ->orderDescription($description)
+        ->successUrl(route('payment.confirmWithCode', ['paymentCode' => $invoiceNumber]))
         ->build();
 
     // Hiển thị form checkout ra giao diện
