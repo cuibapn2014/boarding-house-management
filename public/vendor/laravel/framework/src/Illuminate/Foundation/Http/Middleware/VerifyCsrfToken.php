@@ -36,7 +36,9 @@ class VerifyCsrfToken
      *
      * @var array
      */
-    protected $except = [];
+    protected $except = [
+        'hooks/sepay-payment',
+    ];
 
     /**
      * Indicates whether the XSRF-TOKEN cookie should be set on the response.
