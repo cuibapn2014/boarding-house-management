@@ -87,3 +87,5 @@ Route::group(['middleware' => 'auth'], function () {
 	// Page routes (must be last)
 	Route::get('/{page}', [PageController::class, 'index'])->name('page.index');
 });
+
+Route::post('/hooks/sepay-payment', [\App\Http\Controllers\PaymentController::class, 'confirm'])->name('payment.confirm');

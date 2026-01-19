@@ -9,6 +9,7 @@ use App\Services\Contracts\PaymentServiceInterface;
 use App\Strategies\PaymentStrategyFactory;
 use App\Http\Requests\StorePaymentRequest;
 use App\DTOs\PaymentData;
+use App\Http\Requests\ConfirmTransactionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -155,5 +156,18 @@ class PaymentController extends Controller
         $this->paymentService->cancelPayment($payment);
 
         return back()->with('success', 'Đã hủy thanh toán thành công');
+    }
+
+    /**
+     * Confirm payment
+     */
+    public function confirm(ConfirmTransactionRequest $request)
+    {
+          
+        $payment = $this->paymentService->processPaymentCompletion($request->code, $request->toArray());
+
+        if (!$payment) {
+            return back()->with('error', 'Không tìm thấy thanh toán');
+        }
     }
 }
