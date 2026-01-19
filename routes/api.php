@@ -36,3 +36,5 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 });
+
+Route::post('/hooks/sepay-payment', [\App\Http\Controllers\PaymentController::class, 'confirm'])->name('payment.confirm');
