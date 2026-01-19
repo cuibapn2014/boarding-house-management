@@ -6,9 +6,11 @@ use App\Models\Payment;
 use App\Models\BoardingHouse;
 use App\Models\Appointment;
 use App\Models\User;
+use App\Models\PointPackage;
 use App\DTOs\PaymentData;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
 use App\Services\Contracts\PaymentServiceInterface;
+use App\Services\Contracts\PointServiceInterface;
 use App\Strategies\PaymentStrategyFactory;
 use App\Events\PaymentCreated;
 use App\Events\PaymentCompleted;
@@ -20,7 +22,8 @@ class PaymentService implements PaymentServiceInterface
 {
     public function __construct(
         protected PaymentRepositoryInterface $repository,
-        protected PaymentStrategyFactory $strategyFactory
+        protected PaymentStrategyFactory $strategyFactory,
+        protected PointServiceInterface $pointService
     ) {}
 
     /**
@@ -150,10 +153,72 @@ class PaymentService implements PaymentServiceInterface
             $this->repository->update($payment, $updateData);
             $payment->refresh();
 
+            // Process point top-up if payment type is point top-up
+            if ($payment->payment_type === Payment::TYPE_POINT_TOP_UP) {
+                $this->processPointTopUpInTransaction($payment);
+            }
+
             event(new PaymentCompleted($payment));
 
             return $payment;
         });
+    }
+
+    /**
+     * Process point top-up within the same transaction
+     */
+    protected function processPointTopUpInTransaction(Payment $payment): void
+    {
+        try {
+            $user = $payment->user;
+            if (!$user) {
+                Log::warning('Payment completed but user not found for point top-up', [
+                    'payment_id' => $payment->id,
+                    'payment_code' => $payment->payment_code,
+                ]);
+                return;
+            }
+
+            $metadata = $payment->metadata ?? [];
+            $packageId = $metadata['package_id'] ?? null;
+
+            if (!$packageId) {
+                Log::warning('Point top-up payment completed but package_id not found in metadata', [
+                    'payment_id' => $payment->id,
+                    'payment_code' => $payment->payment_code,
+                ]);
+                return;
+            }
+
+            $package = PointPackage::find($packageId);
+            if (!$package) {
+                Log::warning('Point package not found for top-up', [
+                    'payment_id' => $payment->id,
+                    'package_id' => $packageId,
+                ]);
+                return;
+            }
+
+            // Top up points within the same transaction
+            $this->pointService->topUpPoints($user, $package, $payment->id);
+
+            Log::info('Points topped up after payment completion (in transaction)', [
+                'payment_id' => $payment->id,
+                'payment_code' => $payment->payment_code,
+                'user_id' => $user->id,
+                'package_id' => $package->id,
+                'points' => $package->total_points,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error processing point top-up in transaction', [
+                'payment_id' => $payment->id,
+                'payment_code' => $payment->payment_code,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            // Re-throw to rollback transaction if needed
+            throw $e;
+        }
     }
 
     /**

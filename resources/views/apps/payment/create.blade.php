@@ -106,7 +106,6 @@
         </div>
     </div>
 </div>
-{!! generatePaymentButton(5000, 'Thanh toán phòng trọ') !!}
 @endsection
 
 @push('js')

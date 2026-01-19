@@ -44,13 +44,15 @@ class Payment extends Model
     const STATUS_COMPLETED = 'completed';
     const STATUS_FAILED = 'failed';
     const STATUS_CANCELLED = 'cancelled';
-
+    const STATUS_EXPIRED = 'expired';
     /**
      * Payment type constants
      */
     const TYPE_DEPOSIT = 'deposit';
     const TYPE_RENT = 'rent';
     const TYPE_BOOKING_FEE = 'booking_fee';
+    const TYPE_POINT_TOP_UP = 'point_top_up';
+    const TYPE_SERVICE_PAYMENT = 'service_payment';
 
     /**
      * Boot the model

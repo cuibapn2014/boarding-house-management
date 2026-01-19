@@ -29,7 +29,7 @@ function getLinkPreview($id, $title)
     return "https://nhatrototsaigon.com/danh-sach-cho-thue/{$id}/{$title}";
 }
 
-function generatePaymentButton($amount, $description)
+function generatePaymentButton($amount, $description, $paymentCode = null)
 {
     // Khởi tạo client
     $sepayMerchantId = env('SEPAY_MERCHANT_ID');
@@ -37,11 +37,14 @@ function generatePaymentButton($amount, $description)
     $env = env('SEPAY_ENV');
     $sepay = new SePayClient($sepayMerchantId, $sepayMerchantSecret, $env);
 
+    // Sử dụng payment_code nếu có, nếu không thì tạo mã tự động
+    $invoiceNumber = $paymentCode ? $paymentCode : ('INV-' . time());
+
     // Tạo dữ liệu đơn hàng
     $checkoutData = CheckoutBuilder::make()
         ->paymentMethod('BANK_TRANSFER')
         ->currency('VND')
-        ->orderInvoiceNumber('INV-' . time())
+        ->orderInvoiceNumber($invoiceNumber)
         ->orderAmount($amount)
         ->operation('PURCHASE')
         ->orderDescription($description)

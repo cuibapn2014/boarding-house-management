@@ -28,6 +28,18 @@ class AppServiceProvider extends ServiceProvider
 
         // Register Webhook Validation Service
         $this->app->singleton(\App\Services\WebhookValidationService::class);
+
+        // Register Point Service
+        $this->app->singleton(
+            \App\Services\Contracts\PointServiceInterface::class,
+            \App\Services\PointService::class
+        );
+
+        // Register Service Payment Service
+        $this->app->singleton(
+            \App\Services\Contracts\ServicePaymentServiceInterface::class,
+            \App\Services\ServicePaymentService::class
+        );
     }
 
     /**

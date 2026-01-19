@@ -66,6 +66,16 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/payment/{paymentCode}/check-status', [\App\Http\Controllers\PaymentController::class, 'checkStatus'])->name('payment.checkStatus');
 	Route::post('/payment/{paymentCode}/cancel', [\App\Http\Controllers\PaymentController::class, 'cancel'])->name('payment.cancel');
 	
+	// Point routes
+	Route::get('/point/wallet', [\App\Http\Controllers\PointController::class, 'wallet'])->name('point.wallet');
+	Route::get('/point/top-up', [\App\Http\Controllers\PointController::class, 'topUp'])->name('point.top-up');
+	Route::post('/point/top-up', [\App\Http\Controllers\PointController::class, 'processTopUp'])->name('point.process-top-up');
+	Route::get('/point/transactions', [\App\Http\Controllers\PointController::class, 'transactions'])->name('point.transactions');
+	
+	// Service Payment routes
+	Route::get('/boarding-house/{boardingHouse}/services', [\App\Http\Controllers\ServicePaymentController::class, 'show'])->name('service-payment.show');
+	Route::post('/boarding-house/{boardingHouse}/services/process', [\App\Http\Controllers\ServicePaymentController::class, 'process'])->name('service-payment.process');
+	
 	// Static pages
 	Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static'); 
 	Route::get('/sign-in-static', [PageController::class, 'signin'])->name('sign-in-static');

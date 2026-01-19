@@ -33,7 +33,8 @@ class User extends Authenticatable
         'plan_current',
         'status',
         'google_id',
-        'provider'
+        'provider',
+        'points'
     ];
 
     /**
@@ -53,6 +54,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'points' => 'decimal:2',
     ];
 
     /**
@@ -69,5 +71,29 @@ class User extends Authenticatable
     public function getIsAdminAttribute() : bool
     {
         return $this->id === 1;
+    }
+
+    /**
+     * Get point transactions for this user
+     */
+    public function pointTransactions()
+    {
+        return $this->hasMany(PointTransaction::class);
+    }
+
+    /**
+     * Get service payments for this user
+     */
+    public function servicePayments()
+    {
+        return $this->hasMany(ServicePayment::class);
+    }
+
+    /**
+     * Check if user has enough points
+     */
+    public function hasEnoughPoints(int $points): bool
+    {
+        return $this->points >= $points;
     }
 }

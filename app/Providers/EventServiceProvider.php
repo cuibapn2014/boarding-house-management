@@ -25,7 +25,7 @@ class EventServiceProvider extends ServiceProvider
             // Add listeners here if needed
         ],
         \App\Events\PaymentCompleted::class => [
-            // Add listeners here if needed (e.g., send notification, update appointment status)
+            \App\Listeners\ProcessPointTopUpOnPaymentCompleted::class,
         ],
     ];
 
