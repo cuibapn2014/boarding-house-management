@@ -140,7 +140,7 @@ class PaymentService implements PaymentServiceInterface
             $order = collect($orders['data']);
         }
 
-        if($order->empty() || $order['order_status'] !== 'CAPTURED') {
+        if($order['order_status'] !== 'CAPTURED') {
             Log::warning("Payment not found for code: {$paymentCode}");
             return null;
         }
