@@ -56,9 +56,11 @@
                 <div class="card-header pb-0">
                     <div class="d-flex align-items-center justify-content-between">
                         <h6 class="mb-0">Lịch sử thanh toán</h6>
+                        @if(auth()->user()->is_admin)
                         <a href="{{ route('payment.create') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus me-2"></i>Tạo thanh toán mới
                         </a>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body">

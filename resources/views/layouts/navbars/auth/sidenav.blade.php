@@ -70,6 +70,7 @@
                     <span class="nav-link-text ms-1">Quản lý người dùng</span>
                 </a>
             </li>
+            @endif
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'payment') == true ? 'active' : '' }}" href="{{ route('page.index', ['page' => 'payment']) }}">
                     <div
@@ -79,7 +80,6 @@
                     <span class="nav-link-text ms-1">Quản lý thanh toán</span>
                 </a>
             </li>
-            @endif
             {{-- <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Pages</h6>
             </li>
