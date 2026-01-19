@@ -89,4 +89,4 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::get('/hooks/sepay-payment-code/{paymentCode}', [\App\Http\Controllers\PaymentController::class, 'confirmWithCode'])->name('payment.confirmWithCode');
-Route::get('/hooks/sepay-payment', [\App\Http\Controllers\PaymentController::class, 'confirm'])->name('payment.confirm');
+Route::post('/hooks/sepay-payment', [\App\Http\Controllers\PaymentController::class, 'confirm'])->name('payment.confirm');
