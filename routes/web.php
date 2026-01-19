@@ -58,6 +58,14 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 	Route::post('/profile/change-password', [UserProfileController::class, 'changePassword'])->name('profile.change-password');
 	
+	// Payment routes
+	Route::get('/payment', [\App\Http\Controllers\PaymentController::class, 'index'])->name('payment.index');
+	Route::get('/payment/create', [\App\Http\Controllers\PaymentController::class, 'create'])->name('payment.create');
+	Route::post('/payment', [\App\Http\Controllers\PaymentController::class, 'store'])->name('payment.store');
+	Route::get('/payment/{paymentCode}', [\App\Http\Controllers\PaymentController::class, 'show'])->name('payment.show');
+	Route::get('/payment/{paymentCode}/check-status', [\App\Http\Controllers\PaymentController::class, 'checkStatus'])->name('payment.checkStatus');
+	Route::post('/payment/{paymentCode}/cancel', [\App\Http\Controllers\PaymentController::class, 'cancel'])->name('payment.cancel');
+	
 	// Static pages
 	Route::get('/profile-static', [PageController::class, 'profile'])->name('profile-static'); 
 	Route::get('/sign-in-static', [PageController::class, 'signin'])->name('sign-in-static');

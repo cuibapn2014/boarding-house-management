@@ -16,4 +16,9 @@ class Appointment extends Model
     {
         return $this->belongsTo(\App\Models\BoardingHouse::class, 'boarding_house_id', 'id');
     }
+
+    public function payment() 
+    {
+        return $this->belongsTo(\App\Models\Payment::class, 'payment_id', 'id');
+    }
 }

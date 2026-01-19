@@ -18,6 +18,15 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        \SePay\SePay\Events\SePayWebhookEvent::class => [
+            \App\Listeners\SePayWebhookListener::class,
+        ],
+        \App\Events\PaymentCreated::class => [
+            // Add listeners here if needed
+        ],
+        \App\Events\PaymentCompleted::class => [
+            // Add listeners here if needed (e.g., send notification, update appointment status)
+        ],
     ];
 
     /**

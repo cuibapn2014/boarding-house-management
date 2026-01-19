@@ -14,12 +14,12 @@
         <ul class="navbar-nav">
             {{-- <li class="nav-item">
                 <a class="nav-link {{ Route::currentRouteName() == 'home' ? 'active' : '' }}" href="{{ route('home') }}">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Bảng điều khiển</span>
-                </a>
+            <div
+                class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Bảng điều khiển</span>
+            </a>
             </li> --}}
             <li class="nav-item mt-3 d-flex align-items-center">
                 <div class="ps-4">
@@ -59,20 +59,29 @@
                         <i class="ni ni-bullet-list-67 text-dark text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Quản lý người dùng</span>
-                    </a>
-                </li>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ str_contains(request()->url(), 'payment') == true ? 'active' : '' }}" href="{{ route('page.index', ['page' => 'payment']) }}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-credit-card text-dark text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Quản lý thanh toán</span>
+                </a>
+            </li>
             @endif
             {{-- <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Pages</h6>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'tables') == true ? 'active' : '' }}" href="{{ route('page.index', ['page' => 'tables']) }}">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Tables</span>
-                </a>
+            <div
+                class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Tables</span>
+            </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{  str_contains(request()->url(), 'billing') == true ? 'active' : '' }}" href="{{ route('page.index', ['page' => 'billing']) }}">
@@ -102,7 +111,7 @@
             href="#" type="button">Nâng cấp PRO</a> -->
         <div class="text-center text-muted position-absolute bottom-0 w-100 py-2 left-0">
             <p class="text-xs font-weight-bold mb-0">
-                Phát triển bởi 
+                Phát triển bởi
                 <strong class="text-primary cursor-pointer" onclick="window.open('https://fb.com/FakerHT', '_blank')">
                     Mạnh Tuấn
                 </strong>
