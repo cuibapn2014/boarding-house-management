@@ -376,7 +376,7 @@
 .btn-appointment {
     background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
     border: none;
-    padding: 1rem;
+    padding: .7rem;
     font-size: 1.1rem;
     font-weight: 700;
     border-radius: 10px;

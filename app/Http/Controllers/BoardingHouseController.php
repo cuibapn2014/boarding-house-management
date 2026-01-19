@@ -46,6 +46,7 @@ class BoardingHouseController extends Controller
                 'status',
                 'is_publish',
                 'created_at',
+                'created_by'
             )
             ->paginate(20)
             ->withQueryString();

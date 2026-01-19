@@ -724,6 +724,7 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                     <strong itemprop="name">{{ $boardingHouse->user_create->full_name }}</strong>
                 </div>
                 
+                @auth
                 <div class="contact-info">
                     <i class="fa-brands fa-whatsapp"></i>
                     <span>Zalo/SMS:</span><br>
@@ -760,10 +761,28 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                         <span>Chat Zalo</span>
                     </a>
                 </div>
+                @else
+                <!-- Hidden contact info for guests -->
+                <div class="contact-info">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span>Zalo/SMS:</span><br>
+                    <span class="text-muted">***********</span>
+                </div>
+                
+                <!-- Contact Action Buttons - Login Required -->
+                <div class="contact-actions">
+                    <a href="{{ route('login') }}" 
+                       class="btn btn-primary w-100 mb-2"
+                       aria-label="Đăng nhập để xem số điện thoại">
+                        <i class="fa-solid fa-sign-in-alt me-2"></i>
+                        <span>Đăng nhập để xem số điện thoại</span>
+                    </a>
+                </div>
+                @endauth
                 
                 <div class="contact__divide mx-auto my-3">Hoặc</div>
                 
-                <button class="btn btn-success btn-appointment w-100" 
+                <button class="btn btn-success btn-appointment w-100 btn-sm" 
                         data-bs-toggle="modal" 
                         data-bs-target="#createAppointmentModal"
                         aria-label="Đặt lịch xem phòng {{ $boardingHouse->title }}">
@@ -851,6 +870,7 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
         <span class="mobile-price-value">{{ getShortPrice($boardingHouse->price) }}/th</span>
     </div>
     <div class="mobile-contact-actions">
+        @auth
         <a href="tel:{{ $boardingHouse->phone ?? $boardingHouse->user_create->phone }}" 
            class="mobile-btn mobile-btn-call"
            aria-label="Gọi điện">
@@ -865,6 +885,14 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
             <i class="fa-brands fa-whatsapp"></i>
             <span>Zalo</span>
         </a>
+        @else
+        <a href="{{ route('login') }}" 
+           class="mobile-btn mobile-btn-call"
+           aria-label="Đăng nhập để xem số điện thoại">
+            <i class="fa-solid fa-sign-in-alt"></i>
+            <span>Đăng nhập</span>
+        </a>
+        @endauth
         <button class="mobile-btn mobile-btn-appointment" 
                 data-bs-toggle="modal" 
                 data-bs-target="#createAppointmentModal"

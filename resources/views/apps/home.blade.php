@@ -72,6 +72,54 @@
         border: 1px solid #e9ecef;
         transition: all 0.2s ease;
     }
+    
+    /* Partner Badge - Compact Design */
+    .partner-badge-compact {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+        color: #fff !important;
+        font-weight: 700 !important;
+        font-size: 0.65rem !important;
+        padding: 0.25rem 0.5rem !important;
+        border-radius: 12px !important;
+        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4), 
+                    0 1px 4px rgba(255, 140, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        border: 1.5px solid rgba(255, 255, 255, 0.4);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        white-space: nowrap;
+        line-height: 1;
+        vertical-align: middle;
+    }
+    
+    .partner-badge-compact i {
+        font-size: 0.7rem;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+        animation: partnerBadgeShine 2s ease-in-out infinite;
+    }
+    
+    @keyframes partnerBadgeShine {
+        0%, 100% {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+        50% {
+            opacity: 1;
+            transform: rotate(8deg) scale(1.1);
+            filter: drop-shadow(0 1px 3px rgba(255, 215, 0, 0.6));
+        }
+    }
+    
+    .property-card:hover .partner-badge-compact {
+        transform: scale(1.05);
+        box-shadow: 0 3px 10px rgba(255, 215, 0, 0.5), 
+                    0 2px 6px rgba(255, 140, 0, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
 </style>
 @endpush
 
@@ -122,6 +170,7 @@ $categories = \App\Constants\SystemDefination::BOARDING_HOUSE_CATEGORY;
                                         style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
                                     <i class="fa-regular fa-heart fs-6"></i>
                                 </button>
+
                             </div>
 
                             {{-- Property Info --}}
@@ -132,10 +181,17 @@ $categories = \App\Constants\SystemDefination::BOARDING_HOUSE_CATEGORY;
                                     {{ $boardingHouse->title }}
                                 </h3>
                                 
-                                <div class="price mb-2" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                                <div class="price mb-2 d-flex align-items-center gap-2 flex-wrap" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
                                     <span class="text-success fw-bold fs-5" itemprop="price" content="{{ $boardingHouse->price }}">
                                         {{ getShortPrice($boardingHouse->price) }}/tháng
                                     </span>
+                                    {{-- Partner Badge (Admin created) - Compact Design --}}
+                                    @if($boardingHouse->created_by === 1)
+                                    <span class="partner-badge-compact">
+                                        <i class="fa-solid fa-star"></i>
+                                        <span>Đối tác</span>
+                                    </span>
+                                    @endif
                                     <meta itemprop="priceCurrency" content="VND">
                                     <meta itemprop="availability" content="https://schema.org/InStock">
                                 </div>

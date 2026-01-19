@@ -52,7 +52,8 @@ class RentalHomeController extends Controller
                                         'price',
                                         'status',
                                         'area',
-                                        'created_at'
+                                        'created_at',
+                                        'created_by'
                                     )
                                     ->when($request->filled('sort'), function($query) use($request) {
                                         switch($request->sort) {
@@ -124,7 +125,8 @@ class RentalHomeController extends Controller
                                                 'price',
                                                 'status',
                                                 'area',
-                                                'created_at'
+                                                'created_at',
+                                                'created_by'
                                             )
                                             ->inRandomOrder()
                                             ->take(8)

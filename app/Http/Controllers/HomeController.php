@@ -47,7 +47,8 @@ class HomeController extends Controller
                                         'price',
                                         'status',
                                         'area',
-                                        'created_at'
+                                        'created_at',
+                                        'created_by'
                                     )
                                     ->orderByDesc('id')
                                     ->limit(20)
@@ -64,7 +65,8 @@ class HomeController extends Controller
                                             'price',
                                             'status',
                                             'area',
-                                            'created_at'
+                                            'created_at',
+                                            'created_by'
                                         )
                                         ->orderByDesc('id')
                                         ->whereIn('district', $nearlyCentreList)
