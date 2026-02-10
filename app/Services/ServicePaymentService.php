@@ -9,7 +9,6 @@ use App\Models\Payment;
 use App\Services\Contracts\ServicePaymentServiceInterface;
 use App\Services\Contracts\PointServiceInterface;
 use App\Services\Contracts\PaymentServiceInterface;
-use App\DTOs\PaymentData;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -31,7 +30,8 @@ class ServicePaymentService implements ServicePaymentServiceInterface
     ) {}
 
     /**
-     * Process service payment (priority: points, fallback: cash)
+     * Process service payment (chỉ thanh toán bằng điểm).
+     * @param array|null $metadata Optional (e.g. ['listing_days' => 30] for publish_listing)
      */
     public function processServicePayment(
         User $user,
@@ -39,74 +39,56 @@ class ServicePaymentService implements ServicePaymentServiceInterface
         string $serviceName,
         int $pointsCost,
         ?BoardingHouse $boardingHouse = null,
-        ?string $description = null
+        ?string $description = null,
+        ?array $metadata = null
     ): ServicePayment {
-        return DB::transaction(function () use ($user, $serviceType, $serviceName, $pointsCost, $boardingHouse, $description) {
+        return DB::transaction(function () use ($user, $serviceType, $serviceName, $pointsCost, $boardingHouse, $description, $metadata) {
             $hasEnoughPoints = $this->pointService->hasEnoughPoints($user, $pointsCost);
-            
-            // Determine payment method
-            $paymentMethod = $hasEnoughPoints 
-                ? ServicePayment::METHOD_POINTS 
-                : ServicePayment::METHOD_CASH;
 
-            // Create service payment record
+            // Tạm thời chỉ hỗ trợ thanh toán bằng điểm
+            if (! $hasEnoughPoints) {
+                throw new \Exception('Bạn không đủ điểm. Vui lòng nạp thêm điểm để sử dụng dịch vụ.');
+            }
+
             $servicePayment = ServicePayment::create([
                 'user_id' => $user->id,
                 'service_type' => $serviceType,
                 'service_name' => $serviceName,
                 'points_cost' => $pointsCost,
-                'cash_amount' => $hasEnoughPoints ? null : $this->pointsToCash($pointsCost),
-                'payment_method' => $paymentMethod,
+                'cash_amount' => null,
+                'payment_method' => ServicePayment::METHOD_POINTS,
                 'boarding_house_id' => $boardingHouse?->id,
-                'status' => $hasEnoughPoints ? ServicePayment::STATUS_PENDING : ServicePayment::STATUS_PENDING,
+                'status' => ServicePayment::STATUS_PENDING,
                 'description' => $description ?? "Thanh toán dịch vụ: {$serviceName}",
+                'metadata' => $metadata,
             ]);
 
-            // If user has enough points, deduct immediately
-            if ($hasEnoughPoints) {
-                $this->pointService->deductPoints(
-                    $user,
-                    $pointsCost,
-                    "Thanh toán dịch vụ: {$serviceName}",
-                    $servicePayment
-                );
+            $this->pointService->deductPoints(
+                $user,
+                $pointsCost,
+                "Thanh toán dịch vụ: {$serviceName}",
+                $servicePayment
+            );
 
-                // Mark as completed
-                $servicePayment->update([
-                    'status' => ServicePayment::STATUS_COMPLETED,
-                    'completed_at' => Carbon::now(),
-                ]);
+            $servicePayment->update([
+                'status' => ServicePayment::STATUS_COMPLETED,
+                'completed_at' => Carbon::now(),
+            ]);
 
-                Log::info("Service payment completed with points", [
-                    'service_payment_id' => $servicePayment->id,
-                    'user_id' => $user->id,
-                    'service_type' => $serviceType,
-                    'points_cost' => $pointsCost,
-                ]);
-            } else {
-                // Create cash payment request
-                $payment = $this->paymentService->createPayment(
-                    PaymentData::fromArray([
-                        'payment_type' => Payment::TYPE_SERVICE_PAYMENT,
-                        'amount' => $this->pointsToCash($pointsCost),
-                        'user_id' => $user->id,
-                        'boarding_house_id' => $boardingHouse?->id,
-                        'description' => "Thanh toán dịch vụ: {$serviceName}",
-                        'expires_at' => Carbon::now()->addDays(1)->toDateTimeString(),
-                    ])
-                );
-
-                $servicePayment->update([
-                    'payment_id' => $payment->id,
-                ]);
-
-                Log::info("Service payment requires cash payment", [
-                    'service_payment_id' => $servicePayment->id,
-                    'user_id' => $user->id,
-                    'payment_id' => $payment->id,
-                    'cash_amount' => $this->pointsToCash($pointsCost),
-                ]);
+            if ($serviceType === ServicePayment::SERVICE_PUBLISH_LISTING && $boardingHouse && ($metadata['listing_days'] ?? null)) {
+                $this->applyPublishListingToBoardingHouse($boardingHouse, (int) $metadata['listing_days']);
             }
+
+            if ($serviceType === ServicePayment::SERVICE_PUSH_LISTING && $boardingHouse) {
+                $boardingHouse->update(['pushed_at' => Carbon::now()]);
+            }
+
+            Log::info("Service payment completed with points", [
+                'service_payment_id' => $servicePayment->id,
+                'user_id' => $user->id,
+                'service_type' => $serviceType,
+                'points_cost' => $pointsCost,
+            ]);
 
             return $servicePayment->fresh();
         });
@@ -128,6 +110,15 @@ class ServicePaymentService implements ServicePaymentServiceInterface
                 'completed_at' => Carbon::now(),
             ]);
 
+            // Apply publish listing to boarding house when paid by cash
+            if ($servicePayment->service_type === ServicePayment::SERVICE_PUBLISH_LISTING && $servicePayment->boarding_house_id) {
+                $boardingHouse = BoardingHouse::find($servicePayment->boarding_house_id);
+                $listingDays = (int) ($servicePayment->metadata['listing_days'] ?? 0);
+                if ($boardingHouse && $listingDays > 0) {
+                    $this->applyPublishListingToBoardingHouse($boardingHouse, $listingDays);
+                }
+            }
+
             Log::info("Service payment completed with cash", [
                 'service_payment_id' => $servicePayment->id,
                 'payment_id' => $payment->id,
@@ -135,6 +126,20 @@ class ServicePaymentService implements ServicePaymentServiceInterface
 
             return $servicePayment->fresh();
         });
+    }
+
+    /**
+     * Set boarding house as published with listing duration and expiry
+     */
+    protected function applyPublishListingToBoardingHouse(BoardingHouse $boardingHouse, int $listingDays): void
+    {
+        $now = Carbon::now();
+        $boardingHouse->update([
+            'is_publish' => true,
+            'listing_days' => $listingDays,
+            'published_at' => $now,
+            'expires_at' => $now->copy()->addDays($listingDays),
+        ]);
     }
 
     /**
@@ -169,13 +174,5 @@ class ServicePaymentService implements ServicePaymentServiceInterface
     public function getServiceCost(string $serviceType): int
     {
         return $this->serviceCosts[$serviceType] ?? 0;
-    }
-
-    /**
-     * Convert points to cash (1 point = 1000 VND)
-     */
-    protected function pointsToCash(int $points): float
-    {
-        return $points * 1000;
     }
 }

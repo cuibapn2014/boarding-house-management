@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('db:backup')->weeklyOn(5);
+        $schedule->command('listings:expire')->everyMinute();
+        $schedule->command('payments:expire')->everyMinute();
     }
 
     /**

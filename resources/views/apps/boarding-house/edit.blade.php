@@ -406,12 +406,43 @@
 
                         <div class="mb-4">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" name="is_publish" type="checkbox" id="is-publish" {{ $boardingHouse->is_publish ? 'checked' : '' }}>
+                                <input class="form-check-input" name="is_publish" type="checkbox" id="is-publish" value="on" {{ $boardingHouse->is_publish ? 'checked' : '' }}>
                                 <label class="form-check-label" for="is-publish">
                                     <span class="font-weight-bold">Publish</span>
                                     <p class="text-xs text-muted mb-0">Hiển thị công khai trên website</p>
                                 </label>
                             </div>
+                        </div>
+
+                        @if($boardingHouse->is_publish && !$boardingHouse->pushed_at)
+                        <div class="mb-4">
+                            <button type="button" id="btn-push-listing" class="btn btn-warning btn-lg w-100 text-dark fw-bold" style="border-radius: 12px; box-shadow: 0 4px 14px rgba(255, 193, 7, 0.4);"
+                                data-url="{{ route('boarding-house.push', [$boardingHouse->id]) }}">
+                                <i class="fas fa-arrow-up me-2"></i>Đẩy tin lên đầu — 5 point
+                            </button>
+                            <small class="text-muted d-block mt-1 text-center">Đưa tin lên đầu danh sách ngay</small>
+                        </div>
+                        @elseif($boardingHouse->is_publish && $boardingHouse->pushed_at)
+                        <div class="mb-4 p-3 rounded bg-light border text-center">
+                            <i class="fas fa-arrow-up text-warning me-1"></i>
+                            <span class="text-muted small">Tin đã đẩy top lúc {{ $boardingHouse->pushed_at->format('d/m/Y H:i') }}</span>
+                        </div>
+                        @endif
+
+                        <div class="mb-4" id="listing-duration-wrapper" style="display: {{ $boardingHouse->is_publish ? 'block' : 'none' }};">
+                            <label class="form-label">Thời gian hiển thị tin <span class="text-danger">*</span></label>
+                            <select id="listing_days" name="listing_days" class="form-control">
+                                <option value="">Chọn thời gian</option>
+                                @foreach($listingDurationPoints ?? [] as $days => $points)
+                                <option value="{{ $days }}" {{ $boardingHouse->listing_days == $days ? 'selected' : '' }}>{{ $days }} ngày — {{ $points }} point</option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted">Chỉ cần chọn khi chuyển từ nháp sang đăng tin — thanh toán theo gói đã chọn.</small>
+                        </div>
+
+                        <div class="mb-4 p-3 rounded bg-light border">
+                            <span class="form-label mb-0 d-block">Số dư hiện tại</span>
+                            <span class="fw-bold text-primary">{{ number_format($userPoints ?? 0) }} point</span>
                         </div>
 
                         <hr>
@@ -473,6 +504,59 @@
                     depositAmountInput.removeAttribute('required');
                     depositAmountInput.value = '';
                 }
+            });
+        }
+
+        const isPublish = document.getElementById('is-publish');
+        const listingDurationWrapper = document.getElementById('listing-duration-wrapper');
+        const listingDays = document.getElementById('listing_days');
+        if (isPublish && listingDurationWrapper) {
+            isPublish.addEventListener('change', function() {
+                listingDurationWrapper.style.display = this.checked ? 'block' : 'none';
+                if (!this.checked) listingDays.removeAttribute('required');
+                else listingDays.setAttribute('required', 'required');
+            });
+        }
+        const formEdit = document.getElementById('formEditBoardingHouse');
+        if (formEdit) {
+            formEdit.addEventListener('submit', function(e) {
+                const isPublishEl = document.getElementById('is-publish');
+                if (isPublishEl && isPublishEl.checked && listingDays && !listingDays.value) {
+                    e.preventDefault();
+                    alert('Vui lòng chọn thời gian hiển thị tin đăng (10, 15, 30 hoặc 60 ngày).');
+                    listingDays.focus();
+                    return false;
+                }
+            });
+        }
+
+        const btnPushListing = document.getElementById('btn-push-listing');
+        if (btnPushListing) {
+            btnPushListing.addEventListener('click', function() {
+                const url = this.dataset.url;
+                if (!url) return;
+                if (!confirm('Đẩy tin lên đầu danh sách (trừ 5 point)?')) return;
+                const csrf = document.querySelector('meta[name="csrf-token"]')?.content || document.querySelector('input[name="_token"]')?.value;
+                btnPushListing.disabled = true;
+                fetch(url, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        if (typeof GlobalHelper !== 'undefined' && GlobalHelper.toastSuccess) GlobalHelper.toastSuccess(data.message);
+                        else alert(data.message);
+                    } else {
+                        if (typeof GlobalHelper !== 'undefined' && GlobalHelper.toastError) GlobalHelper.toastError(data.message || 'Có lỗi xảy ra.');
+                        else alert(data.message || 'Có lỗi xảy ra.');
+                    }
+                })
+                .catch(() => {
+                    if (typeof GlobalHelper !== 'undefined' && GlobalHelper.toastError) GlobalHelper.toastError('Có lỗi xảy ra.');
+                })
+                .finally(() => { btnPushListing.disabled = false; });
             });
         }
     });

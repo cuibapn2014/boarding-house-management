@@ -467,12 +467,28 @@
 
                         <div class="mb-4">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" name="is_publish" type="checkbox" id="is-publish" checked="">
+                                <input class="form-check-input" name="is_publish" type="checkbox" id="is-publish" value="on">
                                 <label class="form-check-label" for="is-publish">
-                                    <span class="font-weight-bold">Publish</span>
-                                    <p class="text-xs text-muted mb-0">Hiển thị công khai trên website</p>
+                                    <span class="font-weight-bold">Đăng tin ngay (cần thanh toán)</span>
+                                    <p class="text-xs text-muted mb-0">Bật để đăng tin lên trang — phí theo thời gian hiển thị</p>
                                 </label>
                             </div>
+                        </div>
+
+                        <div class="mb-4" id="listing-duration-wrapper" style="display: none;">
+                            <label class="form-label">Thời gian hiển thị tin <span class="text-danger">*</span></label>
+                            <select id="listing_days" name="listing_days" class="form-control">
+                                <option value="">Chọn thời gian</option>
+                                @foreach($listingDurationPoints ?? [] as $days => $points)
+                                <option value="{{ $days }}">{{ $days }} ngày — {{ $points }} point</option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted">Tin đăng sẽ hiển thị công khai trong số ngày đã chọn sau khi thanh toán.</small>
+                        </div>
+
+                        <div class="mb-4 p-3 rounded bg-light border">
+                            <span class="form-label mb-0 d-block">Số dư hiện tại</span>
+                            <span class="fw-bold text-primary" id="user-points-display">{{ number_format($userPoints ?? 0) }} point</span>
                         </div>
 
                         <hr>
@@ -488,10 +504,21 @@
                             </ul>
                         </div>
 
+                        @if(($draftCount ?? 0) >= 1)
+                        <div class="alert alert-warning mb-3">
+                            <i class="fas fa-info-circle me-2"></i>Bạn đã có 1 tin nháp. Chỉ được tối đa 1 tin nháp — vui lòng đăng hoặc xóa tin nháp trước khi tạo mới.
+                        </div>
+                        @endif
+
                         <!-- Action Buttons -->
                         <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn submit-btn">
-                                <i class="fas fa-save me-2"></i>Lưu tin đăng
+                            @if(($draftCount ?? 0) < 1)
+                            <button type="button" id="btn-save-draft" class="btn btn-outline-secondary">
+                                <i class="fas fa-file-alt me-2"></i>Lưu nháp
+                            </button>
+                            @endif
+                            <button type="submit" id="btn-submit-publish" class="btn submit-btn">
+                                <i class="fas fa-check-circle me-2"></i>Thanh toán & Đăng tin
                             </button>
                             <a href="{{ route('boarding-house.index') }}" class="btn cancel-btn">
                                 <i class="fas fa-times me-2"></i>Hủy bỏ
@@ -571,6 +598,41 @@
         });
 
         updateChecklist();
+
+        const isPublish = document.getElementById('is-publish');
+        const listingDurationWrapper = document.getElementById('listing-duration-wrapper');
+        const listingDays = document.getElementById('listing_days');
+        if (isPublish && listingDurationWrapper) {
+            isPublish.addEventListener('change', function() {
+                listingDurationWrapper.style.display = this.checked ? 'block' : 'none';
+                if (!this.checked) listingDays.removeAttribute('required');
+                else listingDays.setAttribute('required', 'required');
+            });
+        }
+
+        const btnSaveDraft = document.getElementById('btn-save-draft');
+        const formCreate = document.getElementById('formCreateBoardingHouse');
+        if (btnSaveDraft && formCreate) {
+            btnSaveDraft.addEventListener('click', function() {
+                if (document.getElementById('is-publish')) {
+                    document.getElementById('is-publish').checked = false;
+                }
+                if (listingDays) listingDays.removeAttribute('required');
+                formCreate.submit();
+            });
+        }
+
+        if (formCreate) {
+            formCreate.addEventListener('submit', function(e) {
+                const isPublishEl = document.getElementById('is-publish');
+                if (isPublishEl && isPublishEl.checked && listingDays && !listingDays.value) {
+                    e.preventDefault();
+                    alert('Vui lòng chọn thời gian hiển thị tin đăng (10, 15, 30 hoặc 60 ngày).');
+                    listingDays.focus();
+                    return false;
+                }
+            });
+        }
 
         const metaTitle = document.getElementById('meta_title');
         const metaTitleFeedback = document.getElementById('meta_title_feedback');

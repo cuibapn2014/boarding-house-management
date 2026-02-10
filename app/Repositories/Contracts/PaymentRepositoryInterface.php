@@ -11,7 +11,7 @@ interface PaymentRepositoryInterface
     /**
      * Find payment by code
      */
-    public function findByCode(string $paymentCode): ?Payment;
+public function findByCode(string $paymentCode): ?Payment;
 
     /**
      * Find payment by ID

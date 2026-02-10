@@ -11,6 +11,7 @@ interface ServicePaymentServiceInterface
 {
     /**
      * Process service payment (priority: points, fallback: cash)
+     * @param array|null $metadata Optional data (e.g. ['listing_days' => 30] for publish_listing)
      */
     public function processServicePayment(
         User $user,
@@ -18,7 +19,8 @@ interface ServicePaymentServiceInterface
         string $serviceName,
         int $pointsCost,
         ?BoardingHouse $boardingHouse = null,
-        ?string $description = null
+        ?string $description = null,
+        ?array $metadata = null
     ): ServicePayment;
 
     /**

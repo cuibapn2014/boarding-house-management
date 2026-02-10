@@ -38,6 +38,7 @@ class ServicePayment extends Model
     const SERVICE_PUSH_LISTING = 'push_listing';
     const SERVICE_PRIORITY_LISTING = 'priority_listing';
     const SERVICE_EXTEND_LISTING = 'extend_listing';
+    const SERVICE_PUBLISH_LISTING = 'publish_listing';
 
     /**
      * Payment method constants

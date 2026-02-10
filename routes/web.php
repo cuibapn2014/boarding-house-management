@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/boarding-house/{id}/create-appointment', [\App\Http\Controllers\BoardingHouseController::class , 'createAppointment'])->name('boarding-house.createAppointment');
 	Route::post('/boarding-house/{id}/create-appointment', [\App\Http\Controllers\BoardingHouseController::class, 'storeAppointment'])->name('boarding-house.storeAppointment');
 	Route::resource('/boarding-house', \App\Http\Controllers\BoardingHouseController::class);
+	Route::post('/boarding-house/{id}/push', [\App\Http\Controllers\BoardingHouseController::class, 'push'])->name('boarding-house.push');
 	Route::delete('/boarding-house-file/{id}/delete', [\App\Http\Controllers\BoardingHouseFileController::class, 'destroy'])->name('boardingHouseFile.destroy');
 	
 	// User Management routes

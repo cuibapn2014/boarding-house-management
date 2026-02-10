@@ -31,6 +31,10 @@ class BoardingHouse extends Model
         'status',
         'furniture_status',
         'is_publish',
+        'listing_days',
+        'published_at',
+        'expires_at',
+        'pushed_at',
         'tags',
         'meta_title',
         'meta_description',
@@ -38,6 +42,12 @@ class BoardingHouse extends Model
         'completion_id',
         'created_by',
         'updated_by',
+    ];
+
+    protected $casts = [
+        'published_at' => 'datetime',
+        'expires_at' => 'datetime',
+        'pushed_at' => 'datetime',
     ];
 
     public function user_create() 

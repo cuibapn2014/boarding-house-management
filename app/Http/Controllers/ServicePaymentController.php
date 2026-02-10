@@ -84,21 +84,10 @@ class ServicePaymentController extends Controller
                 "Thanh toán dịch vụ {$serviceName} cho tin đăng: {$boardingHouse->title}"
             );
 
-            // If payment completed with points
-            if ($servicePayment->isCompleted() && $servicePayment->payment_method === ServicePayment::METHOD_POINTS) {
+            if ($servicePayment->isCompleted()) {
                 return redirect()
-                    ->route('boarding-house.show', $boardingHouse->id)
+                    ->route('boarding-house.index')
                     ->with('success', "Đã thanh toán dịch vụ {$serviceName} thành công bằng điểm!");
-            }
-
-            // If requires cash payment, redirect to payment page
-            if ($servicePayment->payment_id) {
-                $payment = \App\Models\Payment::find($servicePayment->payment_id);
-                if ($payment) {
-                    return redirect()
-                        ->route('payment.show', $payment->payment_code)
-                        ->with('info', "Bạn không đủ điểm. Vui lòng thanh toán bằng tiền mặt để sử dụng dịch vụ.");
-                }
             }
 
             return back()->with('error', 'Có lỗi xảy ra khi xử lý thanh toán dịch vụ.');
@@ -110,9 +99,8 @@ class ServicePaymentController extends Controller
                 'service_type' => $request->service_type,
             ]);
 
-            return back()
-                ->withInput()
-                ->with('error', 'Có lỗi xảy ra khi xử lý thanh toán dịch vụ. Vui lòng thử lại.');
+            $message = $e->getMessage() ?: 'Có lỗi xảy ra khi xử lý thanh toán dịch vụ. Vui lòng thử lại.';
+            return back()->withInput()->with('error', $message);
         }
     }
 }

@@ -478,8 +478,6 @@ const BoardingHouseFormPage = {
                 if(typeof GlobalHelper !== 'undefined') {
                     GlobalHelper.toastSuccess(data.message || 'Thành công!');
                 }
-                
-                // Redirect to index page
                 setTimeout(() => {
                     window.location.href = '/boarding-house';
                 }, 1000);

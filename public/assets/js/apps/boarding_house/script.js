@@ -60,6 +60,23 @@ $(document).ready(function() {
         window.location.href = url;
     });
 
+    // Đẩy tin nhanh (trừ 5 point)
+    $(document).on('click', '.quick-push-listing', function(e) {
+        e.preventDefault();
+        const url = $(this).data('url');
+        if (!confirm('Đẩy tin lên đầu danh sách (trừ 5 point)?')) return;
+        const _token = $('meta[name="csrf-token"]').attr('content') || $('meta[name="csrf_token"]').attr('content');
+        const handleSuccess = function(response) {
+            if (response.status === 'success') {
+                GlobalHelper.toastSuccess(response.message);
+                BoardingHouse.loadData(null, window.location.href);
+            } else {
+                GlobalHelper.toastError(response.message || 'Có lỗi xảy ra.');
+            }
+        };
+        ApiHelper.callApi(url, 'POST', {}, { 'X-CSRF-TOKEN': _token }, {}, null, handleSuccess, null, null, true, 'Đang xử lý...').then(() => {}).catch(() => {});
+    });
+
     // Quick filter badges
     $(document).on('click', '.filter-badge', function(e) {
         e.preventDefault();

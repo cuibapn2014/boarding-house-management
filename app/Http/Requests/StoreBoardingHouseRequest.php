@@ -52,7 +52,9 @@ class StoreBoardingHouseRequest extends FormRequest
                 }
             ],
             'min_contract_months' => 'nullable|integer|min:1',
-            'area' => 'nullable|integer|min:1'
+            'area' => 'nullable|integer|min:1',
+            'is_publish' => 'nullable',
+            'listing_days' => 'required_if:is_publish,on|nullable|in:10,15,30,60',
         ];
     }
 
@@ -146,6 +148,8 @@ class StoreBoardingHouseRequest extends FormRequest
             
             'area.integer' => 'Diện tích phải là số nguyên',
             'area.min' => 'Diện tích phải lớn hơn 0',
+            'listing_days.required_if' => 'Khi đăng tin bạn phải chọn thời gian hiển thị (10, 15, 30 hoặc 60 ngày).',
+            'listing_days.in' => 'Thời gian hiển thị phải là 10, 15, 30 hoặc 60 ngày.',
         ];
     }
 
@@ -166,7 +170,8 @@ class StoreBoardingHouseRequest extends FormRequest
             'require_deposit' => 'Yêu cầu cọc',
             'deposit_amount' => 'Số tiền cọc',
             'min_contract_months' => 'Hợp đồng tối thiểu',
-            'area' => 'Diện tích'
+            'area' => 'Diện tích',
+            'listing_days' => 'Thời gian hiển thị tin',
         ];
     }
 }

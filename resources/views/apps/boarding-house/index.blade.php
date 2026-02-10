@@ -297,6 +297,15 @@
     .status-badge.bg-warning {
         background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
     }
+    .status-badge.pushed-top-badge {
+        left: auto;
+        right: 16px;
+        top: 16px;
+        background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%) !important;
+        color: #fff !important;
+        font-size: 10px;
+        padding: 6px 10px;
+    }
 
     /* Card Body */
     .card-body {
@@ -783,6 +792,11 @@ $furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
                         <span class="status-badge {{ $boardingHouse->status == 'available' ? 'bg-success' : 'bg-warning' }} text-white">
                             {{ $status[$boardingHouse->status] }}
                         </span>
+                        @if($boardingHouse->pushed_at)
+                        <span class="status-badge pushed-top-badge text-white" title="Tin đã đẩy lên đầu lúc {{ $boardingHouse->pushed_at->format('d/m/Y H:i') }}">
+                            <i class="fas fa-arrow-up me-1"></i>Đẩy top
+                        </span>
+                        @endif
                         
                         <!-- Price Tag -->
                         <div class="price-tag">
@@ -821,6 +835,18 @@ $furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
                                 <i class="far fa-clock"></i>
                                 <span>Tạo: {{ date('d/m/Y H:i', strtotime($boardingHouse->created_at)) }}</span>
                             </div>
+                            @if($boardingHouse->is_publish && $boardingHouse->expires_at)
+                            <div class="info-item">
+                                <i class="fas fa-calendar-check"></i>
+                                <span>Hết hạn: {{ $boardingHouse->expires_at->format('d/m/Y') }}</span>
+                            </div>
+                            @endif
+                            @if($boardingHouse->pushed_at)
+                            <div class="info-item text-warning">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>Đẩy top: {{ $boardingHouse->pushed_at->format('d/m/Y H:i') }}</span>
+                            </div>
+                            @endif
                         </div>
 
                         <!-- Creator Info (Admin Only) -->
@@ -897,6 +923,13 @@ $furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
                                     class="action-btn bg-gradient-secondary text-white clone-boarding-house" title="Sao chép">
                                     <i class="far fa-copy"></i>
                                 </a>
+                                @if($boardingHouse->is_publish && !$boardingHouse->pushed_at)
+                                <a href="javascript:;"
+                                    data-url="{{ route('boarding-house.push', [$boardingHouse->id]) }}"
+                                    class="action-btn bg-gradient-warning text-white quick-push-listing" title="Đẩy tin (5 point)">
+                                    <i class="fas fa-arrow-up"></i>
+                                </a>
+                                @endif
                             </div>
                             <a href="javascript:;"
                                 data-url="{{ route('boarding-house.destroy', [$boardingHouse->id]) }}"

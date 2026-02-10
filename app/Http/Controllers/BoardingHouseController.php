@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\SystemDefination;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\StoreBoardingHouseRequest;
 use App\Models\Appointment;
 use App\Models\BoardingHouse;
 use App\Models\BoardingHouseFile;
+use App\Models\ServicePayment;
+use App\Services\Contracts\ServicePaymentServiceInterface;
 use App\Services\TelegramService;
 use App\Utils\ChatGptUtils;
 use Illuminate\Http\Request;
@@ -18,8 +21,10 @@ class BoardingHouseController extends Controller
     private TelegramService $telegramService;
     private ChatGptUtils $chatGptUtils;
 
-    public function __construct(TelegramService $telegramService)
-    {
+    public function __construct(
+        TelegramService $telegramService,
+        protected ServicePaymentServiceInterface $servicePaymentService
+    ) {
         $this->telegramService = $telegramService;
         $this->chatGptUtils = new ChatGptUtils();
     }
@@ -61,6 +66,9 @@ class BoardingHouseController extends Controller
                 'status',
                 'furniture_status',
                 'is_publish',
+                'listing_days',
+                'expires_at',
+                'pushed_at',
                 'created_at',
                 'created_by',
             )
@@ -74,38 +82,83 @@ class BoardingHouseController extends Controller
     {
         $boardingHouse = BoardingHouse::find($request->input('id'));
 
-        if($boardingHouse) {
-            return view('apps.boarding-house.clone', compact('boardingHouse'));
+        if ($boardingHouse) {
+            $listingDurationPoints = SystemDefination::LISTING_DURATION_POINTS;
+            $draftCount = BoardingHouse::where('created_by', auth()->id())->where('is_publish', false)->count();
+            $userPoints = (int) (auth()->user()->points ?? 0);
+            return view('apps.boarding-house.clone', compact('boardingHouse', 'listingDurationPoints', 'draftCount', 'userPoints'));
         }
 
-        return view('apps.boarding-house.create');
+        $listingDurationPoints = SystemDefination::LISTING_DURATION_POINTS;
+        $draftCount = BoardingHouse::where('created_by', auth()->id())->where('is_publish', false)->count();
+        $userPoints = (int) (auth()->user()->points ?? 0);
+
+        return view('apps.boarding-house.create', compact('listingDurationPoints', 'draftCount', 'userPoints'));
     }
 
     public function store(StoreBoardingHouseRequest $request)
     {
+        $isPublish = $request->has('is_publish') && $request->input('is_publish') === 'on';
+
+        if (! $isPublish) {
+            // Lưu nháp: tối đa 1 tin nháp
+            $draftCount = BoardingHouse::where('created_by', auth()->id())->where('is_publish', false)->count();
+            if ($draftCount >= 1) {
+                return $this->responseError('Bạn chỉ được lưu tối đa 1 tin nháp. Vui lòng đăng hoặc xóa tin nháp trước khi tạo mới.');
+            }
+        } else {
+            // Đăng tin: bắt buộc chọn thời gian hiển thị và thanh toán
+            $listingDays = (int) $request->input('listing_days');
+            $pointsByDuration = SystemDefination::LISTING_DURATION_POINTS;
+            if (! isset($pointsByDuration[$listingDays])) {
+                return $this->responseError('Vui lòng chọn thời gian hiển thị tin đăng (10, 15, 30 hoặc 60 ngày).');
+            }
+        }
+
         try {
             $tags = $request->filled('tags') ? array_map(fn($item) => $item->value, json_decode($request->tags)) : [];
-            
-            // Optimize content with AI
             $content = trim($request->input('content'));
             $optimizedContent = $this->optimizeContentWithAI($content);
             $optimizedTags = $this->generateTagsWithAI($content, $tags);
 
-            DB::transaction(function () use ($request, $optimizedContent, $optimizedTags) {
-                // Create boarding house
-                $boardingHouse = $this->createBoardingHouse($request, $optimizedContent, $optimizedTags);
-                
-                // Upload files
+            $boardingHouse = null;
+
+            DB::transaction(function () use ($request, $optimizedContent, $optimizedTags, $isPublish, &$boardingHouse) {
+                // Tạo BH: nếu đăng tin thì tạm lưu is_publish=0, thanh toán xong mới bật
+                $boardingHouse = $this->createBoardingHouse($request, $optimizedContent, $optimizedTags, false);
                 $this->uploadFiles($request, $boardingHouse->id);
             });
+
+            if ($isPublish) {
+                $listingDays = (int) $request->input('listing_days');
+                $pointsCost = SystemDefination::LISTING_DURATION_POINTS[$listingDays];
+                $serviceName = "Đăng tin hiển thị {$listingDays} ngày";
+
+                try {
+                    $servicePayment = $this->servicePaymentService->processServicePayment(
+                        auth()->user(),
+                        ServicePayment::SERVICE_PUBLISH_LISTING,
+                        $serviceName,
+                        $pointsCost,
+                        $boardingHouse,
+                        $serviceName,
+                        ['listing_days' => $listingDays]
+                    );
+                } catch (\Exception $e) {
+                    Log::error('Publish listing payment failed: ' . $e->getMessage());
+                    return $this->responseError($e->getMessage());
+                }
+
+                return $this->responseSuccess('Đăng tin thành công! Tin sẽ hiển thị trong ' . $listingDays . ' ngày.');
+            }
+
+            return $this->responseSuccess($isPublish ? 'Thêm mới thành công!' : 'Lưu nháp thành công!');
         } catch (\Exception $ex) {
             Log::error('Error creating boarding house: ' . $ex->getMessage(), [
                 'trace' => $ex->getTraceAsString()
             ]);
             return $this->responseError('Có lỗi xảy ra khi tạo nhà trọ. Vui lòng thử lại.');
         }
-
-        return $this->responseSuccess('Thêm mới thành công!');
     }
 
     /**
@@ -154,8 +207,9 @@ class BoardingHouseController extends Controller
 
     /**
      * Create boarding house record
+     * @param bool $isPublish When false, save as draft (used when payment will set publish later)
      */
-    private function createBoardingHouse($request, $content, $tags): BoardingHouse
+    private function createBoardingHouse($request, $content, $tags, bool $isPublish = false): BoardingHouse
     {
         $boardingHouse = new BoardingHouse();
         $boardingHouse->title            = trim($request->input('title'));
@@ -177,10 +231,10 @@ class BoardingHouseController extends Controller
         $boardingHouse->area              = $request->filled('area') ? (int)$request->input('area') : null;
         $boardingHouse->status           = $request->input('status');
         $boardingHouse->furniture_status = $request->input('furniture_status');
-        $boardingHouse->is_publish       = $request->has('is_publish') && $request->input('is_publish') === 'on';
+        $boardingHouse->is_publish       = $isPublish;
         $boardingHouse->tags             = $tags;
         $boardingHouse->save();
-        
+
         return $boardingHouse;
     }
 
@@ -204,21 +258,25 @@ class BoardingHouseController extends Controller
         }
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $boardingHouse = BoardingHouse::with('boarding_house_files')->find($id);
 
-        if(! $boardingHouse) {
+        if (! $boardingHouse) {
             return $this->responseError('Dữ liệu không tồn tại hoặc đã bị xoá!');
         }
 
-        return view('apps.boarding-house.edit', compact('boardingHouse'));
+        $listingDurationPoints = SystemDefination::LISTING_DURATION_POINTS;
+        $userPoints = (int) (auth()->user()->points ?? 0);
+
+        return view('apps.boarding-house.edit', compact('boardingHouse', 'listingDurationPoints', 'userPoints'));
     }
 
-    public function update(StoreBoardingHouseRequest $request, $id) 
+    public function update(StoreBoardingHouseRequest $request, $id)
     {
         $boardingHouse = BoardingHouse::find($id);
 
-        if (!$boardingHouse) {
+        if (! $boardingHouse) {
             return $this->responseError('Dữ liệu không tồn tại hoặc đã bị xoá!');
         }
 
@@ -226,10 +284,22 @@ class BoardingHouseController extends Controller
             return $this->responseError('Không có quyền chỉnh sửa');
         }
 
+        $wantPublish = $request->has('is_publish') && $request->input('is_publish') === 'on';
+        $wasDraft = ! $boardingHouse->is_publish;
+
+        // Chuyển từ nháp sang đăng tin: bắt buộc chọn thời gian và thanh toán
+        if ($wantPublish && $wasDraft) {
+            $listingDays = (int) $request->input('listing_days');
+            $pointsByDuration = SystemDefination::LISTING_DURATION_POINTS;
+            if (! isset($pointsByDuration[$listingDays])) {
+                return $this->responseError('Vui lòng chọn thời gian hiển thị tin đăng (10, 15, 30 hoặc 60 ngày).');
+            }
+        }
+
         try {
             $tags = $request->filled('tags') ? array_map(fn($item) => $item->value, json_decode($request->tags)) : [];
-            
-            DB::transaction(function () use ($request, $boardingHouse, $tags) {
+
+            DB::transaction(function () use ($request, $boardingHouse, $tags, $wantPublish, $wasDraft) {
                 $boardingHouse->title            = trim($request->input('title'));
                 $boardingHouse->category         = $request->input('category');
                 $boardingHouse->description      = trim($request->input('description'));
@@ -249,13 +319,48 @@ class BoardingHouseController extends Controller
                 $boardingHouse->area              = $request->filled('area') ? (int)$request->input('area') : null;
                 $boardingHouse->status           = $request->input('status');
                 $boardingHouse->furniture_status = $request->input('furniture_status');
-                $boardingHouse->is_publish       = $request->has('is_publish') && $request->input('is_publish') === 'on';
                 $boardingHouse->tags             = implode(', ', $tags);
-                $boardingHouse->save();
 
-                // Upload new files if any
+                if (! $wantPublish) {
+                    $boardingHouse->is_publish = false;
+                    $boardingHouse->listing_days = null;
+                    $boardingHouse->published_at = null;
+                    $boardingHouse->expires_at = null;
+                }
+                // Nếu đang chuyển từ nháp sang đăng: is_publish sẽ được set sau khi thanh toán
+                elseif (! $wasDraft) {
+                    $boardingHouse->is_publish = true;
+                }
+
+                $boardingHouse->save();
                 $this->uploadFiles($request, $boardingHouse->id);
             });
+
+            // Chuyển từ nháp sang đăng tin: xử lý thanh toán
+            if ($wantPublish && $wasDraft) {
+                $listingDays = (int) $request->input('listing_days');
+                $pointsCost = SystemDefination::LISTING_DURATION_POINTS[$listingDays];
+                $serviceName = "Đăng tin hiển thị {$listingDays} ngày";
+
+                try {
+                    $servicePayment = $this->servicePaymentService->processServicePayment(
+                        auth()->user(),
+                        ServicePayment::SERVICE_PUBLISH_LISTING,
+                        $serviceName,
+                        $pointsCost,
+                        $boardingHouse->fresh(),
+                        $serviceName,
+                        ['listing_days' => $listingDays]
+                    );
+                } catch (\Exception $e) {
+                    Log::error('Publish listing payment failed: ' . $e->getMessage());
+                    return $this->responseError($e->getMessage());
+                }
+
+                return $this->responseSuccess('Đăng tin thành công! Tin sẽ hiển thị trong ' . $listingDays . ' ngày.');
+            }
+
+            return $this->responseSuccess('Chỉnh sửa thành công!');
         } catch (\Exception $ex) {
             Log::error('Error updating boarding house: ' . $ex->getMessage(), [
                 'id' => $id,
@@ -263,8 +368,41 @@ class BoardingHouseController extends Controller
             ]);
             return $this->responseError('Có lỗi xảy ra khi cập nhật. Vui lòng thử lại.');
         }
+    }
 
-        return $this->responseSuccess('Chỉnh sửa thành công!');
+    /**
+     * Push tin nhanh từ danh sách (trừ điểm)
+     */
+    public function push($id)
+    {
+        $boardingHouse = BoardingHouse::find($id);
+        if (! $boardingHouse) {
+            return $this->responseError('Tin đăng không tồn tại.');
+        }
+        if (! $boardingHouse->canEdit()) {
+            return $this->responseError('Không có quyền thao tác.');
+        }
+        if (! $boardingHouse->is_publish) {
+            return $this->responseError('Chỉ có thể đẩy tin đã đăng. Vui lòng đăng tin trước.');
+        }
+        if ($boardingHouse->pushed_at) {
+            return $this->responseError('Tin này đã được đẩy top, không thể đẩy lại.');
+        }
+        $pointsCost = $this->servicePaymentService->getServiceCost(ServicePayment::SERVICE_PUSH_LISTING);
+        try {
+            $this->servicePaymentService->processServicePayment(
+                auth()->user(),
+                ServicePayment::SERVICE_PUSH_LISTING,
+                'Đẩy tin nhanh',
+                $pointsCost,
+                $boardingHouse,
+                'Đẩy tin nhanh: ' . $boardingHouse->title
+            );
+        } catch (\Exception $e) {
+            Log::error('Quick push failed: ' . $e->getMessage());
+            return $this->responseError($e->getMessage());
+        }
+        return $this->responseSuccess('Đã đẩy tin lên đầu danh sách!');
     }
 
     public function destroy($id)

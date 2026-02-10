@@ -27,4 +27,12 @@ class SystemDefination {
         'CONFIRMED' => 'Đã xác nhận',
         'CANCELED' => 'Đã huỷ',
     ];
+
+    /** Thời gian hiển thị tin đăng (ngày) => số point */
+    const LISTING_DURATION_POINTS = [
+        10  => 15,
+        15  => 20,
+        30  => 35,
+        60  => 50,
+    ];
 }
