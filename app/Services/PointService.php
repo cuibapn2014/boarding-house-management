@@ -166,6 +166,101 @@ class PointService implements PointServiceInterface
     }
 
     /**
+     * Get transaction history for all users (admin only). Filter by user_id if provided.
+     */
+    public function getTransactionHistoryForAllUsers(?int $perPage = 20, ?int $userId = null): LengthAwarePaginator
+    {
+        $query = PointTransaction::with('user')
+            ->orderBy('created_at', 'desc');
+
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        return $query->paginate($perPage);
+    }
+
+    /**
+     * Admin: add points to user and log full history
+     */
+    public function addPointsByAdmin(User $targetUser, int $points, string $reason, User $adminUser): PointTransaction
+    {
+        return DB::transaction(function () use ($targetUser, $points, $reason, $adminUser) {
+            $balanceBefore = (float) ($targetUser->points ?? 0);
+            $balanceAfter = $balanceBefore + $points;
+
+            $targetUser->increment('points', $points);
+            $targetUser->refresh();
+
+            $transaction = PointTransaction::create([
+                'user_id' => $targetUser->id,
+                'transaction_type' => PointTransaction::TYPE_ADMIN_ADD,
+                'amount' => $points,
+                'balance_before' => $balanceBefore,
+                'balance_after' => $balanceAfter,
+                'reference_type' => null,
+                'reference_id' => null,
+                'description' => $reason,
+                'metadata' => [
+                    'admin_id' => $adminUser->id,
+                    'admin_name' => $adminUser->firstname . ' ' . $adminUser->lastname,
+                ],
+            ]);
+
+            Log::info('Admin added points', [
+                'target_user_id' => $targetUser->id,
+                'admin_id' => $adminUser->id,
+                'points' => $points,
+                'transaction_id' => $transaction->id,
+            ]);
+
+            return $transaction;
+        });
+    }
+
+    /**
+     * Admin: subtract points from user and log full history
+     */
+    public function subtractPointsByAdmin(User $targetUser, int $points, string $reason, User $adminUser): PointTransaction
+    {
+        return DB::transaction(function () use ($targetUser, $points, $reason, $adminUser) {
+            if (! $this->hasEnoughPoints($targetUser, $points)) {
+                throw new \Exception('Người dùng không đủ điểm để trừ.');
+            }
+
+            $balanceBefore = (float) ($targetUser->points ?? 0);
+            $balanceAfter = $balanceBefore - $points;
+
+            $targetUser->decrement('points', $points);
+            $targetUser->refresh();
+
+            $transaction = PointTransaction::create([
+                'user_id' => $targetUser->id,
+                'transaction_type' => PointTransaction::TYPE_ADMIN_SUBTRACT,
+                'amount' => -$points,
+                'balance_before' => $balanceBefore,
+                'balance_after' => $balanceAfter,
+                'reference_type' => null,
+                'reference_id' => null,
+                'description' => $reason,
+                'metadata' => [
+                    'admin_id' => $adminUser->id,
+                    'admin_name' => $adminUser->firstname . ' ' . $adminUser->lastname,
+                ],
+            ]);
+
+            Log::info('Admin subtracted points', [
+                'target_user_id' => $targetUser->id,
+                'admin_id' => $adminUser->id,
+                'points' => $points,
+                'transaction_id' => $transaction->id,
+            ]);
+
+            return $transaction;
+        });
+    }
+
+    /**
      * Get all active point packages
      */
     public function getActivePackages(): Collection

@@ -168,9 +168,11 @@
                     <div class="text-center py-5">
                         <i class="fas fa-receipt fa-3x text-muted mb-3"></i>
                         <p class="text-muted">Chưa có thanh toán nào</p>
+                        @if(auth()->user()->is_admin)
                         <a href="{{ route('payment.create') }}" class="btn btn-primary">
                             <i class="fas fa-plus me-2"></i>Tạo thanh toán mới
                         </a>
+                        @endif
                     </div>
                     @endif
                 </div>

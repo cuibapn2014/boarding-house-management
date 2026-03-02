@@ -37,6 +37,8 @@ class PointTransaction extends Model
     const TYPE_DEDUCTION = 'deduction';
     const TYPE_REFUND = 'refund';
     const TYPE_SERVICE_PAYMENT = 'service_payment';
+    const TYPE_ADMIN_ADD = 'admin_add';
+    const TYPE_ADMIN_SUBTRACT = 'admin_subtract';
 
     /**
      * Get the user that owns the transaction

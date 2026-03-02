@@ -43,44 +43,44 @@ class ServicePaymentService implements ServicePaymentServiceInterface
         ?array $metadata = null
     ): ServicePayment {
         return DB::transaction(function () use ($user, $serviceType, $serviceName, $pointsCost, $boardingHouse, $description, $metadata) {
-            $hasEnoughPoints = $this->pointService->hasEnoughPoints($user, $pointsCost);
+            $isAdmin = $user->is_admin ?? false;
+            $effectiveCost = $isAdmin ? 0 : $pointsCost;
 
-            // Tạm thời chỉ hỗ trợ thanh toán bằng điểm
-            if (! $hasEnoughPoints) {
-                throw new \Exception('Bạn không đủ điểm. Vui lòng nạp thêm điểm để sử dụng dịch vụ.');
+            if (! $isAdmin) {
+                if (! $this->pointService->hasEnoughPoints($user, $pointsCost)) {
+                    throw new \Exception('Bạn không đủ điểm. Vui lòng nạp thêm điểm để sử dụng dịch vụ.');
+                }
             }
 
             $servicePayment = ServicePayment::create([
                 'user_id' => $user->id,
                 'service_type' => $serviceType,
                 'service_name' => $serviceName,
-                'points_cost' => $pointsCost,
+                'points_cost' => $effectiveCost,
                 'cash_amount' => null,
                 'payment_method' => ServicePayment::METHOD_POINTS,
                 'boarding_house_id' => $boardingHouse?->id,
                 'status' => ServicePayment::STATUS_PENDING,
                 'description' => $description ?? "Thanh toán dịch vụ: {$serviceName}",
-                'metadata' => $metadata,
+                'metadata' => array_merge($metadata ?? [], $isAdmin ? ['admin_free' => true] : []),
             ]);
 
-            $this->pointService->deductPoints(
-                $user,
-                $pointsCost,
-                "Thanh toán dịch vụ: {$serviceName}",
-                $servicePayment
-            );
+            if ($effectiveCost > 0) {
+                $this->pointService->deductPoints(
+                    $user,
+                    $effectiveCost,
+                    "Thanh toán dịch vụ: {$serviceName}",
+                    $servicePayment
+                );
+            }
 
             $servicePayment->update([
                 'status' => ServicePayment::STATUS_COMPLETED,
                 'completed_at' => Carbon::now(),
             ]);
 
-            if ($serviceType === ServicePayment::SERVICE_PUBLISH_LISTING && $boardingHouse && ($metadata['listing_days'] ?? null)) {
-                $this->applyPublishListingToBoardingHouse($boardingHouse, (int) $metadata['listing_days']);
-            }
-
-            if ($serviceType === ServicePayment::SERVICE_PUSH_LISTING && $boardingHouse) {
-                $boardingHouse->update(['pushed_at' => Carbon::now()]);
+            if ($serviceType === ServicePayment::SERVICE_PUSH_LISTING && $boardingHouse && ($metadata['listing_days'] ?? null)) {
+                $this->applyPushListingToBoardingHouse($boardingHouse, (int) $metadata['listing_days']);
             }
 
             Log::info("Service payment completed with points", [
@@ -110,15 +110,6 @@ class ServicePaymentService implements ServicePaymentServiceInterface
                 'completed_at' => Carbon::now(),
             ]);
 
-            // Apply publish listing to boarding house when paid by cash
-            if ($servicePayment->service_type === ServicePayment::SERVICE_PUBLISH_LISTING && $servicePayment->boarding_house_id) {
-                $boardingHouse = BoardingHouse::find($servicePayment->boarding_house_id);
-                $listingDays = (int) ($servicePayment->metadata['listing_days'] ?? 0);
-                if ($boardingHouse && $listingDays > 0) {
-                    $this->applyPublishListingToBoardingHouse($boardingHouse, $listingDays);
-                }
-            }
-
             Log::info("Service payment completed with cash", [
                 'service_payment_id' => $servicePayment->id,
                 'payment_id' => $payment->id,
@@ -129,15 +120,14 @@ class ServicePaymentService implements ServicePaymentServiceInterface
     }
 
     /**
-     * Set boarding house as published with listing duration and expiry
+     * Áp dụng đẩy tin lên top: pushed_at, listing_days, expires_at (không đổi is_publish).
      */
-    protected function applyPublishListingToBoardingHouse(BoardingHouse $boardingHouse, int $listingDays): void
+    protected function applyPushListingToBoardingHouse(BoardingHouse $boardingHouse, int $listingDays): void
     {
         $now = Carbon::now();
         $boardingHouse->update([
-            'is_publish' => true,
+            'pushed_at' => $now,
             'listing_days' => $listingDays,
-            'published_at' => $now,
             'expires_at' => $now->copy()->addDays($listingDays),
         ]);
     }

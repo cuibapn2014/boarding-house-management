@@ -325,18 +325,20 @@
 
     /* Info Items */
     .info-item {
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        gap: 8px;
-        font-size: 13px;
+        gap: 6px;
+        font-size: 12px;
         color: #64748b;
-        margin-bottom: 8px;
+        margin-right: 12px;
     }
     .info-item i {
-        width: 18px;
         color: #667eea;
-        font-size: 12px;
+        font-size: 11px;
     }
+    .listing-meta { font-size: 12px; }
+    .listing-actions { gap: 6px; }
+    .listing-actions .action-btn { width: 36px; height: 36px; }
 
     /* Action Buttons */
     .action-btn {
@@ -472,13 +474,21 @@
         .thumbnail-wrapper {
             height: 180px;
         }
+        .thumbnail-wrapper img {
+            object-fit: cover;
+            height: 100%;
+        }
         .card-body {
-            padding: 16px;
+            padding: 12px;
         }
+        .card-title { font-size: 15px; -webkit-line-clamp: 2; }
         .action-btn {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
+            font-size: 12px;
         }
+        .listing-actions .dropdown .dropdown-toggle { padding: 0; }
+        .creator-info.compact .creator-avatar-small { width: 24px; height: 24px; }
     }
 
     /* Loading State */
@@ -777,165 +787,84 @@ $furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
     <div class="row list-data">
         @forelse($boardingHouses as $boardingHouse)
             @php
-            $thumbnail = $boardingHouse?->boarding_house_files?->where('type', 'image')?->first();
+                $firstImage = $boardingHouse?->boarding_house_files?->where('type', 'image')?->first();
+                $thumbUrl = $firstImage && $firstImage->type === 'image'
+                    ? getOptimizedThumbnailUrl($firstImage->url)
+                    : \Storage::url('images/image.jpg');
             @endphp
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card boarding-house-card h-100">
                     <div class="thumbnail-wrapper">
-                        @if($thumbnail && $thumbnail->type === 'image')
-                            <img src="{{ $thumbnail->url }}" alt="{{ $boardingHouse->title }}" loading="lazy">
-                        @else
-                            <img src="{{ \Storage::url('images/image.jpg') }}" alt="Default">
-                        @endif
-                        
-                        <!-- Status Badge -->
+                        <img src="{{ $thumbUrl }}" alt="{{ Str::limit($boardingHouse->title, 80) }}" loading="lazy" decoding="async" width="400" height="300">
                         <span class="status-badge {{ $boardingHouse->status == 'available' ? 'bg-success' : 'bg-warning' }} text-white">
                             {{ $status[$boardingHouse->status] }}
                         </span>
                         @if($boardingHouse->pushed_at)
-                        <span class="status-badge pushed-top-badge text-white" title="Tin đã đẩy lên đầu lúc {{ $boardingHouse->pushed_at->format('d/m/Y H:i') }}">
+                        <span class="status-badge pushed-top-badge text-white" title="Đẩy top {{ $boardingHouse->pushed_at->format('d/m/Y H:i') }}">
                             <i class="fas fa-arrow-up me-1"></i>Đẩy top
                         </span>
                         @endif
-                        
-                        <!-- Price Tag -->
                         <div class="price-tag">
                             {{ numberFormatVi($boardingHouse->price) }} <sup>đ</sup>/tháng
                         </div>
                     </div>
 
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <h5 class="card-title">
-                                {{ Str::limit($boardingHouse->title, 50) }}
-                            </h5>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title">{{ Str::limit($boardingHouse->title, 45) }}</h5>
                             <div class="publish-icon">
                                 @if($boardingHouse->is_publish)
-                                    <i class="fas fa-eye text-success" title="Đã publish"></i>
+                                    <i class="fas fa-eye text-success" title="Đã đăng"></i>
                                 @else
-                                    <i class="fas fa-eye-slash text-danger" title="Chưa publish"></i>
+                                    <i class="fas fa-eye-slash text-danger" title="Nháp"></i>
                                 @endif
                             </div>
                         </div>
-
-                        <div class="mb-3">
-                            <div class="info-item">
-                                <i class="fas fa-tag"></i>
-                                <span>{{ $categories[$boardingHouse->category] ?? $boardingHouse->category }}</span>
-                            </div>
-
-                            @if($boardingHouse->furniture_status)
-                            <div class="info-item">
-                                <i class="fas fa-couch"></i>
-                                <span>{{ $furnitureStatus[$boardingHouse->furniture_status] ?? '' }}</span>
-                            </div>
-                            @endif
-
-                            <div class="info-item">
-                                <i class="far fa-clock"></i>
-                                <span>Tạo: {{ date('d/m/Y H:i', strtotime($boardingHouse->created_at)) }}</span>
-                            </div>
-                            @if($boardingHouse->is_publish && $boardingHouse->expires_at)
-                            <div class="info-item">
-                                <i class="fas fa-calendar-check"></i>
-                                <span>Hết hạn: {{ $boardingHouse->expires_at->format('d/m/Y') }}</span>
-                            </div>
-                            @endif
-                            @if($boardingHouse->pushed_at)
-                            <div class="info-item text-warning">
-                                <i class="fas fa-arrow-up"></i>
-                                <span>Đẩy top: {{ $boardingHouse->pushed_at->format('d/m/Y H:i') }}</span>
-                            </div>
-                            @endif
+                        <div class="listing-meta mb-2">
+                            <span class="info-item"><i class="fas fa-tag"></i> {{ $categories[$boardingHouse->category] ?? $boardingHouse->category }}</span>
+                            <span class="info-item"><i class="far fa-clock"></i> {{ $boardingHouse->created_at->format('d/m/Y') }}</span>
                         </div>
 
-                        <!-- Creator Info (Admin Only) -->
                         @if(auth()->user()->is_admin && $boardingHouse->user_create)
-                        <div class="creator-info mt-3 pt-3 border-top" style="border-color: #e2e8f0 !important;">
-                            <button class="btn btn-sm w-100 text-start p-0 creator-toggle-btn" 
-                                    type="button" 
-                                    data-bs-toggle="collapse" 
-                                    data-bs-target="#creator-{{ $boardingHouse->id }}" 
-                                    aria-expanded="false"
-                                    style="background: none; border: none !important; color: inherit; box-shadow: none !important;">
+                        <div class="creator-info compact mt-2 pt-2 border-top border-light">
+                            <button class="btn btn-sm w-100 text-start p-0 creator-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#creator-{{ $boardingHouse->id }}" aria-expanded="false" style="background:none;border:none;color:inherit;">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="d-flex align-items-center gap-2">
-                                        <img src="{{ $boardingHouse->user_create->avatar ?? '/img/user-placeholder.png' }}" 
-                                             alt="creator" 
-                                             class="creator-avatar-small">
-                                        <div>
-                                            <div style="font-size: 12px; font-weight: 600; color: #475569;">
-                                                <i class="fas fa-user-circle me-1" style="color: #667eea;"></i>Người tạo
-                                            </div>
-                                            <div style="font-size: 13px; font-weight: 600; color: #1e293b;">
-                                                {{ $boardingHouse->user_create->firstname }} {{ $boardingHouse->user_create->lastname }}
-                                            </div>
-                                        </div>
+                                        <img src="{{ $boardingHouse->user_create->avatar ?? '/img/user-placeholder.png' }}" alt="" class="creator-avatar-small">
+                                        <span class="small fw-600 text-dark">{{ $boardingHouse->user_create->firstname }} {{ $boardingHouse->user_create->lastname }}</span>
                                     </div>
-                                    <i class="fas fa-chevron-down creator-toggle-icon" style="color: #667eea; transition: transform 0.3s ease;"></i>
+                                    <i class="fas fa-chevron-down creator-toggle-icon small text-primary"></i>
                                 </div>
                             </button>
                             <div class="collapse mt-2" id="creator-{{ $boardingHouse->id }}">
-                                <div class="creator-details">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <img src="{{ $boardingHouse->user_create->avatar ?? '/img/user-placeholder.png' }}" 
-                                             alt="creator" 
-                                             class="creator-avatar-large">
-                                        <div class="flex-grow-1">
-                                            <div style="font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 8px;">
-                                                {{ $boardingHouse->user_create->firstname }} {{ $boardingHouse->user_create->lastname }}
-                                            </div>
-                                            <div class="creator-detail-item">
-                                                <i class="fas fa-envelope"></i>
-                                                <span>{{ $boardingHouse->user_create->email }}</span>
-                                            </div>
-                                            @if($boardingHouse->user_create->phone)
-                                            <div class="creator-detail-item">
-                                                <i class="fas fa-phone"></i>
-                                                <span>{{ $boardingHouse->user_create->phone }}</span>
-                                            </div>
-                                            @endif
-                                        </div>
-                                    </div>
+                                <div class="creator-details small">
+                                    <div class="creator-detail-item"><i class="fas fa-envelope"></i> {{ $boardingHouse->user_create->email }}</div>
+                                    @if($boardingHouse->user_create->phone)
+                                    <div class="creator-detail-item"><i class="fas fa-phone"></i> {{ $boardingHouse->user_create->phone }}</div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                         @endif
 
-                        <!-- Action Buttons -->
-                        <div class="d-flex justify-content-between align-items-center pt-3 border-top" style="border-color: #e2e8f0 !important;">
-                            <div class="d-flex gap-2">
-                                <a href="{{ getLinkPreview($boardingHouse->id, $boardingHouse->title) }}" 
-                                    class="action-btn bg-gradient-success text-white" title="Xem chi tiết" target="_blank">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ route('boarding-house.edit', [$boardingHouse->id]) }}" 
-                                    class="action-btn bg-gradient-primary text-white" title="Chỉnh sửa">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="javascript:;"
-                                    data-url="{{ route('boarding-house.createAppointment', ['id' => $boardingHouse->id]) }}"
-                                    class="action-btn bg-gradient-info text-white create-appointment" title="Tạo cuộc hẹn">
-                                    <i class="far fa-calendar-plus"></i>
-                                </a>
-                                <a href="javascript:;"
-                                    data-url="{{ route('boarding-house.create', ['id' => $boardingHouse->id]) }}"
-                                    class="action-btn bg-gradient-secondary text-white clone-boarding-house" title="Sao chép">
-                                    <i class="far fa-copy"></i>
-                                </a>
-                                @if($boardingHouse->is_publish && !$boardingHouse->pushed_at)
-                                <a href="javascript:;"
-                                    data-url="{{ route('boarding-house.push', [$boardingHouse->id]) }}"
-                                    class="action-btn bg-gradient-warning text-white quick-push-listing" title="Đẩy tin (5 point)">
-                                    <i class="fas fa-arrow-up"></i>
-                                </a>
-                                @endif
+                        <div class="listing-actions pt-2 mt-2 border-top border-light d-flex flex-wrap align-items-center gap-1">
+                            <a href="{{ getLinkPreview($boardingHouse->id, $boardingHouse->title) }}" class="action-btn bg-gradient-success text-white" title="Xem" target="_blank"><i class="fas fa-eye"></i></a>
+                            <a href="{{ route('boarding-house.edit', [$boardingHouse->id]) }}" class="action-btn bg-gradient-primary text-white" title="Sửa"><i class="fas fa-edit"></i></a>
+                            <div class="dropdown d-inline">
+                                <button class="action-btn bg-gradient-secondary text-white border-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Thêm" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                    <li><a class="dropdown-item create-appointment" href="javascript:;" data-url="{{ route('boarding-house.createAppointment', ['id' => $boardingHouse->id]) }}"><i class="far fa-calendar-plus me-2"></i>Tạo cuộc hẹn</a></li>
+                                    <li><a class="dropdown-item clone-boarding-house" href="javascript:;" data-url="{{ route('boarding-house.create', ['id' => $boardingHouse->id]) }}"><i class="far fa-copy me-2"></i>Sao chép tin</a></li>
+                                    @if($boardingHouse->is_publish && !$boardingHouse->pushed_at)
+                                    <li><a class="dropdown-item" href="{{ route('boarding-house.edit', [$boardingHouse->id]) }}"><i class="fas fa-arrow-up me-2"></i>Đẩy tin lên top</a></li>
+                                    @endif
+                                    @if(auth()->user()->is_admin && $boardingHouse->pushed_at)
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-warning stop-push-listing" href="javascript:;" data-url="{{ route('boarding-house.stop-push', [$boardingHouse->id]) }}" data-id="{{ $boardingHouse->id }}"><i class="fas fa-stop-circle me-2"></i>Dừng đẩy top</a></li>
+                                    @endif
+                                </ul>
                             </div>
-                            <a href="javascript:;"
-                                data-url="{{ route('boarding-house.destroy', [$boardingHouse->id]) }}"
-                                class="action-btn bg-gradient-danger text-white remove-boarding-house" title="Xóa">
-                                <i class="fas fa-trash"></i>
-                            </a>
+                            <a href="javascript:;" data-url="{{ route('boarding-house.destroy', [$boardingHouse->id]) }}" class="action-btn bg-gradient-danger text-white remove-boarding-house ms-auto" title="Xóa"><i class="fas fa-trash"></i></a>
                         </div>
                     </div>
                 </div>

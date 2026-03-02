@@ -195,7 +195,7 @@
         font-size: 18px;
         font-weight: 700;
         color: #1e293b;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
         line-height: 1.3;
     }
     .user-info-item {
@@ -210,6 +210,17 @@
         width: 16px;
         color: #667eea;
         font-size: 12px;
+    }
+    .user-points-badge {
+        font-size: 12px;
+        font-weight: 600;
+        color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+        padding: 4px 10px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
     }
 
     /* Stats Row */
@@ -235,6 +246,19 @@
         font-size: 20px;
         font-weight: 700;
         color: #667eea;
+    }
+
+    @media (max-width: 767px) {
+        .user-card .card-body { padding: 16px !important; }
+        .user-avatar { width: 56px; height: 56px; }
+        .user-name { font-size: 16px; }
+        .user-info-item { font-size: 12px; }
+        .badge-container { flex-wrap: wrap; gap: 4px; }
+        .user-role-badge { font-size: 10px; padding: 4px 8px; }
+        .user-stats-row { padding: 12px; margin: 12px 0; }
+        .user-stats-row .stat-value { font-size: 18px; }
+        .user-stats-row .stat-label { font-size: 11px; }
+        .action-btn { width: 36px; height: 36px; }
     }
 
     /* Empty State */
@@ -418,13 +442,13 @@
                 <div class="card-body p-4">
                     <div class="d-flex align-items-start mb-4">
                         <img src="{{ $user?->avatar ?? '/img/user-placeholder.png' }}" class="user-avatar me-3" alt="avatar">
-                        <div class="flex-grow-1">
-                            <h6 class="user-name">
+                        <div class="flex-grow-1 min-w-0">
+                            <h6 class="user-name mb-1">
                                 {{ $user->firstname }} {{ $user->lastname }}
                             </h6>
                             <div class="user-info-item">
                                 <i class="fas fa-envelope"></i>
-                                <span>{{ Str::limit($user->email, 25) }}</span>
+                                <span class="text-truncate d-inline-block" style="max-width: 180px;" title="{{ $user->email }}">{{ $user->email }}</span>
                             </div>
                             @if($user->phone)
                             <div class="user-info-item">
@@ -432,6 +456,9 @@
                                 <span>{{ $user->phone }}</span>
                             </div>
                             @endif
+                            <div class="user-info-item mt-1">
+                                <span class="user-points-badge"><i class="fas fa-coins"></i> {{ number_format($user->points ?? 0, 0) }} điểm</span>
+                            </div>
                         </div>
                         <div class="badge-container">
                             @if($user->is_admin)
@@ -466,17 +493,13 @@
 
                     <div class="user-stats-row">
                         <div class="row text-center">
-                            <div class="col-4">
-                                <div class="stat-label">Nhà trọ</div>
-                                <div class="stat-value">0</div>
+                            <div class="col-6">
+                                <div class="stat-label">Tin đã đăng</div>
+                                <div class="stat-value">{{ number_format($user->boarding_houses_count ?? 0, 0) }}</div>
                             </div>
-                            <div class="col-4">
-                                <div class="stat-label">Phòng</div>
-                                <div class="stat-value">0</div>
-                            </div>
-                            <div class="col-4">
-                                <div class="stat-label">Khách</div>
-                                <div class="stat-value">0</div>
+                            <div class="col-6">
+                                <div class="stat-label">Điểm đã dùng</div>
+                                <div class="stat-value">{{ number_format(abs((float)($user->total_points_used ?? 0)), 0) }}</div>
                             </div>
                         </div>
                     </div>

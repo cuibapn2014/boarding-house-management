@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\PointPackage;
 use App\Services\Contracts\PointServiceInterface;
 use App\Services\Contracts\PaymentServiceInterface;
@@ -16,6 +17,13 @@ class PointController extends Controller
         protected PointServiceInterface $pointService,
         protected PaymentServiceInterface $paymentService
     ) {}
+
+    private function ensureAdmin(): void
+    {
+        if (! auth()->user()->is_admin) {
+            abort(403, 'Chỉ admin mới có quyền truy cập.');
+        }
+    }
 
     /**
      * Display wallet page with balance and transaction history
@@ -98,5 +106,62 @@ class PointController extends Controller
         $transactions = $this->pointService->getTransactionHistory($user, 20);
 
         return view('apps.point.transactions', compact('transactions'));
+    }
+
+    /**
+     * Admin: xem lịch sử sử dụng điểm của tất cả user
+     */
+    public function adminTransactions(Request $request)
+    {
+        $this->ensureAdmin();
+        $userId = $request->filled('user_id') ? (int) $request->user_id : null;
+        $transactions = $this->pointService->getTransactionHistoryForAllUsers(20, $userId);
+        $users = User::orderBy('firstname')->get(['id', 'firstname', 'lastname', 'email']);
+
+        return view('apps.point.admin-transactions', compact('transactions', 'users'));
+    }
+
+    /**
+     * Admin: form cộng/trừ điểm thủ công
+     */
+    public function showAdjustPoints(Request $request)
+    {
+        $this->ensureAdmin();
+        $users = User::orderBy('firstname')->get(['id', 'firstname', 'lastname', 'email', 'points']);
+
+        return view('apps.point.admin-adjust', compact('users'));
+    }
+
+    /**
+     * Admin: xử lý cộng/trừ điểm (ghi đầy đủ lịch sử)
+     */
+    public function storeAdjustPoints(Request $request)
+    {
+        $this->ensureAdmin();
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'action' => 'required|in:add,subtract',
+            'points' => 'required|integer|min:1',
+            'reason' => 'required|string|max:500',
+        ]);
+
+        $targetUser = User::findOrFail($request->user_id);
+        $adminUser = auth()->user();
+        $points = (int) $request->points;
+        $reason = trim($request->reason);
+
+        try {
+            if ($request->action === 'add') {
+                $this->pointService->addPointsByAdmin($targetUser, $points, $reason, $adminUser);
+                $message = "Đã cộng {$points} điểm cho " . $targetUser->firstname . ' ' . $targetUser->lastname;
+            } else {
+                $this->pointService->subtractPointsByAdmin($targetUser, $points, $reason, $adminUser);
+                $message = "Đã trừ {$points} điểm của " . $targetUser->firstname . ' ' . $targetUser->lastname;
+            }
+            return redirect()->route('point.admin.transactions')->with('success', $message);
+        } catch (\Exception $e) {
+            Log::error('Admin adjust points failed: ' . $e->getMessage());
+            return back()->withInput()->with('error', $e->getMessage());
+        }
     }
 }

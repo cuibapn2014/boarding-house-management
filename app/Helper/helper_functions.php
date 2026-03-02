@@ -29,6 +29,26 @@ function getLinkPreview($id, $title)
     return "https://nhatrototsaigon.com/danh-sach-cho-thue/{$id}/{$title}";
 }
 
+/**
+ * Trả về URL ảnh tối ưu cho thumbnail (Cloudinary: resize + auto format/quality).
+ * Giảm tải và cải thiện performance hiển thị.
+ */
+function getOptimizedThumbnailUrl(?string $url, int $width = 400, int $height = 300): ?string
+{
+    if (! $url || trim($url) === '') {
+        return null;
+    }
+    if (! str_contains($url, 'res.cloudinary.com')) {
+        return $url;
+    }
+    // Cloudinary: chèn transformation sau /upload/ -> /upload/c_fill,w_400,h_300,f_auto,q_auto/
+    $transform = "c_fill,w_{$width},h_{$height},f_auto,q_auto";
+    if (preg_match('#(.*/upload/)(.*)#', $url, $m)) {
+        return $m[1] . $transform . '/' . $m[2];
+    }
+    return $url;
+}
+
 function generatePaymentButton($amount, $description, $paymentCode = null)
 {
     // Khởi tạo client

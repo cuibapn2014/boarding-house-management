@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('/boarding-house/{id}/create-appointment', [\App\Http\Controllers\BoardingHouseController::class, 'storeAppointment'])->name('boarding-house.storeAppointment');
 	Route::resource('/boarding-house', \App\Http\Controllers\BoardingHouseController::class);
 	Route::post('/boarding-house/{id}/push', [\App\Http\Controllers\BoardingHouseController::class, 'push'])->name('boarding-house.push');
+	Route::post('/boarding-house/{id}/stop-push', [\App\Http\Controllers\BoardingHouseController::class, 'stopPush'])->name('boarding-house.stop-push');
 	Route::delete('/boarding-house-file/{id}/delete', [\App\Http\Controllers\BoardingHouseFileController::class, 'destroy'])->name('boardingHouseFile.destroy');
 	
 	// User Management routes
@@ -72,7 +73,10 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/point/top-up', [\App\Http\Controllers\PointController::class, 'topUp'])->name('point.top-up');
 	Route::post('/point/top-up', [\App\Http\Controllers\PointController::class, 'processTopUp'])->name('point.process-top-up');
 	Route::get('/point/transactions', [\App\Http\Controllers\PointController::class, 'transactions'])->name('point.transactions');
-	
+	Route::get('/point/admin/transactions', [\App\Http\Controllers\PointController::class, 'adminTransactions'])->name('point.admin.transactions');
+	Route::get('/point/admin/adjust', [\App\Http\Controllers\PointController::class, 'showAdjustPoints'])->name('point.admin.adjust');
+	Route::post('/point/admin/adjust', [\App\Http\Controllers\PointController::class, 'storeAdjustPoints'])->name('point.admin.adjust.store');
+
 	// Service Payment routes
 	Route::get('/boarding-house/{boardingHouse}/services', [\App\Http\Controllers\ServicePaymentController::class, 'show'])->name('service-payment.show');
 	Route::post('/boarding-house/{boardingHouse}/services/process', [\App\Http\Controllers\ServicePaymentController::class, 'process'])->name('service-payment.process');

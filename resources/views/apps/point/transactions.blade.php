@@ -32,6 +32,8 @@
         background: #fff3cd;
         color: #856404;
     }
+    .type-admin_add { background: #cfe2ff; color: #084298; }
+    .type-admin_subtract { background: #f8d7da; color: #58151c; }
 </style>
 @endpush
 
@@ -66,15 +68,14 @@
                                                 <h6 class="mb-1">{{ $transaction->description }}</h6>
                                                 <small class="text-muted">
                                                     <span class="transaction-type-badge type-{{ $transaction->transaction_type }}">
-                                                        @if($transaction->transaction_type === 'top_up')
-                                                            Nạp điểm
-                                                        @elseif($transaction->transaction_type === 'deduction')
-                                                            Trừ điểm
-                                                        @elseif($transaction->transaction_type === 'refund')
-                                                            Hoàn điểm
-                                                        @else
-                                                            Thanh toán dịch vụ
-                                                        @endif
+                                                        @switch($transaction->transaction_type)
+                                                            @case('top_up') Nạp điểm @break
+                                                            @case('deduction') Trừ điểm @break
+                                                            @case('refund') Hoàn điểm @break
+                                                            @case('admin_add') Admin cộng điểm @break
+                                                            @case('admin_subtract') Admin trừ điểm @break
+                                                            @default Thanh toán dịch vụ
+                                                        @endswitch
                                                     </span>
                                                     <span class="ms-2">{{ $transaction->created_at->format('d/m/Y H:i:s') }}</span>
                                                 </small>

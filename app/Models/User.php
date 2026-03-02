@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\BoardingHouse;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -71,6 +72,14 @@ class User extends Authenticatable
     public function getIsAdminAttribute() : bool
     {
         return $this->id === 1;
+    }
+
+    /**
+     * Boarding houses (listings) created by this user
+     */
+    public function boardingHouses()
+    {
+        return $this->hasMany(BoardingHouse::class, 'created_by', 'id');
     }
 
     /**

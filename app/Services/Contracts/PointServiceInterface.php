@@ -41,6 +41,21 @@ interface PointServiceInterface
     public function getTransactionHistory(User $user, ?int $perPage = 15): LengthAwarePaginator;
 
     /**
+     * Get transaction history for all users (admin only)
+     */
+    public function getTransactionHistoryForAllUsers(?int $perPage = 20, ?int $userId = null): LengthAwarePaginator;
+
+    /**
+     * Admin: add points to user (logs full history)
+     */
+    public function addPointsByAdmin(User $targetUser, int $points, string $reason, User $adminUser): PointTransaction;
+
+    /**
+     * Admin: subtract points from user (logs full history)
+     */
+    public function subtractPointsByAdmin(User $targetUser, int $points, string $reason, User $adminUser): PointTransaction;
+
+    /**
      * Get all active point packages
      */
     public function getActivePackages(): Collection;

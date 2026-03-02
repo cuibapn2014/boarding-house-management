@@ -37,9 +37,8 @@ const BoardingHouse = {
                 currentPagination.remove();
             }
             
-            // Update filter count if function exists
-            if(typeof updateFilterCount === 'function') {
-                updateFilterCount();
+            if (typeof refreshActiveFilterCount === 'function') {
+                refreshActiveFilterCount();
             }
         }
 

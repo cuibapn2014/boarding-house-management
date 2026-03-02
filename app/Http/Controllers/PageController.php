@@ -17,7 +17,13 @@ class PageController extends Controller
     public function index(string $page)
     {
         if (view()->exists("pages.{$page}")) {
-            $users = $page == 'user-management' ? User::paginate(20) : new LengthAwarePaginator(collect([]), 20, 20);
+            $users = $page == 'user-management'
+                ? User::withCount('boardingHouses')
+                    ->withSum(['pointTransactions as total_points_used' => function ($q) {
+                        $q->where('amount', '<', 0);
+                    }], 'amount')
+                    ->paginate(20)
+                : new LengthAwarePaginator(collect([]), 20, 20);
             return view("pages.{$page}", compact('users'));
         }
 

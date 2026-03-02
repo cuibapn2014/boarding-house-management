@@ -1,23 +1,23 @@
 "use strict";
-const apiProvince = 'https://provinces.open-api.vn/api/?depth=3';
+const API_PROVINCES = 'https://provinces.open-api.vn/api/?depth=3';
+var apiProvince = API_PROVINCES; // dùng chung với BoardingHouse.js
 var locationHCM;
-var delaySearch;
+var searchDebounceTimer;
 
 $(document).ready(function() {
-    initShowAdvanceFilter();
+    restoreAdvanceFilterFromStorage();
     GlobalHelper.initValueSearchForm();
     BoardingHouse.setLocationHCM();
 
-    // Search functionality
-    $(document).on('search input cut paste', '#byTitle, #byFromPrice, #byToPrice', function(e) {
-        clearTimeout(delaySearch);
-        delaySearch = setTimeout(() => search($(this)), 550);
-    })
-
-    $(document).on('change', '#byCategory, #byStatus, #byFurnitureStatus, #byPublish', function(e) {
-        clearTimeout(delaySearch);
-        delaySearch = setTimeout(() => search($(this)), 550);
-    })
+    // Tìm kiếm: debounce 550ms
+    $(document).on('search input cut paste', '#byTitle, #byFromPrice, #byToPrice', function() {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => performListingSearch($(this)), 550);
+    });
+    $(document).on('change', '#byCategory, #byStatus, #byFurnitureStatus, #byPublish', function() {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => performListingSearch($(this)), 550);
+    });
 
     // Delete boarding house
     $(document).on('click', '.remove-boarding-house', function(e) {
@@ -34,9 +34,8 @@ $(document).ready(function() {
         BoardingHouse.destroy($(this));
     });
 
-    // Advance filter toggle
     $(document).on('click', '#btn-advance-filter', function() {
-        handleClickAdvanceFilter();
+        saveAdvanceFilterOpenState();
         $(this).find('.toggle-icon').toggleClass('rotate');
     });
 
@@ -53,28 +52,38 @@ $(document).ready(function() {
     $(document).on('click', '.create-appointment', BoardingHouse.showModalCreateAppointment);
     $(document).on('click', '#createAppointmentModal #btn-submit', BoardingHouse.storeAppointment);
 
-    // Clone boarding house
+    // Clone listing: go to create page with source id
     $(document).on('click', '.clone-boarding-house', function(e) {
         e.preventDefault();
         const url = $(this).data('url');
-        window.location.href = url;
+        if (url) window.location.href = url;
     });
 
-    // Đẩy tin nhanh (trừ 5 point)
-    $(document).on('click', '.quick-push-listing', function(e) {
+    // Admin: stop push listing
+    $(document).on('click', '.stop-push-listing', function(e) {
         e.preventDefault();
-        const url = $(this).data('url');
-        if (!confirm('Đẩy tin lên đầu danh sách (trừ 5 point)?')) return;
-        const _token = $('meta[name="csrf-token"]').attr('content') || $('meta[name="csrf_token"]').attr('content');
-        const handleSuccess = function(response) {
-            if (response.status === 'success') {
-                GlobalHelper.toastSuccess(response.message);
-                BoardingHouse.loadData(null, window.location.href);
-            } else {
-                GlobalHelper.toastError(response.message || 'Có lỗi xảy ra.');
+        const btn = $(this);
+        const url = btn.data('url');
+        if (!url) return;
+        if (!confirm('Bạn có chắc muốn dừng đẩy top tin này?')) return;
+        const token = $('meta[name="csrf-token"]').attr('content') || $('meta[name="csrf_token"]').attr('content');
+        $.ajax({
+            url: url,
+            type: 'POST',
+            headers: { 'X-CSRF-TOKEN': token, 'Accept': 'application/json' },
+            success: function(res) {
+                if (res.status === 'success') {
+                    GlobalHelper.toastSuccess(res.message);
+                    BoardingHouse.loadData(null, window.location.href);
+                } else {
+                    GlobalHelper.toastError(res.message || 'Có lỗi xảy ra');
+                }
+            },
+            error: function(xhr) {
+                const msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Không thể dừng đẩy top';
+                GlobalHelper.toastError(msg);
             }
-        };
-        ApiHelper.callApi(url, 'POST', {}, { 'X-CSRF-TOKEN': _token }, {}, null, handleSuccess, null, null, true, 'Đang xử lý...').then(() => {}).catch(() => {});
+        });
     });
 
     // Quick filter badges
@@ -97,106 +106,78 @@ $(document).ready(function() {
             formSearch.find('#byStatus').val('rented');
         }
         
-        // Trigger search
         formSearch.find('#byStatus').trigger('change');
-        
-        // Update filter count
-        updateFilterCount();
+        refreshActiveFilterCount();
     });
 
-    // Clear filter button
     $(document).on('click', '#btn-clear-filter', function(e) {
         e.preventDefault();
-        clearAllFilters();
+        resetAllFiltersAndReload();
     });
 
-    // Update filter count on any filter change
-    $(document).on('change', '#byCategory, #byStatus, #byFurnitureStatus, #byPublish', function() {
-        updateFilterCount();
-    });
-
-    $(document).on('input', '#byFromPrice, #byToPrice', function() {
-        updateFilterCount();
-    });
-
-    // Initialize filter count on page load
-    updateFilterCount();
+    $(document).on('change', '#byCategory, #byStatus, #byFurnitureStatus, #byPublish', refreshActiveFilterCount);
+    $(document).on('input', '#byFromPrice, #byToPrice', refreshActiveFilterCount);
+    refreshActiveFilterCount();
 });
 
-function search(ele) {
-    const formSearch = ele.closest('#form-search__boarding-house');
-    const serialize = formSearch.serialize();
-    const url = `${window.location.origin}${window.location.pathname}?${serialize}`;
-
+/** Gửi form tìm kiếm và tải lại danh sách tin đăng */
+function performListingSearch($triggerElement) {
+    const $form = $triggerElement.closest('#form-search__boarding-house');
+    const queryString = $form.serialize();
+    const url = `${window.location.origin}${window.location.pathname}?${queryString}`;
     window.history.pushState(null, {}, url);
-
     BoardingHouse.loadData(null, url);
 }
 
-function handleClickAdvanceFilter() {
-    const advanceFilter = $('#advance-filter');
-    const isExpanded = advanceFilter.hasClass('show');
-    
-    // Save state to localStorage
-    localStorage.setItem('boarding_house.__advance_filter', !isExpanded);
+function saveAdvanceFilterOpenState() {
+    const isOpen = $('#advance-filter').hasClass('show');
+    localStorage.setItem('boarding_house.__advance_filter', !isOpen);
 }
 
-function initShowAdvanceFilter() {
-    const isAdvanceFilter = localStorage.getItem('boarding_house.__advance_filter') ?? 'false';
-
-    if(JSON.parse(isAdvanceFilter)) {
+function restoreAdvanceFilterFromStorage() {
+    const saved = localStorage.getItem('boarding_house.__advance_filter') ?? 'false';
+    if (JSON.parse(saved)) {
         $('#advance-filter').addClass('show');
         $('#btn-advance-filter').find('.toggle-icon').addClass('rotate');
     }
 }
 
-function updateFilterCount() {
-    const formSearch = $('#form-search__boarding-house');
-    let count = 0;
+/** Đếm số bộ lọc đang bật và cập nhật badge + nút xóa lọc */
+function refreshActiveFilterCount() {
+    const $form = $('#form-search__boarding-house');
+    let activeCount = 0;
+    if ($form.find('#byTitle').val().trim() !== '') activeCount++;
+    if ($form.find('#byCategory').val() !== '') activeCount++;
+    if ($form.find('#byFromPrice').val().trim() !== '') activeCount++;
+    if ($form.find('#byToPrice').val().trim() !== '') activeCount++;
+    if ($form.find('#byFurnitureStatus').val() !== '') activeCount++;
+    if ($form.find('#byPublish').val() !== '') activeCount++;
 
-    // Count active filters
-    if(formSearch.find('#byTitle').val().trim() !== '') count++;
-    if(formSearch.find('#byCategory').val() !== '') count++;
-    if(formSearch.find('#byFromPrice').val().trim() !== '') count++;
-    if(formSearch.find('#byToPrice').val().trim() !== '') count++;
-    if(formSearch.find('#byFurnitureStatus').val() !== '') count++;
-    if(formSearch.find('#byPublish').val() !== '') count++;
-    
-    // Update filter count badge
-    const filterCountBadge = $('#filter-count');
-    if(count > 0) {
-        filterCountBadge.text(count).removeClass('d-none');
+    const $badge = $('#filter-count');
+    if (activeCount > 0) {
+        $badge.text(activeCount).removeClass('d-none');
         $('#btn-clear-filter').addClass('show');
     } else {
-        filterCountBadge.addClass('d-none');
+        $badge.addClass('d-none');
         $('#btn-clear-filter').removeClass('show');
     }
 }
 
-function clearAllFilters() {
-    const formSearch = $('#form-search__boarding-house');
-    
-    // Clear all form fields
-    formSearch.find('#byTitle').val('');
-    formSearch.find('#byCategory').val('');
-    formSearch.find('#byFromPrice').val('');
-    formSearch.find('#byToPrice').val('');
-    formSearch.find('#byStatus').val('');
-    formSearch.find('#byFurnitureStatus').val('');
-    formSearch.find('#byPublish').val('');
-    
-    // Reset quick filter badges to "Tất cả"
+/** Xóa toàn bộ bộ lọc và tải lại danh sách */
+function resetAllFiltersAndReload() {
+    const $form = $('#form-search__boarding-house');
+    $form.find('#byTitle').val('');
+    $form.find('#byCategory').val('');
+    $form.find('#byFromPrice').val('');
+    $form.find('#byToPrice').val('');
+    $form.find('#byStatus').val('');
+    $form.find('#byFurnitureStatus').val('');
+    $form.find('#byPublish').val('');
     $('.filter-badge').removeClass('active');
     $('.filter-badge[data-filter="all"]').addClass('active');
-    
-    // Update filter count
-    updateFilterCount();
-    
-    // Trigger search to refresh data
+    refreshActiveFilterCount();
     const url = `${window.location.origin}${window.location.pathname}`;
     window.history.pushState(null, {}, url);
     BoardingHouse.loadData(null, url);
-    
-    // Show success message
     GlobalHelper.toastSuccess('Đã xóa tất cả bộ lọc');
 }
