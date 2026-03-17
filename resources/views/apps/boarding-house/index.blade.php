@@ -7,7 +7,8 @@
         border: none;
         border-radius: 20px;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
+        /* Allow dropdown to escape card bounds */
+        overflow: visible;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         background: #ffffff;
         position: relative;
@@ -245,6 +246,8 @@
         height: 220px;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
+    /* Keep rounded corners even when card overflow is visible */
+    .thumbnail-wrapper { border-radius: 20px 20px 0 0; }
     .thumbnail-wrapper img {
         width: 100%;
         height: 100%;
@@ -339,6 +342,32 @@
     .listing-meta { font-size: 12px; }
     .listing-actions { gap: 6px; }
     .listing-actions .action-btn { width: 36px; height: 36px; }
+    .dropdown-toggle-no-caret::after { display: none !important; }
+    .card-actions-dropdown .dropdown-menu {
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 14px;
+        padding: 8px;
+        min-width: 240px;
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+        /* Higher than sidebar/topnav overlays */
+        z-index: 50000;
+    }
+    .card-actions-dropdown { position: relative; z-index: 50000; }
+    .card-actions-dropdown .dropdown-item {
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-weight: 600;
+        color: #334155;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .card-actions-dropdown .dropdown-item i { width: 18px; text-align: center; color: #667eea; }
+    .card-actions-dropdown .dropdown-item:hover {
+        background: linear-gradient(135deg, #f8f9ff 0%, #e8ebff 100%);
+        color: #1e293b;
+    }
+    .card-actions-dropdown .dropdown-divider { margin: 8px 0; }
 
     /* Action Buttons */
     .action-btn {
@@ -848,19 +877,23 @@ $furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
                         @endif
 
                         <div class="listing-actions pt-2 mt-2 border-top border-light d-flex flex-wrap align-items-center gap-1">
-                            <a href="{{ getLinkPreview($boardingHouse->id, $boardingHouse->title) }}" class="action-btn bg-gradient-success text-white" title="Xem" target="_blank"><i class="fas fa-eye"></i></a>
+                            @if($boardingHouse->is_publish)
+                                <a href="{{ getLinkPreview($boardingHouse->id, $boardingHouse->title) }}" class="action-btn bg-gradient-success text-white" title="Xem" target="_blank"><i class="fas fa-eye"></i></a>
+                            @endif
                             <a href="{{ route('boarding-house.edit', [$boardingHouse->id]) }}" class="action-btn bg-gradient-primary text-white" title="Sửa"><i class="fas fa-edit"></i></a>
-                            <div class="dropdown d-inline">
-                                <button class="action-btn bg-gradient-secondary text-white border-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Thêm" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
-                                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                                    <li><a class="dropdown-item create-appointment" href="javascript:;" data-url="{{ route('boarding-house.createAppointment', ['id' => $boardingHouse->id]) }}"><i class="far fa-calendar-plus me-2"></i>Tạo cuộc hẹn</a></li>
-                                    <li><a class="dropdown-item clone-boarding-house" href="javascript:;" data-url="{{ route('boarding-house.create', ['id' => $boardingHouse->id]) }}"><i class="far fa-copy me-2"></i>Sao chép tin</a></li>
+                            <div class="dropdown d-inline card-actions-dropdown">
+                                <button class="action-btn bg-gradient-secondary text-white border-0 dropdown-toggle dropdown-toggle-no-caret" type="button" data-bs-toggle="dropdown" title="Thao tác" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item create-appointment" href="javascript:;" data-url="{{ route('boarding-house.createAppointment', ['id' => $boardingHouse->id]) }}"><i class="far fa-calendar-plus"></i>Tạo cuộc hẹn</a></li>
+                                    <li><a class="dropdown-item clone-boarding-house" href="javascript:;" data-url="{{ route('boarding-house.create', ['id' => $boardingHouse->id]) }}"><i class="far fa-copy"></i>Sao chép tin</a></li>
                                     @if($boardingHouse->is_publish && !$boardingHouse->pushed_at)
-                                    <li><a class="dropdown-item" href="{{ route('boarding-house.edit', [$boardingHouse->id]) }}"><i class="fas fa-arrow-up me-2"></i>Đẩy tin lên top</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('boarding-house.edit', [$boardingHouse->id]) }}"><i class="fas fa-arrow-up"></i>Đẩy tin lên top</a></li>
                                     @endif
                                     @if(auth()->user()->is_admin && $boardingHouse->pushed_at)
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-warning stop-push-listing" href="javascript:;" data-url="{{ route('boarding-house.stop-push', [$boardingHouse->id]) }}" data-id="{{ $boardingHouse->id }}"><i class="fas fa-stop-circle me-2"></i>Dừng đẩy top</a></li>
+                                    <li><a class="dropdown-item text-warning stop-push-listing" href="javascript:;" data-url="{{ route('boarding-house.stop-push', [$boardingHouse->id]) }}" data-id="{{ $boardingHouse->id }}"><i class="fas fa-stop-circle"></i>Dừng đẩy top</a></li>
                                     @endif
                                 </ul>
                             </div>
@@ -920,4 +953,179 @@ $furnitureStatus = SystemDefination::BOARDING_HOUSE_FURNITURE_STATUS;
 
 <script src="{{ asset('assets/js/apps/boarding_house/script.js') }}"></script>
 <script src="{{ asset('assets/js/apps/boarding_house/BoardingHouse.js') }}"></script>
+<script>
+    (function () {
+        const PADDING = 12;
+
+        function measureMenu(menuEl) {
+            const prevDisplay = menuEl.style.display;
+            const prevVisibility = menuEl.style.visibility;
+            const prevPosition = menuEl.style.position;
+            const prevLeft = menuEl.style.left;
+            const prevTop = menuEl.style.top;
+            const prevTransform = menuEl.style.transform;
+
+            menuEl.style.visibility = 'hidden';
+            menuEl.style.display = 'block';
+            menuEl.style.position = 'fixed';
+            menuEl.style.left = '0px';
+            menuEl.style.top = '0px';
+            menuEl.style.transform = 'none';
+
+            const rect = menuEl.getBoundingClientRect();
+
+            menuEl.style.display = prevDisplay;
+            menuEl.style.visibility = prevVisibility;
+            menuEl.style.position = prevPosition;
+            menuEl.style.left = prevLeft;
+            menuEl.style.top = prevTop;
+            menuEl.style.transform = prevTransform;
+
+            return rect;
+        }
+
+        function decidePlacement(toggleEl, menuEl) {
+            const vw = window.innerWidth || document.documentElement.clientWidth;
+            const vh = window.innerHeight || document.documentElement.clientHeight;
+
+            const toggleRect = toggleEl.getBoundingClientRect();
+            const menuRect = measureMenu(menuEl);
+
+            const spaceLeft = toggleRect.left;
+            const spaceRight = vw - toggleRect.right;
+            const spaceBottom = vh - toggleRect.bottom;
+            const spaceTop = toggleRect.top;
+
+            const needAlignEnd = spaceRight < menuRect.width && spaceLeft > spaceRight;
+            const needDropUp = spaceBottom < menuRect.height && spaceTop > spaceBottom;
+
+            return { needAlignEnd, needDropUp };
+        }
+
+        function clamp(n, min, max) {
+            return Math.max(min, Math.min(max, n));
+        }
+
+        function getSafeLeftBoundary() {
+            // Prevent menu from appearing under the fixed sidebar (it looks like "overflow left")
+            const candidates = [
+                document.querySelector('.sidenav'),
+                document.querySelector('.navbar-vertical'),
+                document.querySelector('#sidenav-main')
+            ].filter(Boolean);
+
+            const vw = window.innerWidth || document.documentElement.clientWidth;
+            let boundary = PADDING;
+
+            for (const el of candidates) {
+                const rect = el.getBoundingClientRect();
+                const style = window.getComputedStyle(el);
+                const isRendered = style.display !== 'none' && style.visibility !== 'hidden' && parseFloat(style.opacity || '1') > 0;
+
+                // On mobile, sidenav may be translated off-canvas. Only count it if it intersects viewport.
+                const intersectsViewport =
+                    rect.width > 50 &&
+                    rect.height > 50 &&
+                    rect.right > 0 &&
+                    rect.left < vw;
+
+                if (isRendered && intersectsViewport) {
+                    boundary = Math.max(boundary, rect.right + PADDING);
+                }
+            }
+
+            return boundary;
+        }
+
+        function placeFixed(toggleEl, menuEl) {
+            const vw = window.innerWidth || document.documentElement.clientWidth;
+            const vh = window.innerHeight || document.documentElement.clientHeight;
+            const toggleRect = toggleEl.getBoundingClientRect();
+            const menuRect = measureMenu(menuEl);
+
+            const spaceLeft = toggleRect.left;
+            const spaceRight = vw - toggleRect.right;
+            const spaceBottom = vh - toggleRect.bottom;
+            const spaceTop = toggleRect.top;
+
+            const openUp = spaceBottom < menuRect.height && spaceTop > spaceBottom;
+            const alignToLeft = spaceRight < menuRect.width && spaceLeft > spaceRight; // stick to left side of button
+
+            let left = alignToLeft
+                ? (toggleRect.right - menuRect.width)
+                : toggleRect.left;
+
+            let top = openUp
+                ? (toggleRect.top - menuRect.height)
+                : toggleRect.bottom;
+
+            const safeLeft = getSafeLeftBoundary();
+            left = clamp(left, safeLeft, vw - PADDING - menuRect.width);
+            top = clamp(top, PADDING, vh - PADDING - menuRect.height);
+
+            // Force fixed positioning so it won't be clipped by overflow ancestors
+            menuEl.style.position = 'fixed';
+            menuEl.style.left = `${Math.round(left)}px`;
+            menuEl.style.top = `${Math.round(top)}px`;
+            menuEl.style.transform = 'none';
+            menuEl.style.margin = '0';
+            // Ensure above sidebar/topnav overlays
+            menuEl.style.zIndex = '50000';
+        }
+
+        document.addEventListener('show.bs.dropdown', function (event) {
+            const dropdown = event.target;
+            if (!dropdown || !dropdown.classList || !dropdown.classList.contains('card-actions-dropdown')) return;
+
+            const toggleEl = dropdown.querySelector('[data-bs-toggle="dropdown"]');
+            const menuEl = dropdown.querySelector('.dropdown-menu');
+            if (!toggleEl || !menuEl) return;
+
+            const { needAlignEnd, needDropUp } = decidePlacement(toggleEl, menuEl);
+
+            // Horizontal: near right edge -> align left (remove end). Near left edge -> align right (add end).
+            // Bootstrap semantics: `dropdown-menu-end` aligns menu to the right of the parent.
+            if (needAlignEnd) menuEl.classList.add('dropdown-menu-end');
+            else menuEl.classList.remove('dropdown-menu-end');
+
+            // Vertical: not enough bottom space -> dropup
+            dropdown.classList.toggle('dropup', !!needDropUp);
+
+            // Ensure it sits above overlays
+            menuEl.style.zIndex = '20000';
+        }, true);
+
+        // After menu is actually shown, re-position as fixed (escape overflow clipping)
+        document.addEventListener('shown.bs.dropdown', function (event) {
+            const dropdown = event.target;
+            if (!dropdown || !dropdown.classList || !dropdown.classList.contains('card-actions-dropdown')) return;
+            const menuEl = dropdown.querySelector('.dropdown-menu');
+            const toggleEl = dropdown.querySelector('[data-bs-toggle="dropdown"]');
+            if (!menuEl || !toggleEl) return;
+
+            // Save original inline styles once
+            if (!menuEl.dataset.origStyle) {
+                menuEl.dataset.origStyle = menuEl.getAttribute('style') || '';
+            }
+            placeFixed(toggleEl, menuEl);
+        }, true);
+
+        // Restore styles on hide so Bootstrap can manage normally
+        document.addEventListener('hide.bs.dropdown', function (event) {
+            const dropdown = event.target;
+            if (!dropdown || !dropdown.classList || !dropdown.classList.contains('card-actions-dropdown')) return;
+            const menuEl = dropdown.querySelector('.dropdown-menu');
+            if (!menuEl) return;
+            if (menuEl.dataset.origStyle !== undefined) {
+                if (menuEl.dataset.origStyle) menuEl.setAttribute('style', menuEl.dataset.origStyle);
+                else menuEl.removeAttribute('style');
+            } else {
+                menuEl.style.position = '';
+                menuEl.style.left = '';
+                menuEl.style.top = '';
+                menuEl.style.transform = '';
+            }
+        }, true);
+    })();
+</script>
 @endpush

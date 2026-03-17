@@ -3,6 +3,8 @@ const Dropzone = {
     index: 1,
     maxImages: 5,  // Default for free plan
     maxVideos: 1,  // Default for free plan
+    maxImageBytes: 10 * 1024 * 1024, // 10MB
+    maxVideoBytes: 50 * 1024 * 1024, // 50MB
     userPlan: 'free', // Default plan
     isAdmin: false, // Default not admin
     destroy: function(selector) {
@@ -174,7 +176,23 @@ const Dropzone = {
         ];
 
         if (!accepts.includes(file.type)) {
-            GlobalHelper.toastError(`File "${file.name}" không được hỗ trợ!`);
+            const msg = `File "${file.name}" không được hỗ trợ! (Chỉ PNG/JPG/JPEG/WEBP hoặc MP4)`;
+            GlobalHelper.toastError(msg);
+            Dropzone._appendError(dropZone, msg);
+            return;
+        }
+
+        // Validate file size
+        if (file.type.includes('image') && file.size > Dropzone.maxImageBytes) {
+            const msg = `Ảnh "${file.name}" vượt quá 10MB.`;
+            GlobalHelper.toastError(msg);
+            Dropzone._appendError(dropZone, msg);
+            return;
+        }
+        if (file.type.includes('video') && file.size > Dropzone.maxVideoBytes) {
+            const msg = `Video "${file.name}" vượt quá 50MB.`;
+            GlobalHelper.toastError(msg);
+            Dropzone._appendError(dropZone, msg);
             return;
         }
 
@@ -186,12 +204,16 @@ const Dropzone = {
                 const currentVideos = Dropzone.files.filter(f => f.type.includes('video')).length;
 
                 if (file.type.includes('image') && currentImages >= Dropzone.maxImages) {
-                    GlobalHelper.toastError(`Gói Free chỉ được phép tải lên tối đa ${Dropzone.maxImages} ảnh!`);
+                    const msg = `Gói Free chỉ được phép tải lên tối đa ${Dropzone.maxImages} ảnh!`;
+                    GlobalHelper.toastError(msg);
+                    Dropzone._appendError(dropZone, msg);
                     return;
                 }
 
                 if (file.type.includes('video') && currentVideos >= Dropzone.maxVideos) {
-                    GlobalHelper.toastError(`Gói Free chỉ được phép tải lên tối đa ${Dropzone.maxVideos} video!`);
+                    const msg = `Gói Free chỉ được phép tải lên tối đa ${Dropzone.maxVideos} video!`;
+                    GlobalHelper.toastError(msg);
+                    Dropzone._appendError(dropZone, msg);
                     return;
                 }
             }
@@ -273,6 +295,17 @@ const Dropzone = {
 
         // Update file count
         Dropzone._updateFileCount(dropZone);
+    },
+
+    _appendError: function(dropZone, message) {
+        try {
+            const dz = $(dropZone);
+            const box = dz.find('.dropzone-errors');
+            if(!box.length) return;
+            box.append(`<div class="text-danger text-sm input-error-message"><i class="fas fa-exclamation-circle me-1"></i>${message}</div>`);
+        } catch(e) {
+            // ignore
+        }
     },
 
     _updateFileCount: function(dropZone) {

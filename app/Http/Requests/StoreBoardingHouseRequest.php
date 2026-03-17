@@ -26,13 +26,30 @@ class StoreBoardingHouseRequest extends FormRequest
         return [
             //
             'title' => 'required|max:255',
-            'description' => 'required',
+            'description' => 'nullable|string|max:255',
             'status' => 'required',
             'price' => 'required',
             'files' => ['nullable', 'array', function ($attribute, $value, $fail) {
                 $this->validateFilesByPlan($value, $fail);
             }],
-            'files.*' => 'nullable|mimes:png,jpg,mp4,jpeg,webp',
+            'files.*' => ['nullable', 'file', 'mimes:png,jpg,mp4,jpeg,webp', function ($attribute, $value, $fail) {
+                if (! $value) {
+                    return;
+                }
+
+                $mimeType = $value->getMimeType() ?? '';
+                $maxImageBytes = 10 * 1024 * 1024;  // 10MB
+                $maxVideoBytes = 50 * 1024 * 1024;  // 50MB
+                $size = (int) ($value->getSize() ?? 0);
+
+                if (str_starts_with($mimeType, 'image/') && $size > $maxImageBytes) {
+                    $fail('Ảnh tải lên vượt quá 10MB.');
+                }
+
+                if (str_starts_with($mimeType, 'video/') && $size > $maxVideoBytes) {
+                    $fail('Video tải lên vượt quá 50MB.');
+                }
+            }],
             'phone' => 'nullable|digits:10',
             'map_link' => 'nullable|url|max:500',
             'meta_title' => 'nullable|string|max:70',
@@ -66,6 +83,10 @@ class StoreBoardingHouseRequest extends FormRequest
         
         // Admin không bị giới hạn
         if ($user->is_admin) {
+            return;
+        }
+
+        if (empty($files) || !is_array($files)) {
             return;
         }
         
@@ -119,7 +140,7 @@ class StoreBoardingHouseRequest extends FormRequest
             'title.required' => 'Vui lòng nhập tiêu đề nhà trọ',
             'title.max' => 'Tiêu đề không được vượt quá :max ký tự',
             
-            'description.required' => 'Vui lòng nhập mô tả ngắn',
+            'description.max' => 'Mô tả không được vượt quá :max ký tự',
             
             'status.required' => 'Vui lòng chọn trạng thái',
             

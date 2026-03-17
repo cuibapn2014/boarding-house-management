@@ -210,9 +210,7 @@
                             </div>
 
                             <div class="col-md-12 mb-3">
-                                <label class="form-label">Mô tả ngắn</label>
-                                <input id="description" name="description" class="form-control" type="text" 
-                                    placeholder="Mô tả ngắn gọn về nhà trọ" value="{{ $boardingHouse->description }}" maxlength="255">
+                                <input id="description" name="description" type="hidden" data-auto-description="1" value="{{ $boardingHouse->description }}">
                             </div>
 
                             <div class="col-md-12 mb-3">
@@ -223,9 +221,11 @@
                                     placeholder="Mô tả chi tiết về phòng trọ, tiện ích, quy định...">{!! $boardingHouse->content !!}</textarea>
                             </div>
 
+                            {{-- Ẩn phần nhập SEO khi chỉnh sửa --}}
+                            {{--
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Từ khoá (SEO)</label>
-                                <input class="form-control" id="tags" data-color="dark" type="text" name="tags" 
+                                <input class="form-control" id="tags" data-color="dark" type="text" name="tags"
                                     value="{{ $boardingHouse->tags }}" placeholder="Nhập từ khóa và nhấn Enter" />
                                 <div id="keyword-stats" class="mt-2" style="display: none;">
                                     <small class="text-muted">
@@ -235,10 +235,13 @@
                                 </div>
                                 <small class="text-muted">Nhập các từ khóa liên quan để tối ưu tìm kiếm</small>
                             </div>
+                            --}}
                         </div>
                     </div>
                 </div>
 
+                {{-- Ẩn phần nhập SEO khi chỉnh sửa --}}
+                {{--
                 <!-- SEO Section -->
                 <div class="card form-card mt-4">
                     <div class="card-body p-4">
@@ -253,7 +256,7 @@
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label">* Meta title</label>
-                                    <input id="meta_title" name="meta_title" class="form-control" type="text" 
+                                    <input id="meta_title" name="meta_title" class="form-control" type="text"
                                         value="{{ $boardingHouse->meta_title ?? '' }}" placeholder="Tự động lấy từ tiêu đề" maxlength="70">
                                     <div id="meta_title_feedback" class="mt-1"></div>
                                     <small class="text-muted">Độ dài tối ưu: 50-60 ký tự. Google hiển thị tối đa 60 ký tự.</small>
@@ -261,7 +264,7 @@
 
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label">Meta description</label>
-                                    <textarea id="meta_description" name="meta_description" class="form-control" 
+                                    <textarea id="meta_description" name="meta_description" class="form-control"
                                         rows="3" placeholder="Tự động lấy từ mô tả" maxlength="320">{{ $boardingHouse->meta_description ?? '' }}</textarea>
                                     <div id="meta_description_feedback" class="mt-1"></div>
                                     <small class="text-muted">Độ dài tối ưu: 120-160 ký tự. Google hiển thị tối đa 160 ký tự.</small>
@@ -269,7 +272,7 @@
 
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label">Canonical URL</label>
-                                    <input id="canonical_url" name="canonical_url" class="form-control" type="url" 
+                                    <input id="canonical_url" name="canonical_url" class="form-control" type="url"
                                         value="{{ $boardingHouse->canonical_url ?? '' }}" placeholder="Tự động lấy từ URL hiện tại" maxlength="500">
                                     <small class="text-muted">URL chuẩn của trang (tự động lấy từ route nếu để trống)</small>
                                 </div>
@@ -277,6 +280,7 @@
                         </div>
                     </div>
                 </div>
+                --}}
 
                 <!-- Location Information -->
                 <div class="card form-card mt-4">
@@ -371,6 +375,13 @@
                         @else
                         <p class="text-sm text-muted mb-3">Tải lên hình ảnh hoặc video về nhà trọ</p>
                         @endif
+                        <div class="alert alert-light border mb-3" style="font-size: 13px;">
+                            <div class="fw-bold mb-1"><i class="fas fa-paperclip me-1"></i>Quy định upload</div>
+                            <ul class="mb-0 ps-3">
+                                <li>Định dạng: <strong>PNG, JPG, JPEG, WEBP</strong> (ảnh) hoặc <strong>MP4</strong> (video)</li>
+                                <li>Dung lượng tối đa: <strong>10MB/ảnh</strong>, <strong>50MB/video</strong></li>
+                            </ul>
+                        </div>
                         @include('components.dropzone')
                     </div>
                 </div>

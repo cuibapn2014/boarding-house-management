@@ -10,7 +10,25 @@ const BoardingHouseFormPage = {
         this.initTinyEditor();
         this.initDistrictSelect();
         this.initSEO();
+        this.initAutoDescription();
         this.bindEvents();
+    },
+
+    initAutoDescription: function() {
+        const titleEl = document.getElementById('title');
+        const descEl = document.getElementById('description');
+        if (!titleEl || !descEl) return;
+        if (!descEl.dataset || descEl.dataset.autoDescription !== '1') return;
+
+        const sync = () => {
+            const title = (titleEl.value || '').trim();
+            if (!title) return;
+            descEl.value = title.substring(0, 255);
+        };
+
+        titleEl.addEventListener('input', sync);
+        titleEl.addEventListener('blur', sync);
+        sync();
     },
 
     initLocationData: function() {
@@ -73,11 +91,13 @@ const BoardingHouseFormPage = {
 
     initSEO: function() {
         const self = this;
+        const titleEl = $('#title');
+        const metaTitle = $('#meta_title');
+        const metaDescription = $('#meta_description');
         
         // Auto-fill meta title from title
-        $('#title').on('blur', function() {
+        if(titleEl.length && metaTitle.length) titleEl.on('blur', function() {
             const title = $(this).val().trim();
-            const metaTitle = $('#meta_title');
             if(title && !metaTitle.val()) {
                 metaTitle.val(title.substring(0, 70));
                 self.validateMetaTitle();
@@ -85,9 +105,9 @@ const BoardingHouseFormPage = {
         });
 
         // Auto-fill meta description from description
-        $('#description').on('blur', function() {
+        const descriptionEl = $('#description');
+        if(descriptionEl.length && metaDescription.length) descriptionEl.on('blur', function() {
             const description = $(this).val().trim();
-            const metaDescription = $('#meta_description');
             if(description && !metaDescription.val()) {
                 metaDescription.val(description.substring(0, 320));
                 self.validateMetaDescription();
@@ -95,19 +115,20 @@ const BoardingHouseFormPage = {
         });
 
         // Real-time validation for meta title
-        $('#meta_title').on('input', function() {
+        if(metaTitle.length) metaTitle.on('input', function() {
             self.validateMetaTitle();
             self.updateKeywordStats();
         });
 
         // Real-time validation for meta description
-        $('#meta_description').on('input', function() {
+        if(metaDescription.length) metaDescription.on('input', function() {
             self.validateMetaDescription();
             self.updateKeywordStats();
         });
 
         // Update keyword stats when tags or content changes
-        $('#tags').on('input', function() {
+        const tagsEl = $('#tags');
+        if(tagsEl.length) tagsEl.on('input', function() {
             self.updateKeywordStats();
         });
 
@@ -126,6 +147,7 @@ const BoardingHouseFormPage = {
 
     validateMetaTitle: function() {
         const metaTitle = $('#meta_title');
+        if(!metaTitle.length) return;
         const value = metaTitle.val().trim();
         const length = value.length;
         const feedback = $('#meta_title_feedback');
@@ -180,6 +202,7 @@ const BoardingHouseFormPage = {
 
     validateMetaDescription: function() {
         const metaDescription = $('#meta_description');
+        if(!metaDescription.length) return;
         const value = metaDescription.val().trim();
         const length = value.length;
         const feedback = $('#meta_description_feedback');
@@ -248,6 +271,7 @@ const BoardingHouseFormPage = {
     },
 
     updateKeywordStats: function() {
+        if(!$('#keyword-stats').length) return;
         const keywords = this.getKeywords();
         if(keywords.length === 0) {
             $('#keyword-stats').hide();
@@ -422,6 +446,11 @@ const BoardingHouseFormPage = {
         const url = form.attr('action');
         const method = form.attr('method') || 'POST';
         const submitBtn = form.find('button[type="submit"]');
+
+        // Clear old errors
+        form.find('.input-error-message, .invalid-feedback').remove();
+        form.find('.is-invalid').removeClass('is-invalid');
+        form.find('.dropzone-errors').empty();
         
         // Get content safely
         const content = this.getEditorContent();
@@ -490,7 +519,29 @@ const BoardingHouseFormPage = {
                 submitBtn.html('<i class="fas fa-save me-2"></i>Lưu Nhà trọ');
 
                 for(const key in errors) {
-                    $(`#${key}`).after(`<span class="input-error-message text-danger text-sm">${errors[key][0]}<span>`);
+                    const message = errors?.[key]?.[0] || 'Dữ liệu không hợp lệ';
+                    const baseKey = (key || '').split('.')[0];
+
+                    if(baseKey === 'files') {
+                        const dzErrors = form.find('.dropzone-errors');
+                        if(dzErrors.length) {
+                            dzErrors.append(`<div class="text-danger text-sm input-error-message"><i class="fas fa-exclamation-circle me-1"></i>${message}</div>`);
+                        }
+                        continue;
+                    }
+
+                    const el = form.find(`#${baseKey}`);
+                    if(el.length) {
+                        el.addClass('is-invalid');
+                        el.after(`<div class="invalid-feedback d-block input-error-message">${message}</div>`);
+                        continue;
+                    }
+
+                    const byName = form.find(`[name="${baseKey}"]`);
+                    if(byName.length) {
+                        byName.addClass('is-invalid');
+                        byName.last().after(`<div class="invalid-feedback d-block input-error-message">${message}</div>`);
+                    }
                 }
             }
         })

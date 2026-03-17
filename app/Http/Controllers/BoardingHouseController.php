@@ -168,7 +168,7 @@ class BoardingHouseController extends Controller
         $boardingHouse = new BoardingHouse();
         $boardingHouse->title            = trim($request->input('title'));
         $boardingHouse->category         = $request->input('category');
-        $boardingHouse->description      = trim($request->input('description'));
+        $boardingHouse->description      = trim($request->input('description') ?: $request->input('title'));
         $boardingHouse->content          = $content;
         $boardingHouse->district         = $request->input('district');
         $boardingHouse->ward             = $request->input('ward');
@@ -246,7 +246,7 @@ class BoardingHouseController extends Controller
             DB::transaction(function () use ($request, $boardingHouse, $tags, $wantPublish) {
                 $boardingHouse->title            = trim($request->input('title'));
                 $boardingHouse->category         = $request->input('category');
-                $boardingHouse->description      = trim($request->input('description'));
+                $boardingHouse->description      = trim($request->input('description') ?: $request->input('title'));
                 $boardingHouse->content          = trim($request->input('content'));
                 $boardingHouse->district         = $request->input('district');
                 $boardingHouse->ward             = $request->input('ward');

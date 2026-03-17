@@ -6,4 +6,5 @@
     </p>
     <div class="dropzone-preview-files d-flex flex-wrap mb-4" style="gap: 8px 8px;max-width:fit-content"></div>
     <input class="dropzone-input-file d-none" type="file" multiple accept="image/png,image/jpeg,image/jpg,image/webp,video/mp4"/>
+    <div class="dropzone-errors mt-2"></div>
 </div>
