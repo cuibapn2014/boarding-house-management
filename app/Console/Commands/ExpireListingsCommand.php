@@ -10,7 +10,7 @@ class ExpireListingsCommand extends Command
 {
     protected $signature = 'listings:expire';
 
-    protected $description = 'Hết hạn đẩy top (expires_at): chỉ xóa trạng thái pin, giữ is_publish.';
+    protected $description = 'Hết hạn đẩy top (expires_at): xóa pushed_at, listing_days, expires_at; giữ is_publish.';
 
     public function handle(): int
     {
@@ -18,6 +18,7 @@ class ExpireListingsCommand extends Command
         $count = BoardingHouse::whereNotNull('expires_at')
             ->where('expires_at', '<=', $now)
             ->update([
+                'pushed_at' => null,
                 'expires_at' => null,
                 'listing_days' => null,
             ]);

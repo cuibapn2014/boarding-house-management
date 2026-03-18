@@ -15,9 +15,9 @@ class ExpirePaymentsCommand extends Command
     public function handle(): int
     {
         $now = Carbon::now();
-        $count = Payment::where('status', Payment::STATUS_PENDING)
+        $count = Payment::whereIn('status', [Payment::STATUS_PENDING, Payment::STATUS_PROCESSING])
             ->whereNotNull('expires_at')
-            ->where('expires_at', '<', $now)
+            ->where('expires_at', '<=', $now)
             ->update(['status' => Payment::STATUS_EXPIRED]);
 
         if ($count > 0) {
