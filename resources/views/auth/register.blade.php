@@ -91,7 +91,7 @@
                                            value="{{ old('phone') }}"
                                            required>
                                     @error('phone')
-                                        <div class="invalid-feedback">{{ $phone }}</div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 

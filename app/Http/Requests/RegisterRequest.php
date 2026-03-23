@@ -25,7 +25,7 @@ class RegisterRequest extends FormRequest
             'username' => 'required|string|max:255|min:2|unique:users,username|alpha_dash',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:6|max:255|confirmed',
-            'phone' => 'required|string|max:255|min:10|unique:users,phone',
+            'phone' => 'required|digits:10|unique:users,phone',
             'terms' => 'sometimes|accepted'
         ];
     }
@@ -57,9 +57,7 @@ class RegisterRequest extends FormRequest
             'password.confirmed' => 'Xác nhận mật khẩu không khớp',
 
             'phone.required' => 'Vui lòng nhập số điện thoại',
-            'phone.string' => 'Số điện thoại không hợp lệ',
-            'phone.max' => 'Số điện thoại không được vượt quá :max ký tự',
-            'phone.min' => 'Số điện thoại phải có ít nhất :min ký tự',
+            'phone.digits' => 'Số điện thoại phải có 10 chữ số',
             'phone.unique' => 'Số điện thoại đã được sử dụng',
 
             'terms.accepted' => 'Bạn phải đồng ý với điều khoản sử dụng'
@@ -79,6 +77,7 @@ class RegisterRequest extends FormRequest
             'password' => 'Mật khẩu',
             'password_confirmation' => 'Xác nhận mật khẩu',
             'terms' => 'Điều khoản sử dụng',
+            'phone' => 'Số điện thoại',
         ];
     }
 }
