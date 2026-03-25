@@ -15,6 +15,26 @@ class StoreBoardingHouseRequest extends FormRequest
         return auth()->check();
     }
 
+    protected function prepareForValidation(): void
+    {
+        $merged = [];
+
+        if ($this->has('price')) {
+            $merged['price'] = numberRemoveComma($this->input('price'));
+        }
+
+        if ($this->has('deposit_amount')) {
+            $raw = $this->input('deposit_amount');
+            $merged['deposit_amount'] = ($raw === null || $raw === '')
+                ? null
+                : numberRemoveComma($raw);
+        }
+
+        if ($merged !== []) {
+            $this->merge($merged);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,13 +42,15 @@ class StoreBoardingHouseRequest extends FormRequest
      */
     public function rules(): array
     {
-        $category = implode(',',array_keys(SystemDefination::BOARDING_HOUSE_CATEGORY));
+        $category = implode(',', array_keys(SystemDefination::BOARDING_HOUSE_CATEGORY));
+        $maxPrice = SystemDefination::BOARDING_HOUSE_MAX_PRICE;
+
         return [
             //
             'title' => 'required|max:255',
             'description' => 'nullable|string|max:255',
             'status' => 'required',
-            'price' => 'required',
+            'price' => "required|numeric|min:0|lte:{$maxPrice}",
             'files' => ['nullable', 'array', function ($attribute, $value, $fail) {
                 $this->validateFilesByPlan($value, $fail);
             }],
@@ -57,16 +79,14 @@ class StoreBoardingHouseRequest extends FormRequest
             'canonical_url' => 'nullable|url|max:500',
             'district' => 'required',
             'ward' => 'required',
-            'category' => 'required|in:' . $category,
+            'category' => 'required|in:'.$category,
             'require_deposit' => 'nullable',
             'deposit_amount' => [
                 'nullable',
+                'required_if:require_deposit,on',
+                'integer',
                 'min:0',
-                function ($attribute, $value, $fail) {
-                    if ($this->input('require_deposit') === 'on' && empty($value)) {
-                        $fail('Vui lòng nhập số tiền cọc khi yêu cầu cọc.');
-                    }
-                }
+                'lte:2147483647',
             ],
             'min_contract_months' => 'nullable|integer|min:1',
             'area' => 'nullable|integer|min:1',
@@ -80,16 +100,16 @@ class StoreBoardingHouseRequest extends FormRequest
     protected function validateFilesByPlan($files, $fail)
     {
         $user = auth()->user();
-        
+
         // Admin không bị giới hạn
         if ($user->is_admin) {
             return;
         }
 
-        if (empty($files) || !is_array($files)) {
+        if (empty($files) || ! is_array($files)) {
             return;
         }
-        
+
         $planCurrent = $user->plan_current ?? 'free';
 
         // Only validate for free plan
@@ -100,7 +120,7 @@ class StoreBoardingHouseRequest extends FormRequest
             // Count new files being uploaded
             foreach ($files as $file) {
                 $mimeType = $file->getMimeType();
-                
+
                 if (strpos($mimeType, 'image') !== false) {
                     $imageCount++;
                 } elseif (strpos($mimeType, 'video') !== false) {
@@ -125,47 +145,52 @@ class StoreBoardingHouseRequest extends FormRequest
 
             // Check limits for free plan
             if ($imageCount > 5) {
-                $fail('Gói Free chỉ được phép tải lên tối đa 5 ảnh (bao gồm cả ảnh cũ). Bạn hiện có ' . $imageCount . ' ảnh.');
+                $fail('Gói Free chỉ được phép tải lên tối đa 5 ảnh (bao gồm cả ảnh cũ). Bạn hiện có '.$imageCount.' ảnh.');
             }
 
             if ($videoCount > 1) {
-                $fail('Gói Free chỉ được phép tải lên tối đa 1 video (bao gồm cả video cũ). Bạn hiện có ' . $videoCount . ' video.');
+                $fail('Gói Free chỉ được phép tải lên tối đa 1 video (bao gồm cả video cũ). Bạn hiện có '.$videoCount.' video.');
             }
         }
     }
 
-    public function messages() : array
+    public function messages(): array
     {
         return [
             'title.required' => 'Vui lòng nhập tiêu đề nhà trọ',
             'title.max' => 'Tiêu đề không được vượt quá :max ký tự',
-            
+
             'description.max' => 'Mô tả không được vượt quá :max ký tự',
-            
+
             'status.required' => 'Vui lòng chọn trạng thái',
-            
+
             'price.required' => 'Vui lòng nhập giá thuê',
-            
+            'price.numeric' => 'Giá không hợp lệ',
+            'price.min' => 'Giá không hợp lệ',
+            'price.lte' => 'Giá tối đa là 999.999.999.999.999',
+
             'files.*.mimes' => 'File tải lên phải là ảnh (png, jpg, jpeg, webp) hoặc video (mp4)',
-            
+
             'phone.digits' => 'Số điện thoại phải có đúng :digits chữ số',
-            
+
             'map_link.url' => 'Link bản đồ phải là một URL hợp lệ',
             'map_link.max' => 'Link bản đồ không được vượt quá :max ký tự',
-            
+
             'district.required' => 'Vui lòng chọn quận/huyện',
-            
+
             'ward.required' => 'Vui lòng chọn phường/xã',
-            
+
             'category.required' => 'Vui lòng chọn danh mục',
             'category.in' => 'Danh mục được chọn không hợp lệ',
-            
+
             'deposit_amount.integer' => 'Số tiền cọc phải là số nguyên',
             'deposit_amount.min' => 'Số tiền cọc phải lớn hơn hoặc bằng 0',
-            
+            'deposit_amount.lte' => 'Số tiền cọc vượt quá giá trị cho phép',
+            'deposit_amount.required_if' => 'Vui lòng nhập số tiền cọc khi yêu cầu cọc.',
+
             'min_contract_months.integer' => 'Số tháng hợp đồng tối thiểu phải là số nguyên',
             'min_contract_months.min' => 'Số tháng hợp đồng tối thiểu phải lớn hơn 0',
-            
+
             'area.integer' => 'Diện tích phải là số nguyên',
             'area.min' => 'Diện tích phải lớn hơn 0',
         ];

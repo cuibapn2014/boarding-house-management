@@ -1,10 +1,15 @@
 <?php
+
 namespace App\Constants;
 
-class SystemDefination {
+class SystemDefination
+{
+    /** Giá tối đa khi đăng tin (VND) */
+    public const BOARDING_HOUSE_MAX_PRICE = 999999999999999;
+
     const BOARDING_HOUSE_STATUS = [
         'available' => 'Còn trống',
-        'rented' => 'Đã cho thuê'
+        'rented' => 'Đã cho thuê',
     ];
 
     const BOARDING_HOUSE_CATEGORY = [
@@ -13,13 +18,13 @@ class SystemDefination {
         'Văn phòng/Mặt bằng' => 'Văn phòng/Mặt bằng',
         'Phòng trọ' => 'Phòng trọ',
         'Ký túc xá' => 'Ký túc xá',
-        'Sleepbox' => 'Sleepbox'
+        'Sleepbox' => 'Sleepbox',
     ];
 
     const BOARDING_HOUSE_FURNITURE_STATUS = [
         'empty' => 'Phòng trống',
         'basic' => 'Nội thất cơ bản',
-        'full' => 'Full nội thất'
+        'full' => 'Full nội thất',
     ];
 
     const APPOINTMENT_STATUS = [
@@ -30,9 +35,9 @@ class SystemDefination {
 
     /** Thời gian hiển thị tin đăng (ngày) => số point */
     const LISTING_DURATION_POINTS = [
-        10  => 15,
-        15  => 20,
-        30  => 35,
-        60  => 50,
+        10 => 15,
+        15 => 20,
+        30 => 35,
+        60 => 50,
     ];
 }
