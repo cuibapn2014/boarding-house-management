@@ -54,7 +54,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => array_values(array_filter(array_map('trim', explode(',', env('LOG_STACK', 'single'))))),
             'ignore_exceptions' => false,
         ],
 
@@ -63,6 +63,19 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
+        ],
+
+        /*
+        | Gửi log lên Discord qua Incoming Webhook.
+        | Đặt DISCORD_WEBHOOK_URL và thêm "discord" vào stack, ví dụ: LOG_STACK=single,discord
+        */
+        'discord' => [
+            'driver' => 'custom',
+            'via' => \App\Logging\CreateDiscordLogger::class,
+            'level' => env('DISCORD_LOG_LEVEL', 'error'),
+            'handler_with' => [
+                'webhook_url' => env('DISCORD_WEBHOOK_URL', ''),
+            ],
         ],
 
         'daily' => [

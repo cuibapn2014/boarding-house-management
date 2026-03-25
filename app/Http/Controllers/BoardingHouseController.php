@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 class BoardingHouseController extends Controller
 {
     private TelegramService $telegramService;
+
     private ChatGptUtils $chatGptUtils;
 
     public function __construct(
@@ -26,35 +27,50 @@ class BoardingHouseController extends Controller
         protected ServicePaymentServiceInterface $servicePaymentService
     ) {
         $this->telegramService = $telegramService;
-        $this->chatGptUtils = new ChatGptUtils();
+        $this->chatGptUtils = new ChatGptUtils;
     }
 
     public function index(Request $request)
     {
         $boardingHouses = BoardingHouse::with([
-                'boarding_house_files:id,boarding_house_id,type,url',
-                'user_create:id,firstname,lastname,email,phone,avatar'
-            ])
-            ->when($request->filled('byTitle'), function($query) use($request) {
+            'boarding_house_files:id,boarding_house_id,type,url',
+            'user_create:id,firstname,lastname,email,phone,avatar',
+        ])
+            ->when($request->filled('byTitle'), function ($query) use ($request) {
                 $query->where('title', 'like', '%'.$request->byTitle.'%');
             })
-            ->when($request->filled('byCategory'), function($query) use($request) {
+            ->when($request->filled('byCategory'), function ($query) use ($request) {
                 $query->where('category', $request->byCategory);
             })
-            ->when($request->filled('byFromPrice'), function($query) use($request) {
+            ->when($request->filled('byFromPrice'), function ($query) use ($request) {
                 $query->where('price', '>=', numberRemoveComma($request->byFromPrice));
             })
-            ->when($request->filled('byToPrice'), function($query) use($request) {
+            ->when($request->filled('byToPrice'), function ($query) use ($request) {
                 $query->where('price', '<=', numberRemoveComma($request->byToPrice));
             })
-            ->when($request->filled('byStatus'), function($query) use($request) {
+            ->when($request->filled('byStatus'), function ($query) use ($request) {
                 $query->where('status', $request->byStatus);
             })
-            ->when($request->filled('byFurnitureStatus'), function($query) use($request) {
+            ->when($request->filled('byFurnitureStatus'), function ($query) use ($request) {
                 $query->where('furniture_status', $request->byFurnitureStatus);
             })
-            ->when($request->filled('byPublish'), function($query) use($request) {
+            ->when($request->filled('byPublish'), function ($query) use ($request) {
                 $query->where('is_publish', $request->byPublish);
+            })
+            ->when($request->filled('byPushTop'), function ($query) use ($request) {
+                $v = $request->byPushTop;
+                if ($v === 'pushed') {
+                    $query->whereNotNull('pushed_at')->where('expires_at', '>', now());
+                } elseif ($v === 'not_pushed') {
+                    $query->where(function ($q) {
+                        $q->whereNull('pushed_at')->orWhere('expires_at', '<=', now());
+                    });
+                } elseif ($v === 'expiring_soon') {
+                    $days = (int) config('boarding_house.push_expiring_warn_days', 3);
+                    $query->whereNotNull('pushed_at')
+                        ->where('expires_at', '>', now())
+                        ->where('expires_at', '<=', now()->copy()->addDays($days));
+                }
             })
             ->bySelf()
             ->orderByDesc('id')
@@ -69,6 +85,7 @@ class BoardingHouseController extends Controller
                 'listing_days',
                 'expires_at',
                 'pushed_at',
+                'view_count',
                 'created_at',
                 'created_by',
             )
@@ -96,7 +113,7 @@ class BoardingHouseController extends Controller
         // Tin nháp không giới hạn số lượng
 
         try {
-            $tags = $request->filled('tags') ? array_map(fn($item) => $item->value, json_decode($request->tags)) : [];
+            $tags = $request->filled('tags') ? array_map(fn ($item) => $item->value, json_decode($request->tags)) : [];
             $content = trim($request->input('content'));
             $optimizedContent = $this->optimizeContentWithAI($content);
             $optimizedTags = $this->generateTagsWithAI($content, $tags);
@@ -109,9 +126,10 @@ class BoardingHouseController extends Controller
 
             return $this->responseSuccess($isPublish ? 'Đăng tin thành công!' : 'Lưu nháp thành công!');
         } catch (\Exception $ex) {
-            Log::error('Error creating boarding house: ' . $ex->getMessage(), [
-                'trace' => $ex->getTraceAsString()
+            Log::error('Error creating boarding house: '.$ex->getMessage(), [
+                'trace' => $ex->getTraceAsString(),
             ]);
+
             return $this->responseError('Có lỗi xảy ra khi tạo nhà trọ. Vui lòng thử lại.');
         }
     }
@@ -121,16 +139,18 @@ class BoardingHouseController extends Controller
      */
     private function optimizeContentWithAI(string $content): ?string
     {
-        if(! auth()->user()->is_admin || auth()->user()->plan_current === 'free') {
+        if (! auth()->user()->is_admin || auth()->user()->plan_current === 'free') {
             return $content;
         }
 
         try {
-            $message = $content . "\n Hãy viết lại cái mô tả trên sao cho seo được điểm tốt. Lưu ý không viết kiểu markdown. Dùng các thẻ của HTML để biểu diễn các xuống dòng hay icon chẳng hạn. Có thể dùng emoji cho sinh động cũng được";
+            $message = $content."\n Hãy viết lại cái mô tả trên sao cho seo được điểm tốt. Lưu ý không viết kiểu markdown. Dùng các thẻ của HTML để biểu diễn các xuống dòng hay icon chẳng hạn. Có thể dùng emoji cho sinh động cũng được";
             $response = $this->chatGptUtils->sendMessageUsingChat($message);
+
             return $response?->choices[0]?->message?->content ?? $content;
         } catch (\Exception $e) {
-            Log::warning('AI content optimization failed: ' . $e->getMessage());
+            Log::warning('AI content optimization failed: '.$e->getMessage());
+
             return $content;
         }
     }
@@ -140,23 +160,24 @@ class BoardingHouseController extends Controller
      */
     private function generateTagsWithAI(string $content, array $defaultTags): string
     {
-        if(! auth()->user()->is_admin || auth()->user()->plan_current === 'free') {
+        if (! auth()->user()->is_admin || auth()->user()->plan_current === 'free') {
             return implode(', ', $defaultTags);
         }
 
         try {
-            $message = $content . "\n Hãy tạo ra những keywords hiệu quả cho bài viết này giúp tôi, những từ khoá liên quan cũng được. Response chỉ trả lời kết quả không cần giải thích";
+            $message = $content."\n Hãy tạo ra những keywords hiệu quả cho bài viết này giúp tôi, những từ khoá liên quan cũng được. Response chỉ trả lời kết quả không cần giải thích";
             $response = $this->chatGptUtils->sendMessageUsingChat($message);
-            
+
             if ($response) {
                 $tags = $response?->choices[0]?->message?->content;
-                $tags = str_replace(["\n", "-"], [", ", ""], $tags);
+                $tags = str_replace(["\n", '-'], [', ', ''], $tags);
+
                 return $tags;
             }
         } catch (\Exception $e) {
-            Log::warning('AI tags generation failed: ' . $e->getMessage());
+            Log::warning('AI tags generation failed: '.$e->getMessage());
         }
-        
+
         return implode(', ', $defaultTags);
     }
 
@@ -165,28 +186,28 @@ class BoardingHouseController extends Controller
      */
     private function createBoardingHouse($request, $content, $tags, bool $isPublish = false): BoardingHouse
     {
-        $boardingHouse = new BoardingHouse();
-        $boardingHouse->title            = trim($request->input('title'));
-        $boardingHouse->category         = $request->input('category');
-        $boardingHouse->description      = trim($request->input('description') ?: $request->input('title'));
-        $boardingHouse->content          = $content;
-        $boardingHouse->district         = $request->input('district');
-        $boardingHouse->ward             = $request->input('ward');
-        $boardingHouse->address          = trim($request->input('address'));
-        $boardingHouse->map_link         = $request->filled('map_link') ? trim($request->input('map_link')) : null;
-        $boardingHouse->phone            = trim($request->input('phone'));
-        $boardingHouse->meta_title       = $request->filled('meta_title') ? trim($request->input('meta_title')) : null;
+        $boardingHouse = new BoardingHouse;
+        $boardingHouse->title = trim($request->input('title'));
+        $boardingHouse->category = $request->input('category');
+        $boardingHouse->description = trim($request->input('description') ?: $request->input('title'));
+        $boardingHouse->content = $content;
+        $boardingHouse->district = $request->input('district');
+        $boardingHouse->ward = $request->input('ward');
+        $boardingHouse->address = trim($request->input('address'));
+        $boardingHouse->map_link = $request->filled('map_link') ? trim($request->input('map_link')) : null;
+        $boardingHouse->phone = trim($request->input('phone'));
+        $boardingHouse->meta_title = $request->filled('meta_title') ? trim($request->input('meta_title')) : null;
         $boardingHouse->meta_description = $request->filled('meta_description') ? trim($request->input('meta_description')) : null;
-        $boardingHouse->canonical_url     = $request->filled('canonical_url') ? trim($request->input('canonical_url')) : null;
-        $boardingHouse->price            = numberRemoveComma($request->input('price'));
-        $boardingHouse->require_deposit  = $request->has('require_deposit') && $request->input('require_deposit') === 'on';
-        $boardingHouse->deposit_amount    = $request->filled('deposit_amount') ? numberRemoveComma($request->input('deposit_amount')) : null;
-        $boardingHouse->min_contract_months = $request->filled('min_contract_months') ? (int)$request->input('min_contract_months') : null;
-        $boardingHouse->area              = $request->filled('area') ? (int)$request->input('area') : null;
-        $boardingHouse->status           = $request->input('status');
+        $boardingHouse->canonical_url = $request->filled('canonical_url') ? trim($request->input('canonical_url')) : null;
+        $boardingHouse->price = numberRemoveComma($request->input('price'));
+        $boardingHouse->require_deposit = $request->has('require_deposit') && $request->input('require_deposit') === 'on';
+        $boardingHouse->deposit_amount = $request->filled('deposit_amount') ? numberRemoveComma($request->input('deposit_amount')) : null;
+        $boardingHouse->min_contract_months = $request->filled('min_contract_months') ? (int) $request->input('min_contract_months') : null;
+        $boardingHouse->area = $request->filled('area') ? (int) $request->input('area') : null;
+        $boardingHouse->status = $request->input('status');
         $boardingHouse->furniture_status = $request->input('furniture_status');
-        $boardingHouse->is_publish       = $isPublish;
-        $boardingHouse->tags             = $tags;
+        $boardingHouse->is_publish = $isPublish;
+        $boardingHouse->tags = $tags;
         $boardingHouse->save();
 
         return $boardingHouse;
@@ -200,10 +221,10 @@ class BoardingHouseController extends Controller
         foreach ($request->file('files', []) as $file) {
             $resourceType = explode('/', $file->getMimeType())[0];
             $uploadedFile = cloudinary()->upload($file->getRealPath(), [
-                'resource_type' => $resourceType
+                'resource_type' => $resourceType,
             ]);
 
-            $boardingHouseFile = new BoardingHouseFile();
+            $boardingHouseFile = new BoardingHouseFile;
             $boardingHouseFile->boarding_house_id = $boardingHouseId;
             $boardingHouseFile->type = $uploadedFile->getFileType();
             $boardingHouseFile->public_id = $uploadedFile->getPublicId();
@@ -241,40 +262,41 @@ class BoardingHouseController extends Controller
         $wantPublish = $request->has('is_publish') && $request->input('is_publish') === 'on';
 
         try {
-            $tags = $request->filled('tags') ? array_map(fn($item) => $item->value, json_decode($request->tags)) : [];
+            $tags = $request->filled('tags') ? array_map(fn ($item) => $item->value, json_decode($request->tags)) : [];
 
             DB::transaction(function () use ($request, $boardingHouse, $tags, $wantPublish) {
-                $boardingHouse->title            = trim($request->input('title'));
-                $boardingHouse->category         = $request->input('category');
-                $boardingHouse->description      = trim($request->input('description') ?: $request->input('title'));
-                $boardingHouse->content          = trim($request->input('content'));
-                $boardingHouse->district         = $request->input('district');
-                $boardingHouse->ward             = $request->input('ward');
-                $boardingHouse->address          = trim($request->input('address'));
-                $boardingHouse->map_link         = $request->filled('map_link') ? trim($request->input('map_link')) : null;
-                $boardingHouse->phone            = trim($request->input('phone'));
-                $boardingHouse->meta_title       = $request->filled('meta_title') ? trim($request->input('meta_title')) : null;
+                $boardingHouse->title = trim($request->input('title'));
+                $boardingHouse->category = $request->input('category');
+                $boardingHouse->description = trim($request->input('description') ?: $request->input('title'));
+                $boardingHouse->content = trim($request->input('content'));
+                $boardingHouse->district = $request->input('district');
+                $boardingHouse->ward = $request->input('ward');
+                $boardingHouse->address = trim($request->input('address'));
+                $boardingHouse->map_link = $request->filled('map_link') ? trim($request->input('map_link')) : null;
+                $boardingHouse->phone = trim($request->input('phone'));
+                $boardingHouse->meta_title = $request->filled('meta_title') ? trim($request->input('meta_title')) : null;
                 $boardingHouse->meta_description = $request->filled('meta_description') ? trim($request->input('meta_description')) : null;
-                $boardingHouse->canonical_url     = $request->filled('canonical_url') ? trim($request->input('canonical_url')) : null;
-                $boardingHouse->price            = numberRemoveComma($request->input('price'));
-                $boardingHouse->require_deposit  = $request->has('require_deposit') && $request->input('require_deposit') === 'on';
-                $boardingHouse->deposit_amount    = $request->filled('deposit_amount') ? numberRemoveComma($request->input('deposit_amount')) : null;
-                $boardingHouse->min_contract_months = $request->filled('min_contract_months') ? (int)$request->input('min_contract_months') : null;
-                $boardingHouse->area              = $request->filled('area') ? (int)$request->input('area') : null;
-                $boardingHouse->status           = $request->input('status');
+                $boardingHouse->canonical_url = $request->filled('canonical_url') ? trim($request->input('canonical_url')) : null;
+                $boardingHouse->price = numberRemoveComma($request->input('price'));
+                $boardingHouse->require_deposit = $request->has('require_deposit') && $request->input('require_deposit') === 'on';
+                $boardingHouse->deposit_amount = $request->filled('deposit_amount') ? numberRemoveComma($request->input('deposit_amount')) : null;
+                $boardingHouse->min_contract_months = $request->filled('min_contract_months') ? (int) $request->input('min_contract_months') : null;
+                $boardingHouse->area = $request->filled('area') ? (int) $request->input('area') : null;
+                $boardingHouse->status = $request->input('status');
                 $boardingHouse->furniture_status = $request->input('furniture_status');
-                $boardingHouse->tags             = implode(', ', $tags);
-                $boardingHouse->is_publish       = $wantPublish;
+                $boardingHouse->tags = implode(', ', $tags);
+                $boardingHouse->is_publish = $wantPublish;
                 $boardingHouse->save();
                 $this->uploadFiles($request, $boardingHouse->id);
             });
 
             return $this->responseSuccess('Chỉnh sửa thành công!');
         } catch (\Exception $ex) {
-            Log::error('Error updating boarding house: ' . $ex->getMessage(), [
+            Log::error('Error updating boarding house: '.$ex->getMessage(), [
                 'id' => $id,
-                'trace' => $ex->getTraceAsString()
+                'trace' => $ex->getTraceAsString(),
             ]);
+
             return $this->responseError('Có lỗi xảy ra khi cập nhật. Vui lòng thử lại.');
         }
     }
@@ -314,15 +336,21 @@ class BoardingHouseController extends Controller
                 $serviceName,
                 $pointsCost,
                 $boardingHouse,
-                'Đẩy tin lên top: ' . $boardingHouse->title,
+                'Đẩy tin lên top: '.$boardingHouse->title,
                 ['listing_days' => $listingDays]
             );
         } catch (\Exception $e) {
-            Log::error('Push listing failed: ' . $e->getMessage());
+            Log::error('Push listing failed: '.$e->getMessage());
+            discord_log('Push listing failed', [
+                'boarding_house_id' => $id,
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage(),
+            ], 'ERROR');
+
             return $this->responseError($e->getMessage());
         }
 
-        return $this->responseSuccess('Đã đẩy tin lên đầu danh sách trong ' . $listingDays . ' ngày!');
+        return $this->responseSuccess('Đã đẩy tin lên đầu danh sách trong '.$listingDays.' ngày!');
     }
 
     /**
@@ -354,7 +382,7 @@ class BoardingHouseController extends Controller
     {
         $boardingHouse = BoardingHouse::find($id);
 
-        if (!$boardingHouse) {
+        if (! $boardingHouse) {
             return $this->responseError('Dữ liệu không tồn tại hoặc đã bị xoá!');
         }
 
@@ -369,7 +397,7 @@ class BoardingHouseController extends Controller
                     try {
                         cloudinary()->destroy($file->public_id);
                     } catch (\Exception $e) {
-                        Log::warning('Failed to delete file from Cloudinary: ' . $file->public_id);
+                        Log::warning('Failed to delete file from Cloudinary: '.$file->public_id);
                     }
                 }
 
@@ -378,10 +406,11 @@ class BoardingHouseController extends Controller
                 $boardingHouse->delete();
             });
         } catch (\Exception $ex) {
-            Log::error('Error deleting boarding house: ' . $ex->getMessage(), [
+            Log::error('Error deleting boarding house: '.$ex->getMessage(), [
                 'id' => $id,
-                'trace' => $ex->getTraceAsString()
+                'trace' => $ex->getTraceAsString(),
             ]);
+
             return $this->responseError('Có lỗi xảy ra khi xóa. Vui lòng thử lại.');
         }
 
@@ -396,15 +425,15 @@ class BoardingHouseController extends Controller
     public function storeAppointment(StoreAppointmentRequest $request, $id)
     {
         $boardingHouse = BoardingHouse::find($id);
-        
-        if (!$boardingHouse) {
+
+        if (! $boardingHouse) {
             return $this->responseError('Dữ liệu không tồn tại hoặc đã bị xoá!');
         }
 
         try {
             DB::transaction(function () use ($request, $boardingHouse, $id) {
                 // Create appointment
-                $appointment = new Appointment();
+                $appointment = new Appointment;
                 $appointment->customer_name = trim($request->input('customer_name'));
                 $appointment->phone = trim($request->input('phone'));
                 $appointment->total_person = $request->input('total_person');
@@ -420,10 +449,11 @@ class BoardingHouseController extends Controller
                 $this->sendAppointmentNotification($appointment, $boardingHouse);
             });
         } catch (\Exception $ex) {
-            Log::error('Error creating appointment: ' . $ex->getMessage(), [
+            Log::error('Error creating appointment: '.$ex->getMessage(), [
                 'boarding_house_id' => $id,
-                'trace' => $ex->getTraceAsString()
+                'trace' => $ex->getTraceAsString(),
             ]);
+
             return $this->responseError('Có lỗi xảy ra khi tạo cuộc hẹn. Vui lòng thử lại.');
         }
 
@@ -436,21 +466,21 @@ class BoardingHouseController extends Controller
     private function sendAppointmentNotification(Appointment $appointment, BoardingHouse $boardingHouse): void
     {
         try {
-            $message = "CUỘC HẸN XEM PHÒNG VỪA ĐƯỢC TẠO" . PHP_EOL . PHP_EOL
-                . "- Ngày giờ hẹn xem phòng: " . date('d/m/Y H:i', strtotime($appointment->appointment_at)) . PHP_EOL
-                . "- Họ tên khách: {$appointment->customer_name}" . PHP_EOL
-                . "- SĐT/Zalo: {$appointment->phone}" . PHP_EOL
-                . "- Tổng người ở: {$appointment->total_person}" . PHP_EOL
-                . "- Tổng xe: {$appointment->total_bike}" . PHP_EOL
-                . "- Ngày chuyển vào dự kiến: " . ($appointment->move_in_date ? date('d/m/Y', strtotime($appointment->move_in_date)) : 'Không rõ') . PHP_EOL
-                . "- Địa chỉ: {$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHouse->district}" . PHP_EOL
-                . "- Post: {$boardingHouse->title}" . PHP_EOL
-                . "- ID Post: {$boardingHouse->id}" . PHP_EOL
-                . "- Ghi chú: {$appointment->note}" . PHP_EOL;
+            $message = 'CUỘC HẸN XEM PHÒNG VỪA ĐƯỢC TẠO'.PHP_EOL.PHP_EOL
+                .'- Ngày giờ hẹn xem phòng: '.date('d/m/Y H:i', strtotime($appointment->appointment_at)).PHP_EOL
+                ."- Họ tên khách: {$appointment->customer_name}".PHP_EOL
+                ."- SĐT/Zalo: {$appointment->phone}".PHP_EOL
+                ."- Tổng người ở: {$appointment->total_person}".PHP_EOL
+                ."- Tổng xe: {$appointment->total_bike}".PHP_EOL
+                .'- Ngày chuyển vào dự kiến: '.($appointment->move_in_date ? date('d/m/Y', strtotime($appointment->move_in_date)) : 'Không rõ').PHP_EOL
+                ."- Địa chỉ: {$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHouse->district}".PHP_EOL
+                ."- Post: {$boardingHouse->title}".PHP_EOL
+                ."- ID Post: {$boardingHouse->id}".PHP_EOL
+                ."- Ghi chú: {$appointment->note}".PHP_EOL;
 
             $this->telegramService->sendMessage($message);
         } catch (\Exception $e) {
-            Log::warning('Failed to send Telegram notification: ' . $e->getMessage());
+            Log::warning('Failed to send Telegram notification: '.$e->getMessage());
         }
     }
 }

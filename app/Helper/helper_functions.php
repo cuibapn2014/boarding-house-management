@@ -16,7 +16,9 @@ function numberFormatVi(int $input)
 
 function convertDateWithFormat(?string $input, string $formatInput, string $formatOutput = 'Y-m-d')
 {
-    if (!$input || trim($input) === '') return null;
+    if (! $input || trim($input) === '') {
+        return null;
+    }
 
     $date = \Carbon\Carbon::createFromFormat($formatInput, $input);
 
@@ -26,6 +28,7 @@ function convertDateWithFormat(?string $input, string $formatInput, string $form
 function getLinkPreview($id, $title)
 {
     $title = Str::slug($title);
+
     return "https://nhatrototsaigon.com/danh-sach-cho-thue/{$id}/{$title}";
 }
 
@@ -44,8 +47,9 @@ function getOptimizedThumbnailUrl(?string $url, int $width = 400, int $height = 
     // Cloudinary: chèn transformation sau /upload/ -> /upload/c_fill,w_400,h_300,f_auto,q_auto/
     $transform = "c_fill,w_{$width},h_{$height},f_auto,q_auto";
     if (preg_match('#(.*/upload/)(.*)#', $url, $m)) {
-        return $m[1] . $transform . '/' . $m[2];
+        return $m[1].$transform.'/'.$m[2];
     }
+
     return $url;
 }
 
@@ -58,7 +62,7 @@ function generatePaymentButton($amount, $description, $paymentCode = null)
     $sepay = new SePayClient($sepayMerchantId, $sepayMerchantSecret, $env);
 
     // Sử dụng payment_code nếu có, nếu không thì tạo mã tự động
-    $invoiceNumber = $paymentCode ? $paymentCode : ('INV-' . time());
+    $invoiceNumber = $paymentCode ? $paymentCode : ('INV-'.time());
 
     // Tạo dữ liệu đơn hàng
     $checkoutData = CheckoutBuilder::make()
@@ -73,4 +77,20 @@ function generatePaymentButton($amount, $description, $paymentCode = null)
 
     // Hiển thị form checkout ra giao diện
     return $sepay->checkout()->generateFormHtml($checkoutData);
+}
+
+/**
+ * Gửi thông báo nhanh tới Discord (Incoming Webhook). Cần DISCORD_WEBHOOK_URL trong .env.
+ */
+function discord_log(string $message, array $context = [], string $level = 'INFO'): void
+{
+    if (! config('discord.webhook_url')) {
+        return;
+    }
+
+    try {
+        app(\App\Services\DiscordLogService::class)->notify($message, $context, strtoupper($level));
+    } catch (\Throwable) {
+        //
+    }
 }

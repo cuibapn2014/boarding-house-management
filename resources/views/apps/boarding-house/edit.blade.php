@@ -429,6 +429,15 @@
                         @if($boardingHouse->is_publish && $boardingHouse->pushed_at)
                         <div class="mb-4 p-3 rounded bg-light border">
                             <p class="text-muted small mb-1"><i class="fas fa-arrow-up text-warning me-1"></i> Tin đã đẩy top lúc {{ $boardingHouse->pushed_at->format('d/m/Y H:i') }}</p>
+                            @if($boardingHouse->expires_at)
+                            <p class="text-muted small mb-1">Hết hạn đẩy top: <strong>{{ $boardingHouse->expires_at->format('d/m/Y H:i') }}</strong></p>
+                            @endif
+                            @if($boardingHouse->isPushExpiringSoon())
+                            <div class="alert alert-warning text-dark small mb-2 py-2" role="alert">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                Gói đẩy top sắp hết hạn. Sau khi hết hạn tin sẽ không còn ưu tiên; bạn có thể đẩy lại (nếu hệ thống cho phép) hoặc liên hệ admin.
+                            </div>
+                            @endif
                             <p class="text-muted small mb-0"><strong>Không thể hoàn thao tác đẩy top.</strong> Liên hệ admin để được hỗ trợ.</p>
                         </div>
                         @elseif($boardingHouse->is_publish && !$boardingHouse->pushed_at)

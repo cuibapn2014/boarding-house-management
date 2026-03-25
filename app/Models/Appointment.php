@@ -12,12 +12,17 @@ class Appointment extends Model
 
     protected $table = 'appointments';
 
-    public function boarding_house() 
+    protected $casts = [
+        'appointment_at' => 'datetime',
+        'move_in_date' => 'date',
+    ];
+
+    public function boarding_house()
     {
         return $this->belongsTo(\App\Models\BoardingHouse::class, 'boarding_house_id', 'id');
     }
 
-    public function payment() 
+    public function payment()
     {
         return $this->belongsTo(\App\Models\Payment::class, 'payment_id', 'id');
     }

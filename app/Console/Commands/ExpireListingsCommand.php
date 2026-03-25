@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\BoardingHouse;
-use Illuminate\Console\Command;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class ExpireListingsCommand extends Command
 {
@@ -25,6 +25,7 @@ class ExpireListingsCommand extends Command
 
         if ($count > 0) {
             $this->info("Đã xóa trạng thái đẩy top hết hạn cho {$count} tin.");
+            discord_log('listings:expire — đã gỡ đẩy top hết hạn', ['count' => $count], 'INFO');
         }
 
         return self::SUCCESS;
