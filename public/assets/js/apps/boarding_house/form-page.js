@@ -1,5 +1,7 @@
 "use strict";
 
+const BOARDING_HOUSE_CONTENT_MAX_LENGTH = 255;
+
 // For Create/Edit Page (not modal)
 const BoardingHouseFormPage = {
     
@@ -455,6 +457,15 @@ const BoardingHouseFormPage = {
         // Get content safely
         const content = this.getEditorContent();
         if(content !== null) {
+            if (content.length > BOARDING_HOUSE_CONTENT_MAX_LENGTH) {
+                const contentField = form.find('#content');
+                contentField.addClass('is-invalid');
+                contentField.after(`<div class="invalid-feedback d-block input-error-message">Nội dung chi tiết không được vượt quá ${BOARDING_HOUSE_CONTENT_MAX_LENGTH} ký tự</div>`);
+                if(typeof GlobalHelper !== 'undefined') {
+                    GlobalHelper.toastError('Nội dung chi tiết đang vượt quá giới hạn ký tự.');
+                }
+                return;
+            }
             formData.set('content', content);
         }
         

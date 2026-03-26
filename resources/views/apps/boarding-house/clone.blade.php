@@ -196,7 +196,7 @@
                                     <i class="fas fa-file-alt me-1"></i>Nội dung chi tiết
                                 </label>
                                 <textarea id="content" name="content" class="form-control tiny-editor" 
-                                    placeholder="Mô tả chi tiết về phòng trọ, tiện ích, quy định...">{!! $boardingHouse->content !!}</textarea>
+                                    placeholder="Mô tả chi tiết về phòng trọ, tiện ích, quy định..." maxlength="255">{!! $boardingHouse->content !!}</textarea>
                             </div>
 
                             {{-- Ẩn phần nhập SEO khi sao chép --}}
@@ -288,20 +288,20 @@
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Địa chỉ cụ thể <span class="text-danger">*</span></label>
                                 <input id="address" name="address" class="form-control" type="text" 
-                                    placeholder="Số nhà, tên đường..." value="{{ $boardingHouse->address }}">
+                                    placeholder="Số nhà, tên đường..." value="{{ $boardingHouse->address }}" maxlength="50">
                             </div>
 
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Link bản đồ (Google Maps)</label>
                                 <input id="map_link" name="map_link" class="form-control" type="url" 
-                                    placeholder="https://maps.google.com/..." value="{{ $boardingHouse->map_link ?? '' }}">
+                                    placeholder="https://maps.google.com/..." value="{{ $boardingHouse->map_link ?? '' }}" maxlength="255">
                                 <small class="text-muted">Dán link Google Maps để hiển thị vị trí trên bản đồ (tùy chọn)</small>
                             </div>
 
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Số điện thoại/Zalo <span class="text-danger">*</span></label>
                                 <input id="phone" name="phone" class="form-control" type="text" 
-                                    placeholder="Nhập số điện thoại liên hệ" value="{{ $boardingHouse->phone ?? auth()->user()?->phone }}">
+                                    placeholder="Nhập số điện thoại liên hệ" value="{{ $boardingHouse->phone ?? auth()->user()?->phone }}" maxlength="10">
                             </div>
                         </div>
                     </div>

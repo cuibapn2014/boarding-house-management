@@ -73,12 +73,13 @@ class StoreBoardingHouseRequest extends FormRequest
                 }
             }],
             'phone' => 'nullable|digits:10',
-            'map_link' => 'nullable|url|max:500',
+            'map_link' => 'nullable|url|max:255',
             'meta_title' => 'nullable|string|max:70',
             'meta_description' => 'nullable|string|max:320',
             'canonical_url' => 'nullable|url|max:500',
-            'district' => 'required',
-            'ward' => 'required',
+            'district' => 'required|string|max:50',
+            'ward' => 'required|string|max:50',
+            'address' => 'required|string|max:255',
             'category' => 'required|in:'.$category,
             'require_deposit' => 'nullable',
             'deposit_amount' => [
@@ -177,8 +178,13 @@ class StoreBoardingHouseRequest extends FormRequest
             'map_link.max' => 'Link bản đồ không được vượt quá :max ký tự',
 
             'district.required' => 'Vui lòng chọn quận/huyện',
+            'district.max' => 'Quận/Huyện không được vượt quá :max ký tự',
 
             'ward.required' => 'Vui lòng chọn phường/xã',
+            'ward.max' => 'Phường/Xã không được vượt quá :max ký tự',
+
+            'address.required' => 'Vui lòng nhập địa chỉ cụ thể',
+            'address.max' => 'Địa chỉ cụ thể không được vượt quá :max ký tự',
 
             'category.required' => 'Vui lòng chọn danh mục',
             'category.in' => 'Danh mục được chọn không hợp lệ',

@@ -288,7 +288,7 @@
                                     <i class="fas fa-file-alt me-1"></i>Nội dung chi tiết
                                 </label>
                                 <textarea id="content" name="content" class="form-control tiny-editor" 
-                                    placeholder="Mô tả chi tiết về phòng trọ, tiện ích, quy định..."></textarea>
+                                    placeholder="Mô tả chi tiết về phòng trọ, tiện ích, quy định..." maxlength="255"></textarea>
                             </div>
 
                             {{-- Ẩn phần nhập SEO khi tạo tin --}}
@@ -378,20 +378,20 @@
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Địa chỉ cụ thể <span class="text-danger">*</span></label>
                                 <input id="address" name="address" class="form-control" type="text" data-quick-required="address"
-                                    placeholder="Số nhà, tên đường...">
+                                    placeholder="Số nhà, tên đường..." maxlength="50">
                             </div>
 
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Link bản đồ (Google Maps)</label>
                                 <input id="map_link" name="map_link" class="form-control" type="url" 
-                                    placeholder="https://maps.google.com/...">
+                                    placeholder="https://maps.google.com/..." maxlength="255">
                                 <small class="text-muted">Dán link Google Maps để hiển thị vị trí trên bản đồ (tùy chọn)</small>
                             </div>
 
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Số điện thoại/Zalo <span class="text-danger">*</span></label>
                                 <input id="phone" name="phone" class="form-control" type="text" data-quick-required="phone" 
-                                    placeholder="Nhập số điện thoại liên hệ" value="{{ auth()->user()?->phone }}">
+                                    placeholder="Nhập số điện thoại liên hệ" value="{{ auth()->user()?->phone }}" maxlength="10">
                             </div>
                         </div>
                     </div>
