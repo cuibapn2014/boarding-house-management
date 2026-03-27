@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BoardingHouse;
+use App\Support\ListingCache;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -24,6 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $ttlSeconds = (int) config('cache.listing_ttl_seconds', 300);
         $nearlyCentreList = [
             'Quận 1',
             'Quận 2',
@@ -34,45 +36,49 @@ class HomeController extends Controller
             'Quận Bình Thạnh'
         ];
 
-        $latestPosts = BoardingHouse::with(['boarding_house_files:boarding_house_id,url'])
-                                    ->published()
-                                    ->select(
-                                        'id',
-                                        'title',
-                                        'description',
-                                        'category',
-                                        'address',
-                                        'district',
-                                        'ward',
-                                        'price',
-                                        'status',
-                                        'area',
-                                        'created_at',
-                                        'created_by'
-                                    )
-                                    ->orderByDesc('id')
-                                    ->limit(20)
-                                    ->get();
+        $latestPosts = ListingCache::remember('home:latest-posts', $ttlSeconds, function () {
+            return BoardingHouse::with(['boarding_house_files:boarding_house_id,url'])
+                ->published()
+                ->select(
+                    'boarding_houses.id',
+                    'boarding_houses.title',
+                    'boarding_houses.description',
+                    'boarding_houses.category',
+                    'boarding_houses.address',
+                    'boarding_houses.district',
+                    'boarding_houses.ward',
+                    'boarding_houses.price',
+                    'boarding_houses.status',
+                    'boarding_houses.area',
+                    'boarding_houses.created_at',
+                    'boarding_houses.created_by'
+                )
+                ->orderByListingPriority('newest')
+                ->limit(20)
+                ->get();
+        });
 
-        $nearlyCentreCity = BoardingHouse::with(['boarding_house_files:boarding_house_id,url'])
-                                        ->published()
-                                        ->select(
-                                            'id',
-                                            'title',
-                                            'category',
-                                            'district',
-                                            'ward',
-                                            'price',
-                                            'status',
-                                            'area',
-                                            'created_at',
-                                            'created_by'
-                                        )
-                                        ->orderByDesc('id')
-                                        ->whereIn('district', $nearlyCentreList)
-                                        ->limit(10)
-                                        ->get();
+        $nearlyCentreCity = ListingCache::remember('home:nearly-centre-city', $ttlSeconds, function () use ($nearlyCentreList) {
+            return BoardingHouse::with(['boarding_house_files:boarding_house_id,url'])
+                ->published()
+                ->select(
+                    'boarding_houses.id',
+                    'boarding_houses.title',
+                    'boarding_houses.category',
+                    'boarding_houses.district',
+                    'boarding_houses.ward',
+                    'boarding_houses.price',
+                    'boarding_houses.status',
+                    'boarding_houses.area',
+                    'boarding_houses.created_at',
+                    'boarding_houses.created_by'
+                )
+                ->whereIn('district', $nearlyCentreList)
+                ->orderByListingPriority('newest')
+                ->limit(10)
+                ->get();
+        });
 
-        return view('apps.home', compact('latestPosts', 'nearlyCentreList'));
+        return view('apps.home', compact('latestPosts', 'nearlyCentreList', 'nearlyCentreCity'));
     }
 }

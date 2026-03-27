@@ -108,4 +108,14 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Listing Cache TTL
+    |--------------------------------------------------------------------------
+    |
+    | Time to live for cached list queries (in seconds).
+    |
+    */
+    'listing_ttl_seconds' => (int) env('LISTING_CACHE_TTL_SECONDS', 300),
+
 ];

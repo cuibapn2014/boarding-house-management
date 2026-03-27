@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Trait\CommonTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -81,6 +82,39 @@ class BoardingHouse extends Model
 
     public function scopePublished($query)
     {
-        return $query->where('is_publish', true);
+        return $query->where('boarding_houses.is_publish', true);
+    }
+
+    public function scopeOrderByListingPriority(Builder $query, ?string $sort = null): Builder
+    {
+        $query->leftJoin('users as listing_users', 'listing_users.id', '=', 'boarding_houses.created_by')
+            ->orderByRaw(
+                "CASE
+                    WHEN boarding_houses.pushed_at IS NOT NULL
+                     AND (boarding_houses.expires_at IS NULL OR boarding_houses.expires_at > ?) THEN 0
+                    WHEN listing_users.plan_current = 'premium' AND listing_users.status = 'active' THEN 1
+                    ELSE 2
+                END",
+                [now()]
+            )
+            ->orderByDesc('boarding_houses.pushed_at');
+
+        switch ($sort) {
+            case 'oldest':
+                $query->orderBy('boarding_houses.id', 'asc');
+                break;
+            case 'price_low':
+                $query->orderBy('boarding_houses.price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('boarding_houses.price', 'desc');
+                break;
+            case 'newest':
+            default:
+                $query->orderByDesc('boarding_houses.id');
+                break;
+        }
+
+        return $query;
     }
 }
