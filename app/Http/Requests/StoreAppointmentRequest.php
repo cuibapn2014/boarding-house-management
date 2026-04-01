@@ -54,7 +54,7 @@ class StoreAppointmentRequest extends FormRequest
             'string'            => 'Định dạng không hợp lệ',
             'gte'               => 'Giá trị phải >= :value',
             'note.max'          => ':attribute tối đa :max ký tự',
-            'appointment.after' => 'Ngày hẹn phải sau hiện tại'
+            'appointment_at.after' => 'Ngày hẹn phải sau hiện tại'
         ];
     }
 
