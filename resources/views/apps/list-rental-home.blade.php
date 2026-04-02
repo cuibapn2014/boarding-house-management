@@ -5,6 +5,7 @@
     'Danh Sách Cho Thuê - Nhà Trọ Tốt Sài Gòn' .
     ($boardingHouses->currentPage() > 1 ? ' - Trang ' . $boardingHouses->currentPage() : '')
 )
+@section('meta_description', 'Danh sách phòng trọ, căn hộ và nhà cho thuê tại TP.HCM theo khu vực, mức giá và nhu cầu thực tế. Lọc nhanh, xem tin mới và liên hệ chính chủ dễ dàng.')
 
 @push('css')
 {{-- Preload critical resources --}}
@@ -155,6 +156,31 @@
         filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
         animation: partnerBadgeShine 2s ease-in-out infinite;
     }
+
+    .listing-price-row {
+        display: flex;
+        align-items: baseline;
+        gap: 0.45rem;
+        flex-wrap: nowrap;
+        overflow: hidden;
+    }
+
+    .listing-price-main,
+    .listing-price-per {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .listing-price-row .partner-badge-compact {
+        flex-shrink: 0;
+    }
+
+    .listing-category-badge {
+        max-width: 70%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
     
     @keyframes partnerBadgeShine {
         0%, 100% {
@@ -173,6 +199,30 @@
         box-shadow: 0 3px 10px rgba(255, 215, 0, 0.5), 
                     0 2px 6px rgba(255, 140, 0, 0.4),
                     inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    .pushed-top-badge {
+        min-width: 30px;
+        height: 22px;
+        padding: 0 7px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+        color: #fff;
+        box-shadow: 0 2px 10px rgba(255, 87, 34, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        z-index: 3;
+    }
+
+    .pushed-top-badge i {
+        font-size: 0.65rem;
+    }
+
+    .pushed-top-badge.stacked-under-category {
+        top: 34px !important;
+        left: 8px !important;
     }
     
     /* Save Button Enhancement */
@@ -576,10 +626,19 @@
             font-size: 1rem !important;
             margin-bottom: 0.25rem !important;
         }
+
+        .listing-price-row {
+            gap: 0.3rem;
+        }
         
         .text-success.fs-4 + span,
         .text-success.fs-4 .text-muted {
             font-size: 0.75rem !important;
+        }
+
+        .listing-price-row .partner-badge-compact {
+            font-size: 0.55rem !important;
+            padding: 0.18rem 0.35rem !important;
         }
         
         address {
@@ -605,6 +664,14 @@
         
         .list-home .card .bg-success i {
             display: none;
+        }
+
+        .pushed-top-badge.stacked-under-category {
+            top: 26px !important;
+            left: 6px !important;
+            min-width: 26px;
+            height: 20px;
+            padding: 0 6px;
         }
         
         /* Save Button */
@@ -1146,12 +1213,18 @@ $currentFilters = array_filter([
                     <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" 
                        class="text-decoration-none"
                        aria-label="Xem chi tiết {{ $boardingHouse->title }}">
+                        @php
+                            $isPushedTop = !empty($boardingHouse->pushed_at) && (empty($boardingHouse->expires_at) || strtotime($boardingHouse->expires_at) > time());
+                        @endphp
                         <div class="card rounded mb-3 d-flex flex-md-nowrap flex-md-row overflow-hidden position-relative text-dark shadow-sm">
                             <div class="position-relative" style="flex-shrink: 0;">
                                 <picture>
+                                    <source media="(max-width: 768px)" srcset="{{ resizeImageCloudinary($boardingHouse->thumbnail, 300, 263, 'webp') }}" type="image/webp">
                                     <source srcset="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350, 'webp') }}" type="image/webp">
                                     <img class="item-img skeleton" 
-                                         src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" 
+                                         src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}"
+                                         srcset="{{ resizeImageCloudinary($boardingHouse->thumbnail, 300, 263) }} 300w, {{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }} 400w"
+                                         sizes="(max-width: 768px) 50vw, 400px"
                                          alt="{{ $boardingHouse->title }}" 
                                          loading="{{ $index < 6 ? 'eager' : 'lazy' }}" 
                                          decoding="async"
@@ -1174,14 +1247,14 @@ $currentFilters = array_filter([
                                     </h3>
                                 </div>
                                 
-                                <div class="text-success fw-bold fs-4 mb-2 d-flex align-items-baseline gap-2 flex-wrap" 
+                                <div class="text-success fw-bold fs-4 mb-2 listing-price-row" 
                                      itemprop="offers" 
                                      itemscope 
                                      itemtype="https://schema.org/Offer">
-                                    <span itemprop="price" content="{{ $boardingHouse->price }}">
+                                    <span class="listing-price-main" itemprop="price" content="{{ $boardingHouse->price }}">
                                         {{ getShortPrice($boardingHouse->price) }}
                                     </span>
-                                    <span class="text-muted" style="font-size: 0.9rem; font-weight: 500;">/tháng</span>
+                                    <span class="listing-price-per text-muted" style="font-size: 0.9rem; font-weight: 500;">/tháng</span>
                                     {{-- Partner Badge (Admin created) - Compact Design --}}
                                     @if($boardingHouse->created_by === 1)
                                     <span class="partner-badge-compact">
@@ -1218,12 +1291,18 @@ $currentFilters = array_filter([
                             </div>
                             
                             {{-- Category Badge --}}
-                            <div class="bg-success position-absolute top-0 start-0 fs-6 text-white px-2 py-1 shadow-sm" 
+                            <div class="bg-success listing-category-badge position-absolute top-0 start-0 fs-6 text-white px-2 py-1 shadow-sm" 
                                  itemprop="category"
                                  style="z-index: 3; border-radius: 0 0 8px 0;">
                                 <i class="fa-solid fa-tag me-1" style="font-size: 0.7rem;"></i>
                                 {{ $categories[$boardingHouse->category] }}
                             </div>
+
+                            @if($isPushedTop)
+                            <span class="pushed-top-badge stacked-under-category position-absolute top-0 start-0" title="Tin được đẩy top" aria-label="Tin được đẩy top">
+                                <i class="fa-solid fa-bolt"></i>
+                            </span>
+                            @endif
 
                             {{-- Save Button --}}
                             <button class="btn btn-link position-absolute top-0 end-0 m-2 p-1 text-white bg-dark bg-opacity-25 rounded-circle" 

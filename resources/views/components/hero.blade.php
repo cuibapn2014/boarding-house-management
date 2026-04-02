@@ -6,8 +6,8 @@
         <link rel="preload" 
               as="image" 
               href="{{ asset('assets/images/hero-background.webp') }}" 
-              imagesrcset="{{ asset('assets/images/hero-bg.webp') }} 575w, {{ asset('assets/images/hero-background.webp') }} 768w"
-              imagesizes="100vw"
+              imagesrcset="{{ asset('assets/images/hero-bg.webp') }} 575w, {{ asset('assets/images/hero-background.webp') }} 1920w"
+              imagesizes="(max-width: 575px) 100vw, 100vw"
               fetchpriority="high">
         @endpush
         
@@ -15,15 +15,14 @@
         <img class="w-100 h-100 object-fit-cover"
              src="{{ asset('assets/images/hero-background.webp') }}" 
              srcset="{{ asset('assets/images/hero-bg.webp') }} 575w, 
-                     {{ asset('assets/images/hero-background.webp') }} 768w,
-                     {{ asset('assets/images/hero-background.webp') }} 1200w" 
-             sizes="100vw"
+                    {{ asset('assets/images/hero-background.webp') }} 1920w" 
+             sizes="(max-width: 575px) 100vw, 100vw"
              width="1920"
              height="800"
              alt="Tìm nơi an cư, bắt đầu cuộc sống mới" 
              loading="eager" 
              fetchpriority="high"
-             decoding="sync" />
+             decoding="auto" />
         <div class="hero-overlay position-absolute w-100 h-100 top-0 start-0" style="background-color: rgba(0,0,0,0.3);"></div>
     </div>
 

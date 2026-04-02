@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /register
+Disallow: /password
 Disallow: /cgi-bin/
 Disallow: /storage/
 Disallow: /storage/logs/

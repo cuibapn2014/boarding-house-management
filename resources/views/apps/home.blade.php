@@ -1,5 +1,6 @@
 @extends('master')
 @section('title', 'Cho Thuê Phòng Trọ TPHCM Giá Rẻ | Nhà Trọ Tốt Sài Gòn - Tìm Phòng Uy Tín 2025')
+@section('meta_description', 'Tìm phòng trọ, căn hộ, nhà nguyên căn tại TP.HCM với giá tốt, thông tin rõ ràng và cập nhật liên tục. Khám phá tin cho thuê mới mỗi ngày tại Nhà Trọ Tốt Sài Gòn.')
 
 @push('css')
 {{-- Preload critical resources --}}
@@ -120,6 +121,25 @@
                     0 2px 6px rgba(255, 140, 0, 0.4),
                     inset 0 1px 0 rgba(255, 255, 255, 0.4);
     }
+
+    .pushed-top-badge {
+        min-width: 34px;
+        height: 24px;
+        padding: 0 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+        color: #fff;
+        box-shadow: 0 2px 10px rgba(255, 87, 34, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        z-index: 4;
+    }
+
+    .pushed-top-badge i {
+        font-size: 0.7rem;
+    }
 </style>
 @endpush
 
@@ -142,13 +162,19 @@ $categories = \App\Constants\SystemDefination::BOARDING_HOUSE_CATEGORY;
                     <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" 
                        class="text-decoration-none"
                        aria-label="Xem chi tiết {{ $boardingHouse->title }}">
+                        @php
+                            $isPushedTop = !empty($boardingHouse->pushed_at) && (empty($boardingHouse->expires_at) || strtotime($boardingHouse->expires_at) > time());
+                        @endphp
                         <div class="card property-card h-100 border-0 shadow-sm overflow-hidden position-relative">
                             {{-- Property Image --}}
                             <div class="property-image position-relative">
                                 <picture>
+                                    <source media="(max-width: 768px)" srcset="{{ resizeImageCloudinary($boardingHouse->thumbnail, 300, 225, 'webp') }}" type="image/webp">
                                     <source srcset="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 300, 'webp') }}" type="image/webp">
                                     <img class="card-img-top skeleton" 
-                                         src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 300) }}" 
+                                         src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 300) }}"
+                                         srcset="{{ resizeImageCloudinary($boardingHouse->thumbnail, 300, 225) }} 300w, {{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 300) }} 400w"
+                                         sizes="(max-width: 768px) 50vw, 25vw"
                                          alt="{{ $boardingHouse->title }}" 
                                          loading="{{ $index < 8 ? 'eager' : 'lazy' }}" 
                                          decoding="async"
@@ -157,7 +183,11 @@ $categories = \App\Constants\SystemDefination::BOARDING_HOUSE_CATEGORY;
                                 </picture>
                                 
                                 {{-- Status Badge --}}
-                                @if($index < 3)
+                                @if(!$isPushedTop)
+                                <span class="pushed-top-badge position-absolute top-0 end-0 m-2" title="Tin được đẩy top" aria-label="Tin được đẩy top">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </span>
+                                @elseif($index < 3)
                                 <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1 shadow-sm">HOT</span>
                                 @elseif($index < 6)
                                 <span class="badge bg-success position-absolute top-0 end-0 m-2 px-2 py-1 shadow-sm">MỚI</span>

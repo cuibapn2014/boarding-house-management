@@ -12,15 +12,16 @@ function dateForHumman(string $date) {
     return \Carbon\Carbon::parse($date)->diffForHumans();
 }
 
-function resizeImageCloudinary(string $url, float $width, float $height) : string {
+function resizeImageCloudinary(string $url, float $width, float $height, string $format = 'webp') : string {
+    $format = strtolower(trim($format)) ?: 'webp';
     $ext = explode('.', $url);
     $ext = count(explode('.', $url)) > 0 ? array_pop($ext) : $ext;
 
     if(in_array($ext, ['mp4', 'avi', 'mkv', 'mov', 'wmv', 'webm'])) {
-        $imgUrl = str_replace('/upload/',"/upload/w_{$width},h_{$height},f_webp/", $url);
-        $imgUrl = str_replace(".{$ext}", '.webp', $imgUrl);
+        $imgUrl = str_replace('/upload/',"/upload/w_{$width},h_{$height},f_{$format}/", $url);
+        $imgUrl = str_replace(".{$ext}", ".{$format}", $imgUrl);
     } else {
-        $imgUrl = str_replace('/upload/',"/upload/f_webp/c_thumb,w_{$width},h_{$height}/", $url);
+        $imgUrl = str_replace('/upload/',"/upload/f_{$format}/c_thumb,w_{$width},h_{$height}/", $url);
     }
 
     return $imgUrl;

@@ -1,5 +1,6 @@
 @extends('master')
 @section('title', 'Đăng Nhập - Nhà Trọ Tốt Sài Gòn')
+@section('meta_description', 'Đăng nhập tài khoản Nhà Trọ Tốt Sài Gòn để lưu tin yêu thích, quản lý lịch hẹn xem phòng và theo dõi thông tin thuê trọ nhanh chóng.')
 
 @push('css')
 <style>
@@ -94,7 +95,7 @@
 @section('content')
 <div class="auth-container">
     <div class="container">
-        <div class="auth-card">
+        <div class="auth-card mx-auto">
             <div class="row g-0">
                 {{-- Left Side - Branding --}}
                 <div class="col-lg-5 auth-left d-none d-lg-flex">

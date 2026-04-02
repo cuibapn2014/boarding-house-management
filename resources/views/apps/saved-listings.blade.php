@@ -104,9 +104,12 @@
                             <a href="{{ route('rentalHome.show', ['id' => $boardingHouse->id, 'title' => $boardingHouse->slug]) }}" 
                                class="text-decoration-none text-dark d-flex flex-md-row flex-column w-100">
                                 <picture>
+                                    <source media="(max-width: 768px)" srcset="{{ resizeImageCloudinary($boardingHouse->thumbnail, 300, 263, 'webp') }}" type="image/webp">
                                     <source srcset="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350, 'webp') }}" type="image/webp">
                                     <img class="item-img" 
-                                         src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}" 
+                                         src="{{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }}"
+                                         srcset="{{ resizeImageCloudinary($boardingHouse->thumbnail, 300, 263) }} 300w, {{ resizeImageCloudinary($boardingHouse->thumbnail, 400, 350) }} 400w"
+                                         sizes="(max-width: 768px) 50vw, 400px"
                                          alt="{{ $boardingHouse->title }}" 
                                          loading="lazy" 
                                          decoding="async"

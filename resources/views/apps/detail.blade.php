@@ -1,5 +1,6 @@
 @extends('master')
 @section('title', $boardingHouse->title . ' - Cho thuê phòng trọ tại ' . $boardingHouse->district)
+@section('meta_description', Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($boardingHouse->description ?? $boardingHouse->content ?? 'Thông tin chi tiết phòng trọ và nhà cho thuê tại TP.HCM.'))), 155, '...'))
 @push('css')
 {{-- Preload critical resources --}}
 <link rel="preload" href="{{ asset('assets/css/splide.min.css') }}" as="style">
@@ -440,8 +441,11 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                         @foreach($boardingHouse->boarding_house_files as $index => $file)
                         <li class="splide__slide position-relative" aria-hidden="false">
                             <picture>
+                                <source media="(max-width: 768px)" srcset="{{ resizeImageCloudinary($file->url, 220, 147, 'webp') }}" type="image/webp">
                                 <source srcset="{{ resizeImageCloudinary($file->url, 300, 200, 'webp') }}" type="image/webp">
                                 <img src="{{ resizeImageCloudinary($file->url, 300, 200) }}"
+                                    srcset="{{ resizeImageCloudinary($file->url, 220, 147) }} 220w, {{ resizeImageCloudinary($file->url, 300, 200) }} 300w"
+                                    sizes="(max-width: 768px) 33vw, 300px"
                                     alt="Thumbnail {{ $boardingHouse->title }} - Hình {{ $index + 1 }}" 
                                     data-media-type="{{ $file->type }}"
                                     data-src="{{ $file->url }}"
@@ -813,8 +817,11 @@ $fullAddress = "{$boardingHouse->address}, {$boardingHouse->ward}, {$boardingHou
                         <div class="related-room-card">
                             <div class="related-room-image">
                                 <picture>
+                                    <source media="(max-width: 768px)" srcset="{{ resizeImageCloudinary($relation->thumbnail, 300, 203, 'webp') }}" type="image/webp">
                                     <source srcset="{{ resizeImageCloudinary($relation->thumbnail, 400, 270, 'webp') }}" type="image/webp">
-                                    <img src="{{ resizeImageCloudinary($relation->thumbnail, 400, 270) }}" 
+                                    <img src="{{ resizeImageCloudinary($relation->thumbnail, 400, 270) }}"
+                                         srcset="{{ resizeImageCloudinary($relation->thumbnail, 300, 203) }} 300w, {{ resizeImageCloudinary($relation->thumbnail, 400, 270) }} 400w"
+                                         sizes="(max-width: 768px) 50vw, 25vw"
                                          alt="{{ $relation->title }}"
                                          loading="{{ $index < 4 ? 'eager' : 'lazy' }}" 
                                          decoding="async"

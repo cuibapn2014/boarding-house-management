@@ -50,6 +50,8 @@ class HomeController extends Controller
                     'boarding_houses.price',
                     'boarding_houses.status',
                     'boarding_houses.area',
+                    'boarding_houses.pushed_at',
+                    'boarding_houses.expires_at',
                     'boarding_houses.created_at',
                     'boarding_houses.created_by'
                 )
@@ -70,6 +72,8 @@ class HomeController extends Controller
                     'boarding_houses.price',
                     'boarding_houses.status',
                     'boarding_houses.area',
+                    'boarding_houses.pushed_at',
+                    'boarding_houses.expires_at',
                     'boarding_houses.created_at',
                     'boarding_houses.created_by'
                 )

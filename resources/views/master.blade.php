@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>@yield('title')</title>
+    @php
+        $defaultTitle = 'Nhà Trọ Tốt Sài Gòn - Tìm phòng trọ, căn hộ, nhà cho thuê tại TP.HCM';
+        $defaultDescription = 'Tìm kiếm và thuê phòng trọ, nhà nguyên căn, căn hộ tại TP.HCM. Tin mới mỗi ngày, đa dạng khu vực, mức giá rõ ràng.';
+        $seoTitle = trim($__env->yieldContent('title')) ?: $defaultTitle;
+        $seoDescription = trim($__env->yieldContent('meta_description')) ?: $defaultDescription;
+        $seoCanonical = url()->current();
+        $seoImage = asset('assets/images/icon/logo.webp');
+    @endphp
+    <title>{{ $seoTitle }}</title>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
@@ -16,11 +24,23 @@
     {{-- Basic SEO Meta Tags --}}
     <meta name="generator" content="Laravel {{ app()->version() }}">
     <meta name="format-detection" content="telephone=no">
+    <meta name="description" content="{{ $seoDescription }}">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="{{ $seoCanonical }}">
     
     {{-- Default Open Graph --}}
     <meta property="og:type" content="website">
     <meta property="og:locale" content="vi_VN">
     <meta property="og:site_name" content="{{ config('app.name') }}">
+    <meta property="og:title" content="{{ $seoTitle }}">
+    <meta property="og:description" content="{{ $seoDescription }}">
+    <meta property="og:url" content="{{ request()->fullUrl() }}">
+    <meta property="og:image" content="{{ $seoImage }}">
+    <meta property="og:image:alt" content="Nhà Trọ Tốt Sài Gòn">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $seoTitle }}">
+    <meta name="twitter:description" content="{{ $seoDescription }}">
+    <meta name="twitter:image" content="{{ $seoImage }}">
     
     {{-- Page-specific SEO tags --}}
     @stack('seo')
@@ -52,7 +72,6 @@
     <link rel="preload" href="{{ asset('assets/images/icon/logo.webp') }}" as="image" fetchpriority="high">
     <link rel="preload" href="{{ asset('assets/css/bootstrap.min.css') }}" as="style">
     <link rel="preload" href="{{ asset('assets/css/style.css') }}" as="style">
-    <link rel="preload" href="{{ asset('assets/js/core/jquery.min.js') }}" as="script">
     
     {{-- Font Preloads --}}
     <link rel="preload" href="{{ asset('assets/fonts/Roboto-Regular.ttf') }}" as="font" type="font/ttf" crossorigin>
@@ -420,6 +439,10 @@
 
     {{-- Enhanced main script --}}
     <script>
+        const requestIdle = window.requestIdleCallback || function (callback) {
+            return setTimeout(callback, 1);
+        };
+
         // Initialize Bootstrap dropdowns
         document.addEventListener('DOMContentLoaded', function() {
             // Try Bootstrap 5 initialization
@@ -467,13 +490,20 @@
             // Scroll to top functionality
             const scrollButton = document.getElementById('scroll-to-top');
             
+            let isScrollTicking = false;
             window.addEventListener('scroll', function() {
+                if (isScrollTicking) return;
+                isScrollTicking = true;
+
+                window.requestAnimationFrame(function () {
                 if (window.pageYOffset > 300) {
                     scrollButton.style.display = 'flex';
                 } else {
                     scrollButton.style.display = 'none';
                 }
-            });
+                    isScrollTicking = false;
+                });
+            }, { passive: true });
 
             scrollButton.addEventListener('click', function() {
                 window.scrollTo({
@@ -484,20 +514,22 @@
 
             // Lazy loading images
             if ('IntersectionObserver' in window) {
-                const imageObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const img = entry.target;
-                            img.src = img.dataset.src;
-                            img.classList.remove('lazyload');
-                            img.classList.add('loaded');
-                            observer.unobserve(img);
-                        }
+                requestIdle(function () {
+                    const imageObserver = new IntersectionObserver((entries, observer) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                const img = entry.target;
+                                img.src = img.dataset.src;
+                                img.classList.remove('lazyload');
+                                img.classList.add('loaded');
+                                observer.unobserve(img);
+                            }
+                        });
                     });
-                });
 
-                document.querySelectorAll('img[data-src]').forEach(img => {
-                    imageObserver.observe(img);
+                    document.querySelectorAll('img[data-src]').forEach(img => {
+                        imageObserver.observe(img);
+                    });
                 });
             }
 
@@ -514,17 +546,13 @@
             });
 
                          // Service Worker registration for caching
-             if ('serviceWorker' in navigator) {
-                 window.addEventListener('load', function() {
-                     navigator.serviceWorker.register('/sw.js')
-                         .then(function(registration) {
-                             console.log('SW registered: ', registration);
-                         })
-                         .catch(function(registrationError) {
-                             console.log('SW registration failed: ', registrationError);
-                         });
-                 });
-             }
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    requestIdle(function () {
+                        navigator.serviceWorker.register('/sw.js').catch(function () {});
+                    });
+                });
+            }
          });
          </script>
 
@@ -540,27 +568,36 @@
          }
 
          // Track scroll depth
-         let scrollDepthTracked = {};
-         window.addEventListener('scroll', function() {
-             const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-             
-             if (scrollPercent >= 25 && !scrollDepthTracked['25']) {
-                 trackEvent('scroll', 'engagement', '25%');
-                 scrollDepthTracked['25'] = true;
-             }
-             if (scrollPercent >= 50 && !scrollDepthTracked['50']) {
-                 trackEvent('scroll', 'engagement', '50%');
-                 scrollDepthTracked['50'] = true;
-             }
-             if (scrollPercent >= 75 && !scrollDepthTracked['75']) {
-                 trackEvent('scroll', 'engagement', '75%');
-                 scrollDepthTracked['75'] = true;
-             }
-             if (scrollPercent >= 90 && !scrollDepthTracked['90']) {
-                 trackEvent('scroll', 'engagement', '90%');
-                 scrollDepthTracked['90'] = true;
-             }
-         });
+        const scrollDepthTracked = {};
+        let gaScrollTicking = false;
+
+        window.addEventListener('scroll', function() {
+            if (gaScrollTicking) return;
+            gaScrollTicking = true;
+
+            window.requestAnimationFrame(function () {
+                const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+                
+                if (scrollPercent >= 25 && !scrollDepthTracked['25']) {
+                    trackEvent('scroll', 'engagement', '25%');
+                    scrollDepthTracked['25'] = true;
+                }
+                if (scrollPercent >= 50 && !scrollDepthTracked['50']) {
+                    trackEvent('scroll', 'engagement', '50%');
+                    scrollDepthTracked['50'] = true;
+                }
+                if (scrollPercent >= 75 && !scrollDepthTracked['75']) {
+                    trackEvent('scroll', 'engagement', '75%');
+                    scrollDepthTracked['75'] = true;
+                }
+                if (scrollPercent >= 90 && !scrollDepthTracked['90']) {
+                    trackEvent('scroll', 'engagement', '90%');
+                    scrollDepthTracked['90'] = true;
+                }
+
+                gaScrollTicking = false;
+            });
+        }, { passive: true });
      </script>
      @endif
 
@@ -573,8 +610,8 @@
     {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "name": "@yield('title')",
-        "description": "@yield('meta_description', 'Tìm kiếm và thuê phòng trọ chất lượng tại TP.HCM với giá tốt nhất')",
+        "name": "{{ $seoTitle }}",
+        "description": "{{ $seoDescription }}",
         "url": "{{ request()->fullUrl() }}",
         "inLanguage": "vi-VN",
         "isPartOf": {

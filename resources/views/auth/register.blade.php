@@ -1,5 +1,6 @@
 @extends('master')
 @section('title', 'Đăng Ký - Nhà Trọ Tốt Sài Gòn')
+@section('meta_description', 'Tạo tài khoản Nhà Trọ Tốt Sài Gòn để nhận tin mới, lưu phòng trọ quan tâm và đặt lịch hẹn xem phòng thuận tiện hơn.')
 
 @push('css')
 <style>
