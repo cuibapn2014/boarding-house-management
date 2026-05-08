@@ -509,7 +509,7 @@
     Dropzone.userPlan = '{{ auth()->user()->plan_current ?? "free" }}';
     Dropzone.isAdmin = {{ auth()->user()->is_admin ? 'true' : 'false' }};
 </script>
-<script src="{{ asset('assets/js/apps/boarding_house/form-page.js') }}?v=1.0.0"></script>
+<script src="{{ asset('assets/js/apps/boarding_house/form-page.js') }}?v=1.0.1"></script>
 <script>
     // Toggle deposit amount field based on require_deposit checkbox
     document.addEventListener('DOMContentLoaded', function() {
