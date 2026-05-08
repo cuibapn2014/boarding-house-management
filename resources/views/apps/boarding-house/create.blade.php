@@ -521,7 +521,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
 
 <script src="{{ asset('assets/js/helper/Dropzone.js') }}"></script>
-<script src="{{ asset('assets/js/apps/boarding_house/form-page.js') }}?v=1.0.0"></script>
+<script src="{{ asset('assets/js/apps/boarding_house/form-page.js') }}?v=1.0.1"></script>
 <script>
     // UI helpers for deposit toggle, checklist progress and meta feedback
     document.addEventListener('DOMContentLoaded', function() {
